@@ -21,6 +21,22 @@
 
 ## 安装包与发布
 
-本记录随构建 33 安装包分发。最终 DMG 生成后，另行核验文件摘要、版本、签名、随包文档、后台模块与浏览器缺失状态，并在仓库补录结果。
+- `npm run build:mac:all` 通过；arm64 与 x64 的运行时、SQLite、本机 Chrome 有窗口／无头启动及包内集成检查通过。x64 通过 Rosetta 执行。
+- 两个 DMG 的 `hdiutil verify`、只读挂载及 `codesign --verify --deep --strict` 通过，版本均为 0.2.33／33。
+- 包内中英文 README、LICENSE、TERMS、NOTICE、免责声明、隐私和第三方文件、构建 32 许可归档与构建源码逐字一致；后台学习模块、前端与展示图一致。未发现浏览器可执行文件、用户数据库或密钥文件。
+- GitHub 草稿附件共 4 个，远端 size／SHA256 digest 与本地文件逐项一致后发布；构建 32 文件未覆盖。构建源码提交为 `206bdc8339f8758e3bf5fcedfe1d4944ba7c9d0d`，标签 `v0.2.33`。
+
+| 架构 | DMG 字节数 | SHA256 |
+| --- | --- | --- |
+| arm64 | 99051885 | `9d4defc953801b2d187de400acb829c6e102e6d95d817266d735f9a86a508c31` |
+| x64 | 101243381 | `ae7df2c551ff93374501a89ee842220a75b654cb8442af29528bda6383349f83` |
+
+上述最终结果在打包后补录；包内同名验证记录保留打包时已完成的检查范围，不包含自引用的最终摘要。
+
+## CI 状态
+
+- 源码提交的 [macOS CI](https://github.com/BeifengFlying/CourseWatch/actions/runs/43625041971) 中，arm64 的 `study-chapter-tests-runtime.test.ts` 与 `study-empty-answer-runtime.test.ts` 各有一项超过默认 5000ms，结果为 333 通过、2 失败；因此不能声称全部 CI 通过。本机 335 项通过与此结果分别记录。
+- 补录时 Intel CI 与 [Windows CI](https://github.com/BeifengFlying/CourseWatch/actions/runs/43625041968) 仍在运行，未将其视为通过。此次 Release 附件仅含 macOS 安装包。
+
 
 本记录中最终文件摘要由打包后在仓库补录，实际校验值以旁置 `.sha256` 及 GitHub Release 附件摘要为准。macOS 临时签名不代表 Apple 公证；本机及模拟课程检查不代表真实模型、真实课程提交或其他系统的实机验收。既有第三方分发许可未决项见[许可核查](../legal/RELEASE_LICENSE_REVIEW.md)。
