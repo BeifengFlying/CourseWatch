@@ -1,26 +1,32 @@
 CourseWatch
 Copyright 2026 CourseWatch contributors
 
-Noncommercial use only. Commercial use is prohibited for original material
-covered by the CourseWatch Noncommercial License 1.0 starting with build 32
-(0.2.32).
-Read LICENSE, TERMS.md / TERMS.en.md and DISCLAIMER.md together.
+From build 33 (0.2.33), the Project uses the unmodified Apache License 2.0
+text in LICENSE together with TERMS.md / TERMS.en.md. Read and redistribute
+those documents together. Noncommercial use only. Commercial use is prohibited
+for covered original material the relevant rights holders have authority to
+license under this combination. The noncommercial requirement began with
+build 32, whose previously delivered copies retain their original terms.
 
-Earlier irrevocable license grants remain intact. Material previously
-licensed under Apache-2.0 remains available under that grant where it
-applies; licenses/Apache-2.0.txt preserves the original license text.
-Removing old installers or rebuilding source history does not revoke those
-rights. This NOTICE records
-attribution and pointers; it does not itself relicense material.
+For that covered material, explicit custom provisions in TERMS take
+precedence where they conflict with the Apache text. Other Apache provisions
+continue to apply. This is a restricted combination, not an unmodified
+standard Apache-2.0 grant or an OSI-defined open-source license. It must not
+be labeled solely as Apache-2.0. See TERMS Sections 0 and 8 for details.
+
+The priority rule does not override independent third-party licenses,
+valid earlier grants or mandatory law. Earlier Apache-2.0 and other valid
+grants remain effective. Removing packages or rebuilding history does not
+revoke those rights. licenses/Apache-2.0.txt retains the standard text;
+licenses/CourseWatch-Noncommercial-1.0.txt retains the separate license
+supplied with the initial build 32 release. These are records of applicable
+versions and prior grants, not optional alternative licenses for new content.
 
 Third-party software, teaching-platform names, logos and platform content
 remain subject to their respective rights and terms. They are not
-relicensed by CourseWatch. See THIRD_PARTY_NOTICES.md and the original
-licenses retained with third-party components.
+relicensed by CourseWatch. See THIRD_PARTY_NOTICES.md and original notices.
+This product is not affiliated with or endorsed by those platforms.
 
-This product is not affiliated with or endorsed by the teaching platforms
-identified in its interface. The custom noncommercial license is not the
-Apache-2.0 license or an OSI-approved open-source license.
-
-DISCLAIMER.md details beta risks and liability provisions. PRIVACY.md
-describes current local data handling.
+DISCLAIMER.md describes beta risks and liability limits; PRIVACY.md
+describes data handling. This NOTICE records attribution and pointers;
+it does not itself grant additional rights.

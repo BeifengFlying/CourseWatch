@@ -1,6 +1,6 @@
 # 第三方软件与素材
 
-从构建 32（0.2.32）起，CourseWatch 有权许可的新版原创内容采用 [CourseWatch 非商业许可证 1.0](LICENSE)及[项目协议](TERMS.md)，禁止商用；此前已依法取得的版本继续按原许可处理。新许可及源码历史重建不撤回历史 Apache-2.0 授权，不改变下列组件、素材及平台内容的权利。具体版本以 `package-lock.json`、随包 `DEPENDENCIES.txt`、`UI-LICENSES/INDEX.txt` 为准；本表不是全部传递依赖的许可证全文。
+从构建 33（0.2.33）起，CourseWatch 有权按该条件许可的新版原创内容采用 [Apache-2.0 正文](LICENSE)与[项目补充协议](TERMS.md)的组合许可。禁止商用要求自构建 32 起实施；该版本及其他历史版本继续按各自随附许可处理。本协议的冲突规则不覆盖第三方独立许可、有效历史授权或法定权利，源码历史重建不撤回这些权利。具体组件版本以 `package-lock.json`、随包 `DEPENDENCIES.txt`、`UI-LICENSES/INDEX.txt` 为准；本表不是全部传递依赖的许可证全文。
 
 ## macOS 包内的软件
 

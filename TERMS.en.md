@@ -2,15 +2,35 @@
 
 [简体中文](TERMS.md) · **English**
 
-Applicable project: CourseWatch. Applicable versions: source and installer versions newly released with these Terms starting with 0.2.32 (build 32). Earlier versions remain subject to the terms supplied with them. Chinese terms and English translation updated: 2026-11-15.
+Applicable project: CourseWatch. The combination of the Apache-2.0 text and these Additional Terms applies to newly released material supplied with these documents starting with 0.2.33 (build 33). The noncommercial requirement began with build 32. Previously released build 32 copies and other historical versions remain subject to the terms supplied with them. Updated: 2026-11-15.
 
-**Noncommercial use only. Commercial use is prohibited.** See Section 8 for scope and treatment of existing grants.
+**Noncommercial use only. Commercial use is prohibited.** See Section 8 for commercial purposes, redistribution and prior grants.
 
-Original material in new releases that the Project has authority to license uses the [CourseWatch Noncommercial License 1.0](LICENSE). These Terms describe use, redistribution and beta risks. Rights previously granted under Apache-2.0 or other licenses remain in effect; the former Apache-2.0 text is retained at [licenses/Apache-2.0.txt](licenses/Apache-2.0.txt). Third-party software, assets and platform content remain subject to their original licenses or terms of service. The Project has no authority to alter those rights through these Terms.
+The Project uses the [Apache License 2.0 text](LICENSE) together with these Additional Terms. LICENSE, TERMS.md / TERMS.en.md and NOTICE must be read and supplied together. For covered material that the relevant rights holders have authority to license under this combination, explicit custom provisions in these Terms take precedence over the Apache text where they actually conflict. Apache provisions that do not conflict continue to apply. This priority does not override independent third-party licenses, prior grants or mandatory law.
 
-The new noncommercial license is a custom license, not the standard Apache-2.0 license or an open-source license as defined by the OSI. It must not be labeled solely as Apache-2.0 or described as permitting unrestricted commercial use.
+The Apache text is preserved verbatim. Noncommercial restrictions and other custom requirements are set out in these Terms. The resulting authorization is a **restricted combination of the Apache-2.0 text and custom terms**, not an unmodified standard Apache-2.0 grant or an OSI-defined open-source license. It must not be labeled solely as Apache-2.0 or described as allowing unrestricted commercial use. LICENSE alone does not offer a separate unrestricted commercial grant for new material covered by this combination. Formation and enforceability remain subject to applicable law and actual ownership.
 
 Definitions: “Project” means the original CourseWatch code, documentation and applications provided by the maintainer. “User” means an individual or organization that downloads, installs, runs, modifies or redistributes the Project. “Learning Platform” means a third-party educational website to which the Project connects or provides a link. “Platform Data” means courses, homework, exams, dates, times, statuses and related content read from a Learning Platform, excluding personal schedules created by the User.
+
+## 0. License Documents, Custom Provisions and Priority
+
+0.1 These Terms cover new original code, documentation and other material that the relevant rights holders have authority to license under this combination. Third-party software, assets, platform content and external contributions without the necessary authorization do not change licenses merely by being in this repository. A version change, repackaging or repository change cannot withdraw prior rights in the same material already covered by an earlier grant.
+
+0.2 **Within Section 0.1, an explicit custom provision in these Terms takes precedence where it conflicts with the Apache-2.0 text on the same licensing matter.** Apache provisions not changed by these Terms continue to apply. Mandatory statutory rights, independent third-party licenses and valid prior grants are outside this priority rule. The rule does not guarantee judicial enforcement of any provision.
+
+0.3 Custom requirements and their relationship to the Apache text are as follows:
+
+| Matter addressed by Apache | Additional or limited requirement in these Terms | Applicable sections |
+| --- | --- | --- |
+| Section 2: reproduction, modification, sublicensing, and distribution in source or object form | Covered material may be used, copied, modified and distributed only for noncommercial purposes; the Apache text does not authorize a prohibited commercial sublicense for that material | Sections 8.1 and 8.4–8.6 |
+| Section 4: retaining licenses, copyright and modification notices on redistribution | Applicable Apache notice requirements remain; these Terms, NOTICE, the disclaimer, privacy and third-party notices must also be supplied, with a prominent noncommercial statement | Sections 8.2 and 8.7 |
+| Section 4: different terms for modifications or derivative works as a whole | Changing licenses, splitting modules, renaming or changing distribution form must not remove commercial restrictions from covered material; independent third-party and previously licensed material retain their own terms | Sections 0.1, 8.3 and 8.7 |
+| Sections 7 and 8: warranty disclaimer and limitation of liability | Retain those provisions where lawful, describe beta risks, and preserve liability and rights that cannot lawfully be excluded | Section 5 and DISCLAIMER.md |
+| Platform access, platform data and identifiers | No grant of third-party account, exam, course, identifier or platform-access rights; use remains subject to law and necessary authorization | Sections 1–4, 6 and 7 |
+
+0.4 [licenses/Apache-2.0.txt](licenses/Apache-2.0.txt) retains a copy of the standard Apache text. [licenses/CourseWatch-Noncommercial-1.0.txt](licenses/CourseWatch-Noncommercial-1.0.txt) retains the separate noncommercial license supplied with the initial build 32 release. These documents record relevant versions, prior grants and third-party matters, and do not offer optional alternative grants for new material. Previously delivered build 32 source and packages are not retroactively placed under different terms by this change in document structure.
+
+0.5 The Chinese and English texts are intended to have the same meaning. An ambiguity or translation difference does not imply withdrawal of third-party or prior rights, or a grant of additional commercial permission. Seek written clarification from the relevant rights holders through the Project's public feedback channel. These documents do not replace a complete ownership or legal review.
 
 ## 1. Data Sources
 
@@ -50,7 +70,7 @@ Definitions: “Project” means the original CourseWatch code, documentation an
 
 5.2 Users must independently verify homework, exams and deadlines, retain other reminder methods, and back up important items before upgrading or removing data. CourseWatch must not be used as the sole source of reminders. Completion marks within the application must not be treated as proof of submission to a platform.
 
-5.3 To the extent permitted by applicable law and unless otherwise agreed in writing, the Project is provided on an “as is” basis. Liability for missed homework, missed exams, effects on grades or academic progress, account restrictions, data loss or other losses arising from use of, or inability to use, the Project is governed by these Terms, [Section 5 of the Noncommercial License](LICENSE), and applicable law. Specific risks and the scope of liability are described in the [Beta Use Notice and Disclaimer](DISCLAIMER.md).
+5.3 To the extent permitted by applicable law and unless otherwise agreed in writing, the Project is provided on an “as is” basis. Liability for missed homework, missed exams, effects on grades or academic progress, account restrictions, data loss or other losses arising from use of, or inability to use, the Project is governed by these Terms, [Sections 7 and 8 of Apache-2.0](LICENSE), and applicable law. Specific risks and the scope of liability are described in the [Beta Use Notice and Disclaimer](DISCLAIMER.md).
 
 5.4 These Terms do not exclude or limit liability that cannot lawfully be excluded or limited, including liability for personal injury where exclusion is prohibited, liability for property loss caused by intentional misconduct or gross negligence where exclusion is prohibited, or other statutory rights.
 
@@ -72,13 +92,29 @@ Definitions: “Project” means the original CourseWatch code, documentation an
 
 ## 8. Prohibition of Commercial Use and Redistribution
 
-8.1 **Starting with build 32 (0.2.32), commercial use of original material in new releases that the Project has authority to license, including modified versions of that material, is prohibited.** Commercial use includes, without limitation, selling or distributing the software for a fee, providing paid deployment or proxy-study services, integrating covered material into paid products or services, and using covered material to display advertising or obtain other commercial revenue. The Project is provided free of charge solely for noncommercial learning, exchange, technical research and functional testing. It does not accept advertising or other commercial partnerships or donations, and makes no commitment to paid support, reminder effectiveness or academic outcomes.
+8.1 **Starting with build 32 (0.2.32), commercial use of new original material that the Project has authority to license, including modifications of that material, is prohibited.** Starting with build 33, this combination permits noncommercial use, reproduction, study, modification and redistribution of covered material, subject to these Terms and applicable Apache provisions. Build 32 and other historical versions remain subject to the terms supplied with them. The Project is free, accepts no advertising partnerships or donations, and makes no commitment to paid support, reminder effectiveness or academic outcomes.
 
-8.2 Noncommercial redistribution must comply with the Noncommercial License, these Terms and third-party licenses. Redistributors must retain applicable LICENSE, NOTICE, copyright and attribution notices and provide these Terms, the Beta Disclaimer and the Privacy and Data Notice. Distribution pages and accompanying documentation must prominently state “Noncommercial use only. Commercial use is prohibited.” This restriction must not be removed or obscured where the Project has the authority to require its retention. Modifications to others' files must be prominently identified. Modified versions must not be presented as original versions released by the maintainer, and must not imply endorsement by an institution or Learning Platform.
+8.2 Noncommercial redistribution of source, installers, portable packages, modified versions or other copies containing covered material must retain LICENSE, NOTICE and applicable copyright and attribution notices. Supply the Chinese or English version of these Terms, DISCLAIMER.md, PRIVACY.md and applicable third-party notices and licenses. Distribution pages and accompanying documentation must prominently state “Noncommercial use only. Commercial use is prohibited.” Do not remove or obscure this restriction. Prominently identify changes to others' files, do not present modified versions as original releases, and do not imply endorsement by the maintainer, an institution or a platform.
 
-8.3 These restrictions apply only to original material that the Project has authority to license, to the extent permitted by applicable law. They do not alter the independent licenses of third-party components. New terms do not retroactively replace licenses of earlier versions or revoke Apache-2.0 rights already lawfully granted on an irrevocable basis. Material covered by those grants remains subject to its original authorization.
+8.3 These restrictions apply only where the relevant rights holders have authority to impose them and applicable law permits. They do not alter independent third-party licenses or retroactively withdraw valid Apache-2.0, separate noncommercial or other prior grants. Recipients who lawfully obtained historical versions or previously licensed material may continue under the relevant original terms. Obtaining newly restricted material does not automatically expand an earlier grant.
 
-8.4 The Apache License 2.0 itself permits commercial use. The prohibition in new releases comes from a separate noncommercial license, not an additional restriction on Apache-2.0. Removing old installers does not revoke earlier grants: recipients who lawfully obtained earlier versions or previously licensed material may still use them under the original license. The new license applies only where the rights holders have authority to make a new grant and cannot be assumed to cover all historical code. Its formation and enforceability remain subject to applicable law and actual ownership of the relevant rights.
+8.4 The following commercial purposes are prohibited unless separately authorized in writing under Section 8.6:
+
+- Selling the software, source or modified versions; charging for downloads, activation codes or membership access; or requiring payment or tips to obtain the software, features or services.
+- Providing paid deployment, hosting, proxy operation, proxy-study or other business services relying on covered material.
+- Integrating, bundling or embedding covered material in paid products, services, commercial packages or business systems. A free copy tied to revenue from associated products or services remains restricted.
+- Using covered material for advertising, commercial promotion, sales commissions or other direct or indirect commercial revenue.
+- Using covered material to develop or operate commercial products or carry out other business activities intended for commercial advantage.
+
+8.5 Direct payment is not the sole criterion; consider the actual purpose and related transactions. Personal noncommercial study, research and testing do not automatically become commercial because the user is employed by an organization. Educational, charitable, research, government and other institutions do not receive an automatic exemption from commercial restrictions because of their identity. Statutory exceptions and rights that cannot lawfully be restricted remain in effect.
+
+8.6 Commercial use requires a separate written grant from the relevant rights holders before it begins, and must stay within that grant. Public source, free downloads, attribution, a proposed partnership, lack of a response or GitHub availability do not imply commercial permission. No one may grant rights on behalf of a third party they lack authority to represent.
+
+8.7 Do not label covered material solely as Apache-2.0 or evade restrictions by changing licenses, closed-source wrapping, open-source publication, renaming, splitting or repackaging. These Terms do not generally require publication of modified source; publishing source does not itself authorize commercial use. Independent third-party source-provision and other obligations still apply. Redistribution and sublicensing must not grant commercial rights that these Terms do not authorize.
+
+8.8 The standard Apache-2.0 text itself permits commercial use. The noncommercial restrictions above come from these Additional Terms and apply together with the Apache text under Section 0; they are not standard Apache-2.0 provisions. Removing packages, deleting tags, rebuilding history or changing license files does not withdraw valid earlier grants or guarantee removal of old copies or GitHub-retained objects.
+
+8.9 Commercial conduct outside this combination's scope is not licensed by it. Termination for violations, cessation of infringement and other remedies remain subject to applicable law. This provision does not exclude statutory defenses, replace a valid separate commercial grant, or withdraw continuing third-party or prior rights.
 
 ## 9. Acceptance of These Terms
 

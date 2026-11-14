@@ -7,6 +7,7 @@ export async function copyDistributionDocs(root: string, destination: string) {
   const files = [
     "LICENSE",
     "licenses/Apache-2.0.txt",
+    "licenses/CourseWatch-Noncommercial-1.0.txt",
     "TERMS.md",
     "TERMS.en.md",
     "NOTICE",
@@ -15,6 +16,7 @@ export async function copyDistributionDocs(root: string, destination: string) {
     "docs/guides/BUILD_HISTORY.md",
     "docs/verification/RELEASE-0.2.30.md",
     "docs/verification/RELEASE-0.2.32.md",
+    "docs/verification/RELEASE-0.2.33.md",
     "docs/verification/README-DESKTOP-2026-11-15.md",
     "docs/verification/WINDOWS-0.2.31-MERGE.md",
     "docs/verification/WINDOWS-0.2.30-R2.md",

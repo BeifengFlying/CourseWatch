@@ -4,15 +4,15 @@
 <p align="center">Course task management, personal schedules and deadline reminders. macOS 14+ / Windows 10+ x64.</p>
 <p align="center">
   <a href="https://github.com/BeifengFlying/CourseWatch/actions/workflows/ci.yml"><img src="https://img.shields.io/badge/CI-GitHub%20Actions-2088FF?logo=githubactions&amp;logoColor=white" alt="CI: GitHub Actions"></a>
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-0.2.32%20beta-orange" alt="Version: 0.2.32 beta"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Noncommercial-red" alt="License: CourseWatch Noncommercial License; commercial use prohibited"></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-0.2.33%20beta-orange" alt="Version: 0.2.33 beta"></a>
+  <a href="TERMS.en.md"><img src="https://img.shields.io/badge/license-Apache--2.0%20%2B%20Terms-red" alt="License: Apache-2.0 text plus custom terms; commercial use prohibited"></a>
   <a href="package.json"><img src="https://img.shields.io/badge/Node.js-24-339933" alt="Node.js 24"></a>
   <a href="#installation"><img src="https://img.shields.io/badge/platform-macOS%2014%2B-blue" alt="Platform: macOS 14+"></a>
   <a href="docs/guides/WINDOWS.md"><img src="https://img.shields.io/badge/platform-Windows%2010%2B%20x64-blue" alt="Platform: Windows 10+ x64, device testing pending"></a>
 </p>
 <p align="center"><a href="#installation">Installation</a> · <a href="#features-and-demos">Demos</a> · <a href="#supported-platforms">Platforms</a> · <a href="#technology-stack">Technology</a> · <a href="#mac-performance-and-energy-measurements">Performance</a> · <a href="docs/guides/BUILD_HISTORY.md">Build history</a></p>
 
-**Starting with build 32 (0.2.32), original material that the project has authority to license is for noncommercial use only. Commercial use is prohibited.** Lawfully obtained earlier versions remain subject to their original licenses; prior grants are not retroactively revoked. Old installer downloads have been removed. See [Section 8 of the Project Terms](TERMS.en.md#8-prohibition-of-commercial-use-and-redistribution) for scope and redistribution requirements.
+**Starting with build 32 (0.2.32), original material that the project has authority to license is for noncommercial use only. Commercial use is prohibited.** Build 33 uses the [Apache-2.0 text](LICENSE) with the [Additional Project Terms](TERMS.en.md); explicit conflicting custom provisions in TERMS take precedence within their scope. Earlier versions retain their original terms. Installer downloads from before the noncommercial requirement have been removed. See [Section 8 of the Project Terms](TERMS.en.md#8-prohibition-of-commercial-use-and-redistribution) for scope and redistribution requirements.
 
 CourseWatch is a course task manager for macOS and Windows. It consolidates homework, exams and deadlines from multiple learning platforms, checks selected courses locally, and sends reminders for new tasks and deadline changes. Personal schedules are available without a course account.
 
@@ -22,15 +22,15 @@ On macOS, closing the main window keeps the app in the menu bar. Windows offers 
 
 ## Installation
 
-Current release: **0.2.32 (build 32, beta)**. Download the package for your system from [GitHub Releases](https://github.com/BeifengFlying/CourseWatch/releases/tag/v0.2.32):
+Current release: **0.2.33 (build 33, beta)**. Download the package for your system from [GitHub Releases](https://github.com/BeifengFlying/CourseWatch/releases/tag/v0.2.33):
 
 | System | Download |
 | --- | --- |
-| macOS 14+ · Apple Silicon | [CourseWatch-0.2.32-build32-mac-arm64.dmg](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.32/CourseWatch-0.2.32-build32-mac-arm64.dmg) |
-| macOS 14+ · Intel | [CourseWatch-0.2.32-build32-mac-x64.dmg](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.32/CourseWatch-0.2.32-build32-mac-x64.dmg) |
+| macOS 14+ · Apple Silicon | [CourseWatch-0.2.33-build33-mac-arm64.dmg](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.33/CourseWatch-0.2.33-build33-mac-arm64.dmg) |
+| macOS 14+ · Intel | [CourseWatch-0.2.33-build33-mac-x64.dmg](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.33/CourseWatch-0.2.33-build33-mac-x64.dmg) |
 | Windows 10+ · x64 | [Build from source on Windows](docs/guides/WINDOWS.md) |
 
-The minimum Windows version is Windows 10 version 2004 (build 19041); version 22H2 or later is recommended. The current source produces `CourseWatch-0.2.32-build32-win-x64-setup.exe`, a ZIP with the same prefix, and `.sha256` files. Check [Windows Actions](https://github.com/BeifengFlying/CourseWatch/actions/workflows/windows.yml) for a successful run containing these changes; downloads depend on that run's actual artifacts. Native window checks for 0.2.30 r2 ran on Windows 11 at 150% scaling. Windows 10, full installation / upgrade / removal, and real notifications still need testing. See the [0.2.31 merge checks](docs/verification/WINDOWS-0.2.31-MERGE.md) for the merged source.
+The minimum Windows version is Windows 10 version 2004 (build 19041); version 22H2 or later is recommended. The current source produces `CourseWatch-0.2.33-build33-win-x64-setup.exe`, a ZIP with the same prefix, and `.sha256` files. Check [Windows Actions](https://github.com/BeifengFlying/CourseWatch/actions/workflows/windows.yml) for a successful run containing these changes; downloads depend on that run's actual artifacts. Native window checks for 0.2.30 r2 ran on Windows 11 at 150% scaling. Windows 10, full installation / upgrade / removal, and real notifications still need testing. See the [0.2.31 merge checks](docs/verification/WINDOWS-0.2.31-MERGE.md) for the merged source.
 
 On Mac, open the DMG and drag CourseWatch into Applications. To upgrade, quit the old version from the menu bar before replacing it. Upgrades retain the existing data directory. Back up important data before replacing the application. Updates are installed manually. Packages and checksums from before the noncommercial license are retained in a local archive; their GitHub downloads are removed.
 
@@ -39,7 +39,7 @@ On Mac, open the DMG and drag CourseWatch into Applications. To upgrade, quit th
 Each package has a matching `.sha256` file. Compare it with the output of:
 
 ```sh
-shasum -a 256 CourseWatch-0.2.32-build32-mac-arm64.dmg
+shasum -a 256 CourseWatch-0.2.33-build33-mac-arm64.dmg
 ```
 
 Mac packages are ad hoc signed and have not been notarized by Apple. The Intel package has passed architecture and Rosetta runtime checks; its interface has not been checked on a physical Intel Mac. Platform coverage and reminder delivery may be incomplete during the beta. School, instructor and platform notices remain the authoritative sources. See [beta limitations](DISCLAIMER.md) for details. The application interface and most documentation are currently in Chinese; this language switch applies to the README.
@@ -247,4 +247,4 @@ Session snapshots and notification secrets use OS credential protection. The dat
 
 Report problems in [Issues](https://github.com/BeifengFlying/CourseWatch/issues), including the version and build number, system, learning platform and reproduction steps. Include redacted screenshots for page-specific issues. Do not publish accounts, cookies, databases or browser profiles. Review and redact logs before uploading.
 
-**Commercial use is prohibited, including paid distribution, paid services and integration into paid products.** Starting with 0.2.32, original material in new releases that the project has authority to license uses the [CourseWatch Noncommercial License 1.0](LICENSE); see the [Project Terms](TERMS.en.md) for use requirements. This is a custom noncommercial license, not an open-source license as defined by the OSI. Earlier Apache-2.0 grants are not retroactively revoked, including when old installers are removed. The beta is free. Advertising partnerships and donations are not accepted. Sources for third-party code, platform names and icons are listed in [third-party notices](THIRD_PARTY_NOTICES.md). Outstanding dependency license items are recorded in the [license review](docs/legal/RELEASE_LICENSE_REVIEW.md).
+**Commercial use is prohibited, including paid distribution, paid services and integration into paid products.** The noncommercial requirement began with build 32. Build 33 uses the [Apache-2.0 text](LICENSE) together with the [Additional Project Terms](TERMS.en.md). For covered material the rights holders have authority to license on this basis, explicit conflicting provisions in TERMS take precedence; other Apache provisions continue to apply. Sections 0 and 8 identify the custom provisions and their relationship to Apache. This restricted combination is not an unmodified standard Apache-2.0 grant or an OSI-defined open-source license. Independent third-party licenses, valid prior grants and mandatory rights are outside the priority rule. Previously delivered build 32 copies retain their separate noncommercial terms; removing old packages does not revoke earlier grants. The beta is free; advertising partnerships and donations are not accepted. See [third-party notices](THIRD_PARTY_NOTICES.md) and the [license review](docs/legal/RELEASE_LICENSE_REVIEW.md).

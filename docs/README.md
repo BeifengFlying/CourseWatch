@@ -18,6 +18,8 @@
 
 ## 验证记录
 
+- [构建 33 许可、文档与打包验证](verification/RELEASE-0.2.33.md)：Apache 原文与 TERMS 的组合形式、历史许可边界及实际验证范围。
+
 - [README 原生桌面截图](verification/README-DESKTOP-2026-11-15.md)：模拟数据、壁纸来源、拍摄范围与复现入口。
 
 - [手机通知验证](verification/MOBILE-NOTIFICATIONS-2026-11-13.md)：通知渠道隔离、配对、界面与尚未完成的真实设备验证。

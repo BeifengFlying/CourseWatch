@@ -6,7 +6,7 @@
 
 ## 界面与操作
 
-当前源码版本为 0.2.32／构建 32，Windows 修订号为 0。新包使用独立构建号文件名，不覆盖原安装包。本次发布尚未构建 Windows 安装包；以下文件名用于源码构建。合并检查见 [Windows 0.2.31](../verification/WINDOWS-0.2.31-MERGE.md)；此前原生窗口与安装包检查见 [Windows 0.2.30 修订 2](../verification/WINDOWS-0.2.30-R2.md)，该历史包不包含合并后的全部改动。
+当前源码版本为 0.2.33／构建 33，Windows 修订号为 0。新包使用独立构建号文件名，不覆盖原安装包。本次发布尚未构建 Windows 安装包；以下文件名用于源码构建。合并检查见 [Windows 0.2.31](../verification/WINDOWS-0.2.31-MERGE.md)；此前原生窗口与安装包检查见 [Windows 0.2.30 修订 2](../verification/WINDOWS-0.2.30-R2.md)，该历史包不包含合并后的全部改动。
 
 Windows 与 macOS 使用同一个 `Desktop.vue`、表单和样式文件。Windows 右上角的最小化与关闭按钮相邻排列；横线最小化到任务栏，叉号请求关闭。窗口可以拖动位置，不能拖动边缘调整大小，不提供最大化按钮。
 
@@ -58,8 +58,8 @@ dotnet publish apps/windows/CourseWatch.csproj -c Release -r win-x64 --self-cont
 
 在 GitHub Actions 的 **Windows desktop package → coursewatch-win-x64** 中下载产物：
 
-- `CourseWatch-0.2.32-build32-win-x64-setup.exe`：安装程序。
-- `CourseWatch-0.2.32-build32-win-x64.zip`：便携包，解压后运行其中的 `CourseWatch.exe`。
+- `CourseWatch-0.2.33-build33-win-x64-setup.exe`：安装程序。
+- `CourseWatch-0.2.33-build33-win-x64.zip`：便携包，解压后运行其中的 `CourseWatch.exe`。
 - 对应的 `.sha256`：文件一致性校验值。同渠道校验文件不能独立证明发布者身份。
 
 请选择包含本轮修改的成功运行；产物以该运行实际上传的文件为准，旧运行的文件名和功能可能不同。
