@@ -29,3 +29,7 @@
 本机类型检查、52 文件 335 项测试及网页／扩展／后台构建通过；两架构包内集成检查通过。临时签名未 Apple 公证，Intel 运行检查使用 Rosetta。真实课程及真实模型作答未验收，已有第三方分发许可未决项仍见[许可核查](../legal/RELEASE_LICENSE_REVIEW.md)。
 
 构建 32 Windows Actions 运行 `43621227405` 的 335 项测试中，334 项通过，`unipus-window.test.ts` 在 5 秒测试上限超时，未进入打包。本次未发布 Windows 新包，未删除或放宽该保护测试。macOS Actions 与本机验证分别记录，不将本机通过表述为全部 CI 通过。
+
+macOS Actions 运行 `43621227316` 的 Intel 任务中，`study-chapter-tests-runtime.test.ts`、`study-empty-answer-runtime.test.ts` 和 `unipus-window.test.ts` 均在 5 秒测试上限超时。本机及已发布包检查通过不能替代该 CI 结果；未删除或放宽测试。
+
+附件公开状态及 GitHub 摘要已核对；匿名下载连通检查中仅取得过一份校验文件的 HTTP 200，其余请求在本机网络超时，未把超时记为下载通过。附件上传和摘要核对不等于所有网络环境下下载成功。
