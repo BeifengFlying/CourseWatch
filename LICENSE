@@ -1,0 +1,82 @@
+CourseWatch Noncommercial License 1.0
+Copyright 2026 CourseWatch contributors
+
+Effective for newly released CourseWatch source and application versions
+starting with 0.2.32 (build 32), dated 2026-11-15.
+
+Noncommercial use only. Commercial use is prohibited.
+
+1. Scope and prior grants
+
+This license covers original CourseWatch material that its copyright
+holders have authority to license under these terms. It does not relicense
+third-party software, assets, platform content, or contributions whose
+holders have not granted the necessary rights.
+
+This license does not revoke or restrict rights previously granted under
+Apache License 2.0 or another license. Earlier versions and material
+already covered by irrevocable grants may continue to be used under those
+grants, including for commercial purposes where those grants permit it.
+The former Apache-2.0 text is retained at licenses/Apache-2.0.txt for those
+prior grants and applicable third-party notices. Its presence is not a new
+Apache-2.0 grant for material first licensed under this license.
+
+2. Noncommercial permission
+
+Subject to this license, the copyright holders grant permission to use,
+reproduce, study, modify and redistribute the covered material, in source
+or binary form, solely for noncommercial purposes. Noncommercial purposes
+are purposes not primarily intended for commercial advantage or monetary
+compensation.
+
+Redistribution must retain this license, applicable copyright and
+attribution notices, NOTICE, TERMS.md or TERMS.en.md, DISCLAIMER.md and
+applicable third-party notices. Distribution pages and accompanying
+instructions must prominently state: "Noncommercial use only. Commercial
+use is prohibited." Modified files must identify that changes were made.
+Modified versions must not be presented as original releases or imply
+endorsement by CourseWatch, an institution or a learning platform.
+
+3. Prohibited commercial use
+
+The permission in Section 2 does not authorize commercial use, including
+selling or distributing the software for a fee, providing paid deployment
+or proxy-study services, incorporating covered material into paid products
+or services, or using it to obtain advertising or other commercial revenue.
+A free copy distributed as part of a commercial offering does not make
+that offering noncommercial.
+
+Commercial permission requires a separate written agreement from all
+relevant rights holders. No commercial permission is implied by silence,
+public access to source code, attribution, or availability on GitHub.
+
+4. Third-party material and statutory rights
+
+Third-party components remain subject to their own licenses, which must
+be preserved. This license does not grant rights to platform accounts,
+data, content, trademarks or logos. It does not limit exceptions or rights
+that applicable law does not permit a license to restrict.
+
+5. No warranty and limitation of liability
+
+TO THE EXTENT PERMITTED BY APPLICABLE LAW AND UNLESS OTHERWISE AGREED IN
+WRITING, THE COVERED MATERIAL IS PROVIDED "AS IS", WITHOUT WARRANTIES OR
+CONDITIONS OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. TO THE EXTENT
+PERMITTED BY APPLICABLE LAW, THE COPYRIGHT HOLDERS AND CONTRIBUTORS ARE
+NOT LIABLE FOR CLAIMS OR DAMAGES ARISING FROM USE OF OR INABILITY TO USE
+THE COVERED MATERIAL. THIS DOES NOT EXCLUDE LIABILITY OR STATUTORY RIGHTS
+THAT CANNOT LAWFULLY BE EXCLUDED OR LIMITED.
+
+6. Compliance and additional project terms
+
+Rights granted by this license terminate if its conditions are violated,
+to the extent permitted by applicable law. Any further permission must
+come from the relevant rights holders. Use remains subject to applicable
+law and platform rules; this license does not authorize cheating,
+unauthorized access or circumvention of access controls.
+
+Read TERMS.md (Simplified Chinese) or TERMS.en.md (English), DISCLAIMER.md
+and THIRD_PARTY_NOTICES.md with this license. They describe project use,
+beta risks and third-party boundaries. This is a custom noncommercial
+license, not the Apache-2.0 license or an OSI-approved open-source license.

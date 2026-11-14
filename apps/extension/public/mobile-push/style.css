@@ -1,0 +1,106 @@
+:root {
+  font-family:
+    system-ui,
+    -apple-system,
+    sans-serif;
+  color: #292824;
+  background: #f5f4f0;
+  color-scheme: light dark;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+}
+main {
+  max-width: 640px;
+  margin: auto;
+  padding: 32px 20px 48px;
+}
+h1 {
+  font-size: 25px;
+}
+h2 {
+  font-size: 19px;
+}
+p {
+  line-height: 1.65;
+  color: #625e56;
+}
+label {
+  display: block;
+  margin: 20px 0 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+input,
+textarea,
+button {
+  font: inherit;
+  max-width: 100%;
+  border-radius: 10px;
+}
+input,
+textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #b9b4a9;
+  background: #fff;
+  color: #292824;
+}
+textarea {
+  overflow-wrap: anywhere;
+  resize: vertical;
+}
+button {
+  min-height: 44px;
+  padding: 11px 16px;
+  border: 0;
+  background: #a74823;
+  color: #fff;
+  cursor: pointer;
+}
+form > button {
+  margin-top: 20px;
+  width: 100%;
+}
+.actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+button:disabled {
+  opacity: 0.55;
+  cursor: wait;
+}
+#status {
+  color: #93401f;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+input:focus-visible,
+textarea:focus-visible,
+button:focus-visible {
+  outline: 3px solid #ce9069;
+  outline-offset: 3px;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    background: #22221f;
+    color: #efede7;
+  }
+  p {
+    color: #bab6ab;
+  }
+  input,
+  textarea {
+    background: #30302b;
+    color: #efede7;
+    border-color: #666256;
+  }
+  #status {
+    color: #eeaf8e;
+  }
+}

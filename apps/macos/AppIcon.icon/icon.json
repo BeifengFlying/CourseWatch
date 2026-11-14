@@ -1,0 +1,62 @@
+{
+  "fill": {
+    "linear-gradient": [
+      "srgb:0.17000,0.20000,0.22000,1.00000",
+      "srgb:0.08000,0.10500,0.12500,1.00000"
+    ]
+  },
+  "groups": [
+    {
+      "name": "Course and time",
+      "layers": [
+        {
+          "name": "01-course",
+          "image-name": "01-course.svg",
+          "fill": {
+            "linear-gradient": [
+              "srgb:0.70000,0.88000,0.84000,1.00000",
+              "srgb:0.26000,0.52000,0.86000,1.00000"
+            ]
+          },
+          "glass": true,
+          "position": {
+            "scale": 1,
+            "translation-in-points": [
+              -28,
+              0
+            ]
+          }
+        },
+        {
+          "name": "02-time",
+          "image-name": "02-time.svg",
+          "fill": {
+            "linear-gradient": [
+              "srgb:0.70000,0.88000,0.84000,1.00000",
+              "srgb:0.26000,0.52000,0.86000,1.00000"
+            ]
+          },
+          "glass": true,
+          "position": {
+            "scale": 1,
+            "translation-in-points": [
+              -28,
+              0
+            ]
+          }
+        }
+      ],
+      "shadow": {
+        "kind": "neutral",
+        "opacity": 0.35
+      },
+      "translucency": {
+        "enabled": true,
+        "value": 0.25
+      }
+    }
+  ],
+  "supported-platforms": {
+    "squares": "shared"
+  }
+}

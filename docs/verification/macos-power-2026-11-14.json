@@ -1,0 +1,34 @@
+{
+  "date": "2026-11-14",
+  "machine": "MacBookPro18,4",
+  "chip": "Apple M1 Max",
+  "macOS": "15.7.4",
+  "sampleCount": 83,
+  "sampleIntervalSeconds": 5,
+  "durationSeconds": 419.396908642,
+  "startedAt": "2026-11-14T08:49:58+00:00",
+  "endedAt": "2026-11-14T08:56:53+00:00",
+  "scope": "Estimated system CPU + GPU + ANE power; includes other applications, existing CourseWatch workload and diagnostics; not application watts or total device/battery power",
+  "watts": {
+    "cpu_power": {
+      "mean": 2.343888915662651,
+      "min": 1.76963,
+      "max": 3.36567
+    },
+    "gpu_power": {
+      "mean": 0.04659035421686747,
+      "min": 0.012653399999999999,
+      "max": 0.205561
+    },
+    "ane_power": {
+      "mean": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "combined_power": {
+      "mean": 2.3904793975903615,
+      "min": 1.81331,
+      "max": 3.48136
+    }
+  }
+}

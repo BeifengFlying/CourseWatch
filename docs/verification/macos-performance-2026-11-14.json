@@ -1,0 +1,195 @@
+{
+  "version": "0.2.30",
+  "date": "2026-11-14",
+  "machine": "MacBookPro18,4",
+  "chip": "Apple M1 Max",
+  "memoryBytes": 34359738368,
+  "macOS": "15.7.4",
+  "secondsPerState": 120,
+  "sampleIntervalSeconds": 2,
+  "syntheticSchedules": 100,
+  "powerCollected": false,
+  "attribution": "process descendants plus macOS process responsibility (includes WebKit and decoder XPC)",
+  "existingAppVersion": "0.2.29",
+  "states": {
+    "foreground": {
+      "samples": 60,
+      "rendererSamples": 60,
+      "activeSamples": 60,
+      "isolated": {
+        "cpuPercentOneCore": {
+          "mean": 0.021970533290607643,
+          "min": 0.010312821924639295,
+          "max": 0.10019868920834007
+        },
+        "packageIdleWakeupsPerSecond": {
+          "mean": 0.8606161670012403,
+          "min": 0.0,
+          "max": 3.4824689411027636
+        },
+        "rssMiB": {
+          "mean": 302.65078125,
+          "min": 291.15625,
+          "max": 308.21875
+        },
+        "footprintMiB": {
+          "mean": 169.2802703857422,
+          "min": 155.30914306640625,
+          "max": 174.816162109375
+        },
+        "processCount": {
+          "mean": 5,
+          "min": 5,
+          "max": 5
+        }
+      },
+      "existing": {
+        "cpuPercentOneCore": {
+          "mean": 1.037458283971748,
+          "min": 0.8728116076178439,
+          "max": 1.3609097270881585
+        },
+        "packageIdleWakeupsPerSecond": {
+          "mean": 72.30768711991415,
+          "min": 35.84204239068731,
+          "max": 107.90450346068238
+        },
+        "rssMiB": {
+          "mean": 1770.5778645833334,
+          "min": 1763.78125,
+          "max": 1777.265625
+        },
+        "footprintMiB": {
+          "mean": 1160.8334177652994,
+          "min": 1144.1195068359375,
+          "max": 1176.5728149414062
+        },
+        "processCount": {
+          "mean": 15,
+          "min": 15,
+          "max": 15
+        }
+      }
+    },
+    "minimized": {
+      "samples": 60,
+      "rendererSamples": 0,
+      "activeSamples": 60,
+      "isolated": {
+        "cpuPercentOneCore": {
+          "mean": 0.015350576998553555,
+          "min": 0.007315765167923561,
+          "max": 0.0779478451119457
+        },
+        "packageIdleWakeupsPerSecond": {
+          "mean": 0.3122396483119263,
+          "min": 0.0,
+          "max": 1.9899258410195804
+        },
+        "rssMiB": {
+          "mean": 183.17473958333332,
+          "min": 166.96875,
+          "max": 209.1875
+        },
+        "footprintMiB": {
+          "mean": 76.29893086751302,
+          "min": 69.5703125,
+          "max": 87.04095458984375
+        },
+        "processCount": {
+          "mean": 2.3833333333333333,
+          "min": 2,
+          "max": 3
+        }
+      },
+      "existing": {
+        "cpuPercentOneCore": {
+          "mean": 1.027678977443404,
+          "min": 0.6018483219315297,
+          "max": 1.309797667991549
+        },
+        "packageIdleWakeupsPerSecond": {
+          "mean": 66.48563227730939,
+          "min": 0.0,
+          "max": 120.39182709871113
+        },
+        "rssMiB": {
+          "mean": 1788.2036458333334,
+          "min": 1773.1875,
+          "max": 2311.953125
+        },
+        "footprintMiB": {
+          "mean": 1183.5885548909505,
+          "min": 1162.7448120117188,
+          "max": 1386.0552368164062
+        },
+        "processCount": {
+          "mean": 15.133333333333333,
+          "min": 15,
+          "max": 23
+        }
+      }
+    },
+    "closed": {
+      "samples": 60,
+      "rendererSamples": 0,
+      "activeSamples": 60,
+      "isolated": {
+        "cpuPercentOneCore": {
+          "mean": 0.014745403466759387,
+          "min": 0.00990103520206852,
+          "max": 0.028132906956958033
+        },
+        "packageIdleWakeupsPerSecond": {
+          "mean": 0.28689724433507346,
+          "min": 0.0,
+          "max": 2.487468078620593
+        },
+        "rssMiB": {
+          "mean": 167.47526041666666,
+          "min": 166.953125,
+          "max": 167.9375
+        },
+        "footprintMiB": {
+          "mean": 70.14256490071615,
+          "min": 69.5234375,
+          "max": 70.61761474609375
+        },
+        "processCount": {
+          "mean": 2,
+          "min": 2,
+          "max": 2
+        }
+      },
+      "existing": {
+        "cpuPercentOneCore": {
+          "mean": 1.046411916068862,
+          "min": 0.8606501987256666,
+          "max": 1.388422937681852
+        },
+        "packageIdleWakeupsPerSecond": {
+          "mean": 72.2326928401921,
+          "min": 41.82383708527873,
+          "max": 122.38221012711017
+        },
+        "rssMiB": {
+          "mean": 1785.4848958333334,
+          "min": 1780.171875,
+          "max": 1790.34375
+        },
+        "footprintMiB": {
+          "mean": 1191.4833984375,
+          "min": 1178.5573120117188,
+          "max": 1199.604248046875
+        },
+        "processCount": {
+          "mean": 15,
+          "min": 15,
+          "max": 15
+        }
+      }
+    }
+  },
+  "startedAt": "2026-11-14T09:02:50.411705+00:00",
+  "endedAt": "2026-11-14T09:09:19.893611+00:00"
+}

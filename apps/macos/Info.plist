@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict>
+<key>CFBundleIdentifier</key><string>top.mcsog.coursewatch</string>
+<key>CFBundleName</key><string>CourseWatch</string>
+<key>CFBundleDisplayName</key><string>CourseWatch</string>
+<key>CFBundleExecutable</key><string>CourseWatch</string>
+<key>CFBundlePackageType</key><string>APPL</string>
+<key>CFBundleShortVersionString</key><string>0.2.32</string>
+  <key>CFBundleVersion</key><string>32</string>
+<key>CFBundleIconFile</key><string>AppIcon</string>
+<key>LSMinimumSystemVersion</key><string>14.0</string>
+<key>LSUIElement</key><true/>
+<key>NSHighResolutionCapable</key><true/>
+<key>NSCalendarsFullAccessUsageDescription</key><string>将课程截止和个人日程写入 iCloud 的 CourseWatch 专用日历，并更新或移除本应用创建的日程，让其他苹果设备接收日历提醒。</string>
+<key>NSAppTransportSecurity</key><dict><key>NSAllowsLocalNetworking</key><true/></dict>
+<key>NSHumanReadableCopyright</key><string>CourseWatch · 2026</string>
+</dict></plist>

@@ -1,0 +1,201 @@
+const {withModelFixture}=require('./model-fixture.cjs');
+const fs = require('node:fs');
+const path = require('node:path');
+const assert = require('node:assert/strict');
+const { JSDOM } = require('jsdom');
+const source = fs.readFileSync(path.join(__dirname, '../学习通AI助手.user.js'), 'utf8').replace('/* TRUSTED_ASSISTANT_ACTIVATION */','return true; /* test harness only: jsdom cannot generate user activation */');
+const delay = () => new Promise(resolve => setTimeout(resolve, 140));
+const logs = [], failures = [];
+async function test(name, run) {
+    try { await run(); logs.push(`PASS ${name}`); }
+    catch (error) { failures.push(`${name}: ${error.stack}`); }
+}
+function fixture(type, url = 'https://mooc1.chaoxing.com/mycourse/studentstudy?courseId=mock-course&clazzid=mock-class&cpi=mock-account', script = source) {
+    const dom = new JSDOM(`<div id="mainid"><h1>章节</h1><div id="prev_tab" style="padding:0 100px"><div id="dct1">${type}</div></div><iframe id="iframe"></iframe></div>`, { url, runScripts: 'outside-only', pretendToBeVisual: true });
+    const w = dom.window;
+    const requests = [], updateRequests = [];
+    w.GM_getValue = withModelFixture((_, fallback) => fallback);
+    w.GM_setValue = () => {};
+    w.GM_getResourceText = () => '{}';
+    w.GM_xmlhttpRequest = request => {
+        if (request.method === 'GET' && request.anonymous === true && request.url.startsWith('https://raw.githubusercontent.com/zhu-hailin/chaoxing-ai-assistant/')) {
+            updateRequests.push(request);queueMicrotask(()=>request.onload({status:200,responseText:source}));
+        } else requests.push(request);
+        return {abort(){request.onabort?.();}};
+    };
+    w.eval(script);
+    return { dom, w, requests, updateRequests, close() { w.dispatchEvent(new w.Event('pagehide')); w.close(); } };
+}
+(async () => {
+    for (const host of ['mooc1-gray.chaoxing.com','mooc1-42.chaoxing.com','mooc2-ans.chaoxing.com','mooc3-gray.xuexitong.com']) await test(`${host} 使用同一课程入口识别规则`, async () => {
+        const f=fixture('视频',`https://${host}/mycourse/studentstudy`);
+        try { await delay(); assert(f.w.document.getElementById('cx-ai-study-toolbar')); }
+        finally { f.close(); }
+    });
+    for (const host of ['mooc1-gray.chaoxing.com.evil.example','evilchaoxing.com','i.chaoxing.com','mooc1-gray.evil.chaoxing.com']) await test(`${host} 不获得课程页能力`, async () => {
+        const f=fixture('视频',`https://${host}/mycourse/studentstudy`);
+        try { await delay(); assert.equal(f.w.document.getElementById('cx-ai-study-root'),null); }
+        finally { f.close(); }
+    });
+    await test('页面偏好初始化异常不阻断学习入口', async () => {
+        const script=source.replace("()=>initOtherFeatures(document)","()=>{throw new Error('fixture preference failure');}");
+        assert.notEqual(script,source);
+        const f=fixture('视频',undefined,script);
+        try { await delay(); assert(f.w.document.getElementById('cx-ai-study-toolbar')); }
+        finally { f.close(); }
+    });
+    for (const type of ['视频', '资料']) await test(`${type}页内容上方助手入口，设置可打开关闭，无题目时禁止分析`, async () => {
+        const f = fixture(type);
+        try {
+            await delay();
+            const d = f.w.document;
+            const entry = d.getElementById('cx-ai-study-toolbar');
+            assert(entry);
+            assert.equal(entry.nextElementSibling.id, 'iframe');
+            assert.equal(entry.style.paddingRight, '100px');
+            assert.equal(entry.style.paddingLeft, '100px');
+            assert.equal(entry.style.boxSizing, 'border-box');
+            d.getElementById('prev_tab').style.padding = '0 24px';
+            f.w.dispatchEvent(new f.w.Event('resize'));
+            assert.equal(entry.style.paddingRight, '24px');
+            assert.equal(d.getElementById('cx-ai-toolbar'), null);
+            const button = entry.shadowRoot.getElementById('settings');
+            assert.equal(button.textContent, '学习通AI助手');
+            assert.equal(entry.shadowRoot.getElementById('course-controls'),null);
+            button.click();
+            const s = d.getElementById('cx-ai-study-root').shadowRoot;
+            assert.equal(s.getElementById('panel').hidden, false);
+            assert.equal(button.getAttribute('aria-expanded'), 'true');
+            assert(s.getElementById('course-nav').hidden);
+            assert(s.getElementById('extract').disabled && s.getElementById('solve').disabled);
+            assert.equal(s.getElementById('ds-key'), null);
+            assert(s.getElementById('api-key-status').textContent.includes('尚未配置'));
+            s.getElementById('nav-chapters').click();
+            assert.equal(s.getElementById('course-nav').hidden, false);
+            s.getElementById('close').click();
+            assert(s.getElementById('panel').hidden);
+            assert.equal(button.getAttribute('aria-expanded'), 'false');
+            assert.equal(f.requests.length, 0);
+            assert.equal(f.updateRequests.length, 1);
+        } finally { f.close(); }
+    });
+    await test('章节内容动态替换后入口重新挂载，面板不重复创建', async () => {
+        const f = fixture('视频');
+        try {
+            await delay();
+            const d = f.w.document, root = d.getElementById('cx-ai-study-root');
+            d.getElementById('mainid').innerHTML = '<h1>资料章节</h1><div id="prev_tab" style="padding:0 48px"></div><iframe id="iframe"></iframe>';
+            await delay();
+            assert.equal(d.querySelectorAll('#cx-ai-study-toolbar').length, 1);
+            assert.equal(d.getElementById('cx-ai-study-toolbar').nextElementSibling.id, 'iframe');
+            assert.equal(d.getElementById('cx-ai-study-root'), root);
+            assert.equal(d.getElementById('cx-ai-study-toolbar').style.paddingRight, '48px');
+            assert.equal(f.requests.length, 0);
+            assert.equal(f.updateRequests.length, 1);
+        } finally { f.close(); }
+    });
+    await test('嵌入播放器和其他页面不额外创建学习页入口', async () => {
+        const f = fixture('视频', 'https://mooc1.chaoxing.com/ananas/modules/video/index.html');
+        try {
+            await delay();
+            assert.equal(f.w.document.getElementById('cx-ai-study-toolbar'), null);
+            const embedded = f.w.document.getElementById('iframe').contentWindow;
+            embedded.document.body.innerHTML = '<div id="mainid"><iframe id="iframe"></iframe></div>';
+            embedded.GM_getValue = withModelFixture((_, fallback) => fallback);
+            embedded.GM_setValue = () => {};
+            embedded.eval(source);
+            await delay();
+            assert.equal(embedded.document.getElementById('cx-ai-study-toolbar'), null);
+            assert.equal(f.requests.length, 0);
+            assert.equal(f.updateRequests.length, 1);
+        } finally { f.close(); }
+    });
+    await test('顶部入口打开嵌套测验助手，可提取和分析；测验仅保留生成按钮', async () => {
+        const f = fixture('章节测验','https://mooc1-gray.chaoxing.com/mycourse/studentstudy');
+        try {
+            await delay();
+            const d = f.w.document;
+            const card = d.getElementById('iframe').contentWindow;
+            card.document.body.innerHTML = '<iframe id="quiz-frame"></iframe>';
+            const middle = card.document.getElementById('quiz-frame').contentWindow;
+            middle.document.body.innerHTML = '<iframe id="third-frame"></iframe>';
+            const quiz = middle.document.getElementById('third-frame').contentWindow;
+            quiz.document.body.innerHTML = `<div class="CeYan"><div class="ceyan_name"><h3>测验</h3></div><div class="singleQuesId" data="1"><div class="Zy_TItle"><div class="fontLabel">【单选题】请选择甲</div></div><ul class="Zy_ulTop"><li><span class="num_option" data="A">A</span><a class="after">甲</a></li><li><span class="num_option" data="B">B</span><a class="after">乙</a></li></ul><input type="hidden" name="answer1"></div></div>`;
+            const requests = [];
+            quiz.GM_getValue = withModelFixture((key, fallback) => key === 'deepseek_api_key' ? 'mock-key' : fallback);
+            quiz.GM_setValue = () => {};
+            quiz.GM_getResourceText = () => '{}';
+            quiz.GM_xmlhttpRequest = request => requests.push(request);
+            quiz.eval(source);
+            await delay();
+            const lower = quiz.document.getElementById('cx-ai-toolbar').shadowRoot;
+            assert(lower.getElementById('settings').hidden);
+            assert.equal(lower.getElementById('generate').hidden, false);
+            const upper = d.getElementById('cx-ai-study-toolbar').shadowRoot.getElementById('settings');
+            upper.click();
+            const portal = d.getElementById('cx-ai-quiz-panel');
+            assert(portal && portal.ownerDocument === d, '测验窗口应显示在主页面');
+            const panel = portal.shadowRoot;
+            assert.equal(panel.getElementById('panel').hidden, false);
+            const head = panel.querySelector('.head');
+            const sendPointer = (target, type, x, y) => {
+                const event = new f.w.MouseEvent(type, { bubbles: true, button: 0, clientX: x, clientY: y });
+                Object.defineProperty(event, 'pointerId', { value: 7 });
+                target.dispatchEvent(event);
+            };
+            sendPointer(head, 'pointerdown', 20, 20);
+            sendPointer(head, 'pointermove', 120, 100);
+            sendPointer(head, 'pointerup', 120, 100);
+            assert.equal(portal.style.left, '100px');
+            assert.equal(portal.style.top, '80px');
+            const fullHeight = parseFloat(panel.getElementById('panel').style.getPropertyValue('--content-height'));
+            Object.defineProperty(f.w, 'innerHeight', { value: 420, configurable: true });
+            f.w.dispatchEvent(new f.w.Event('resize'));
+            const smallHeight = parseFloat(panel.getElementById('panel').style.getPropertyValue('--content-height'));
+            assert(smallHeight < fullHeight && smallHeight > 0, '目录高度未随可用视口缩小');
+            panel.getElementById('nav-chapters').click();
+            const coursePanel=d.getElementById('cx-ai-study-root').shadowRoot;
+            assert.equal(coursePanel.getElementById('view-chapters').hidden, false);
+            assert.equal(coursePanel.getElementById('panel').hidden, false);
+            assert.equal(panel.getElementById('panel').hidden, true);
+            upper.click();
+            panel.getElementById('nav-model').click();
+
+            f.w.dispatchEvent(new f.w.Event('resize'));
+            assert.equal(portal.style.top, '80px');
+            sendPointer(panel.getElementById('github'), 'pointerdown', 20, 20);
+            sendPointer(head, 'pointermove', 220, 200);
+            assert.equal(portal.style.top, '80px');
+
+            assert(d.getElementById('cx-ai-study-root').shadowRoot.getElementById('panel').hidden);
+            assert.equal(panel.getElementById('extract').disabled, false);
+            assert.equal(panel.getElementById('solve').disabled, false);
+            panel.getElementById('extract').click();
+            await delay();
+            assert(panel.getElementById('output').textContent.includes('请选择甲'));
+            panel.getElementById('solve').click();
+            await delay();
+            assert.equal(requests.length, 1);
+            requests[0].onload({ status: 200, responseText: JSON.stringify({ choices: [{ finish_reason: 'stop', message: { content: JSON.stringify({ answers: [{ id: '1', answer: ['A'], reason: '模拟解析' }] }) } }] }) });
+            await delay();
+            assert(panel.getElementById('output').textContent.includes('模拟解析'));
+            panel.getElementById('close').click();
+            assert.equal(upper.getAttribute('aria-expanded'), 'false');
+            upper.click();
+            assert.equal(panel.getElementById('panel').hidden, false);
+            upper.click();
+            assert(panel.getElementById('panel').hidden);
+            panel.getElementById('nav-chapters').click();
+            const mainPanel = d.getElementById('cx-ai-study-root').shadowRoot;
+            assert.equal(mainPanel.getElementById('panel').hidden, false, '测验存在时仍能打开主课程面板');
+            assert.equal(mainPanel.getElementById('view-chapters').hidden, false);
+            assert.equal(mainPanel.getElementById('course-start').disabled, false, '主页面课程操作入口可用');
+            assert.equal(panel.getElementById('panel').hidden, true, '侧边自动刷课导航打开主窗口并收起子测验窗口');
+            quiz.dispatchEvent(new quiz.Event('pagehide'));
+        } finally { f.close(); }
+    });
+    const report = { total: logs.length + failures.length, failures, logs };
+    fs.writeFileSync(path.join(__dirname, 'study-results.json'), JSON.stringify(report, null, 2));
+    console.log(JSON.stringify(report, null, 2));
+    process.exitCode = failures.length ? 1 : 0;
+})();

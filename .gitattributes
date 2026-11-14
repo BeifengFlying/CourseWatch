@@ -1,0 +1,10 @@
+# Keep the protected sources byte-identical on Windows and macOS.
+# Their SHA256 values are checked before tests and desktop builds.
+/packages/study/src/video-quiz.ts text eol=lf
+/packages/study/src/unipus-activity.ts text eol=lf
+/packages/study/src/unipus-window.ts text eol=lf
+/tests/study-automation.test.ts text eol=lf
+/tests/unipus-window.test.ts text eol=lf
+# Preserve every upstream file byte-for-byte, including existing CRLF files.
+# Git blobs and the upstream manifest contain the exact original bytes.
+/third_party/** -text

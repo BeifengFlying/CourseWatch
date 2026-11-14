@@ -1,0 +1,68 @@
+name: Windows desktop package
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, 'codex/windows-*']
+  pull_request:
+    paths:
+      - 'apps/**'
+      - 'packages/**'
+      - 'scripts/**'
+      - 'tests/**'
+      - 'package*.json'
+      - 'tsconfig*.json'
+      - '.github/workflows/windows.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: windows-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 35
+    env:
+      PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}\.cache\ms-playwright-windows
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.22.1
+          cache: npm
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - run: npm ci
+      - run: npm run typecheck
+      - name: Check desktop preferences without changing startup registration
+        run: dotnet run --project tests/windows/PreferencesChecks.csproj -c Release
+      - run: npm run browser:install
+      - run: npm test
+      - name: Locate Inno Setup
+        shell: pwsh
+        run: |
+          $compiler = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
+          if (!(Test-Path $compiler)) { choco install innosetup --no-progress -y; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE } }
+          if (!(Test-Path $compiler)) { throw 'Inno Setup compiler not found' }
+          "COURSEWATCH_ISCC=$compiler" >> $env:GITHUB_ENV
+      - run: npm run build:win
+      - name: Launch packaged WebView2 desktop
+        shell: powershell
+        run: scripts/check-windows-host.ps1 -App build/windows/x64/CourseWatch
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coursewatch-win-diagnostics
+          if-no-files-found: ignore
+          path: build/windows-diagnostics/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: coursewatch-win-x64
+          if-no-files-found: error
+          path: |
+            dist/*-win-x64*.zip
+            dist/*-win-x64*-setup.exe
+            dist/*-win-x64*.sha256

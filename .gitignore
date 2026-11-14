@@ -1,0 +1,61 @@
+# Dependencies / builds
+node_modules/
+.pnpm-store/
+dist/
+build/
+.cache/
+.output/
+.wxt/
+coverage/
+*.tsbuildinfo
+
+# Local secrets and browser authentication
+.env
+.env.*
+!.env.example
+.auth/
+playwright/.auth/
+**/storage-state*.json
+**/storageState*.json
+**/cookies*.json
+**/session*.json
+**/profiles/
+**/user-data/
+**/userData/
+
+# Runtime data must live outside the repository in production
+/data/
+/config/
+/logs/
+/backups/
+/exports/
+*.db
+*.db-*
+*.sqlite
+*.sqlite-*
+*.sqlite3
+*.sqlite3-*
+*.log
+*.pem
+*.key
+
+# Developer artifacts
+.DS_Store
+.idea/
+.vscode/
+test-results/
+playwright-report/
+apps/windows/bin/
+apps/windows/obj/
+tests/windows/bin/
+tests/windows/obj/
+apps/windows/CourseWatch.ico
+
+# Retired platform sources and private research (not distributed)
+/.local-archive/
+
+# Local repository comparison checkout
+/.tmp-repo/
+
+# Python measurement helper bytecode
+__pycache__/

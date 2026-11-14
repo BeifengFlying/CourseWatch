@@ -1,0 +1,1035 @@
+{
+  "checked_on": "2026-11-12",
+  "timezone": "Asia/Shanghai",
+  "scope": "Feasibility and integration design only. Authenticated jsjks classroom/program-homework UI read and user-supplied Renwei screenshot observed; no independent session/API collector verification, code imports, dependency installation or runtime compatibility tests.",
+  "method": "GitHub repository search, gh REST metadata and commit-pinned file reads; public official documentation; unauthenticated platform HTTP GET. User-supplied screenshots and read-only computer-use observations in the already authenticated Chrome session.",
+  "interpretation": "pushed_at is upstream UTC metadata and is not proof of runtime compatibility or security. Commit snapshots are evidence references, not chosen production dependency versions.",
+  "searches": [
+    "学习通 作业 提醒",
+    "雨课堂 作业",
+    "chaoxing homework",
+    "人卫 题库",
+    "云南 考试",
+    "\"jsjks.jnjy\"",
+    "\"jsjks\" \"ynjy\""
+  ],
+  "repositories": [
+    {
+      "full_name": "siye4366/xxt-Tool",
+      "html_url": "https://github.com/siye4366/xxt-Tool",
+      "description": "xxtT：学习通 / 雨课堂作业与课表助手，支持截止倒计时、手动任务、课程提醒和常驻通知。A lightweight Android dashboard for Chaoxing & Yuketang.",
+      "language": "Kotlin",
+      "archived": false,
+      "pushed_at": "2026-11-07T15:15:57Z",
+      "default_branch": "main",
+      "commit": "92e8870e9678b878de0b44ca964496a6a6a8e313",
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdx_id": "MIT",
+        "url": "https://api.github.com/licenses/mit",
+        "node_id": "MDc6TGljZW5zZTEz"
+      },
+      "license_file": {
+        "path": "LICENSE",
+        "html_url": "https://github.com/siye4366/xxt-Tool/blob/92e8870e9678b878de0b44ca964496a6a6a8e313/LICENSE",
+        "sha": "ac27e2390c6a871e2702d5b62e9f76cbee1e6329",
+        "license": {
+          "key": "mit",
+          "name": "MIT License",
+          "spdx_id": "MIT",
+          "url": "https://api.github.com/licenses/mit",
+          "node_id": "MDc6TGljZW5zZTEz"
+        }
+      },
+      "snapshot_url": "https://github.com/siye4366/xxt-Tool/tree/92e8870e9678b878de0b44ca964496a6a6a8e313",
+      "review_level": "selected_files_read",
+      "inspected_files": [
+        {
+          "path": "LICENSE",
+          "url": "https://github.com/siye4366/xxt-Tool/blob/92e8870e9678b878de0b44ca964496a6a6a8e313/LICENSE",
+          "lines": 21,
+          "sha256": "e7a99c4aea4a9a105edc5a094c3cdd9a660e0f0c692c072b987a461de7aafa3e"
+        },
+        {
+          "path": "app/src/main/java/com/xxkg/board/XtApi.kt",
+          "url": "https://github.com/siye4366/xxt-Tool/blob/92e8870e9678b878de0b44ca964496a6a6a8e313/app/src/main/java/com/xxkg/board/XtApi.kt",
+          "lines": 375,
+          "sha256": "1227eb7c9e08420baa84f8e24af2d0b996250f06d07d81898c4ac2bc21fbfb25"
+        },
+        {
+          "path": "app/src/main/java/com/xxkg/board/YtApi.kt",
+          "url": "https://github.com/siye4366/xxt-Tool/blob/92e8870e9678b878de0b44ca964496a6a6a8e313/app/src/main/java/com/xxkg/board/YtApi.kt",
+          "lines": 384,
+          "sha256": "cdb96c6a02e057349aa1ffc2d1a37cf69f1d169539092ca1e29f8477739dda14"
+        },
+        {
+          "path": "app/src/main/java/com/xxkg/board/HtmlParsers.kt",
+          "url": "https://github.com/siye4366/xxt-Tool/blob/92e8870e9678b878de0b44ca964496a6a6a8e313/app/src/main/java/com/xxkg/board/HtmlParsers.kt",
+          "lines": 261,
+          "sha256": "77d3feb48d52133fbcdac8dd644e215c2e1357524cf970694abf099eb758757a"
+        }
+      ]
+    },
+    {
+      "full_name": "arrry-07/chaoxing-journal",
+      "html_url": "https://github.com/arrry-07/chaoxing-journal",
+      "description": "手账风的学习通作业管理 Android 应用：截止日历、提醒与完成率统计（Flutter）",
+      "language": "Dart",
+      "archived": false,
+      "pushed_at": "2026-11-12T01:00:57Z",
+      "default_branch": "main",
+      "commit": "e6d8b53a81042a461935bd39e1e2aa4d9bcfc11a",
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdx_id": "MIT",
+        "url": "https://api.github.com/licenses/mit",
+        "node_id": "MDc6TGljZW5zZTEz"
+      },
+      "license_file": {
+        "path": "LICENSE",
+        "html_url": "https://github.com/arrry-07/chaoxing-journal/blob/e6d8b53a81042a461935bd39e1e2aa4d9bcfc11a/LICENSE",
+        "sha": "056efea5491085ccf94340f861c5e8a4996c0b64",
+        "license": {
+          "key": "mit",
+          "name": "MIT License",
+          "spdx_id": "MIT",
+          "url": "https://api.github.com/licenses/mit",
+          "node_id": "MDc6TGljZW5zZTEz"
+        }
+      },
+      "snapshot_url": "https://github.com/arrry-07/chaoxing-journal/tree/e6d8b53a81042a461935bd39e1e2aa4d9bcfc11a",
+      "review_level": "selected_files_read",
+      "inspected_files": [
+        {
+          "path": "LICENSE",
+          "url": "https://github.com/arrry-07/chaoxing-journal/blob/e6d8b53a81042a461935bd39e1e2aa4d9bcfc11a/LICENSE",
+          "lines": 21,
+          "sha256": "e49f24126b22d51c7b7e8aa678764b5eb7fc457faa869baa4ac06d78e8e0e189"
+        },
+        {
+          "path": "study_assistant-1.1.0/local_app/lib/src/local/chaoxing_assignment_parser.dart",
+          "url": "https://github.com/arrry-07/chaoxing-journal/blob/e6d8b53a81042a461935bd39e1e2aa4d9bcfc11a/study_assistant-1.1.0/local_app/lib/src/local/chaoxing_assignment_parser.dart",
+          "lines": 552,
+          "sha256": "aaa45b52db3329d708fefed45e44fc041e79e6d1ae9aadc9fd1e88259b53d4ed"
+        },
+        {
+          "path": "study_assistant-1.1.0/local_app/lib/src/local/chaoxing_local_client.dart",
+          "url": "https://github.com/arrry-07/chaoxing-journal/blob/e6d8b53a81042a461935bd39e1e2aa4d9bcfc11a/study_assistant-1.1.0/local_app/lib/src/local/chaoxing_local_client.dart",
+          "lines": 1836,
+          "sha256": "2a9e3acb73e302bbacbe2307d21001d2f215a82283f1a3df1d2efe1fcd02fde9"
+        },
+        {
+          "path": "references/xuexitong-cli/LICENSE",
+          "url": "https://github.com/arrry-07/chaoxing-journal/blob/e6d8b53a81042a461935bd39e1e2aa4d9bcfc11a/references/xuexitong-cli/LICENSE",
+          "note": "Read nested MIT license, copyright 2026 Wu Jiale; parser lines 345-346 carry attribution."
+        }
+      ]
+    },
+    {
+      "full_name": "linpigeon/UniversityTodos",
+      "html_url": "https://github.com/linpigeon/UniversityTodos",
+      "description": "长江雨课堂作业与公告ToDo清单",
+      "language": "C#",
+      "archived": false,
+      "pushed_at": "2026-11-05T10:06:59Z",
+      "default_branch": "master",
+      "commit": "fd1890ad2d20b3fa1f36a1f5d080d785074e95eb",
+      "license": {
+        "key": "agpl-3.0",
+        "name": "GNU Affero General Public License v3.0",
+        "spdx_id": "AGPL-3.0",
+        "url": "https://api.github.com/licenses/agpl-3.0",
+        "node_id": "MDc6TGljZW5zZTE="
+      },
+      "license_file": {
+        "path": "LICENSE.txt",
+        "html_url": "https://github.com/linpigeon/UniversityTodos/blob/fd1890ad2d20b3fa1f36a1f5d080d785074e95eb/LICENSE.txt",
+        "sha": "0ad25db4bd1d86c452db3f9602ccdbe172438f52",
+        "license": {
+          "key": "agpl-3.0",
+          "name": "GNU Affero General Public License v3.0",
+          "spdx_id": "AGPL-3.0",
+          "url": "https://api.github.com/licenses/agpl-3.0",
+          "node_id": "MDc6TGljZW5zZTE="
+        }
+      },
+      "snapshot_url": "https://github.com/linpigeon/UniversityTodos/tree/fd1890ad2d20b3fa1f36a1f5d080d785074e95eb",
+      "review_level": "selected_files_read",
+      "inspected_files": [
+        {
+          "path": "LICENSE.txt",
+          "url": "https://github.com/linpigeon/UniversityTodos/blob/fd1890ad2d20b3fa1f36a1f5d080d785074e95eb/LICENSE.txt",
+          "lines": 661,
+          "sha256": "8486a10c4393cee1c25392769ddd3b2d6c242d6ec7928e1414efff7dfb2f07ef"
+        },
+        {
+          "path": "docs/ykt-api.md",
+          "url": "https://github.com/linpigeon/UniversityTodos/blob/fd1890ad2d20b3fa1f36a1f5d080d785074e95eb/docs/ykt-api.md",
+          "lines": 396,
+          "sha256": "e2832b7f5241ecdf2ac0dbb6c07571782a329de64e6202878ea39beb6d1eafa5"
+        },
+        {
+          "path": "UniversityTodos/Services/ChaoxingApiClient.cs",
+          "url": "https://github.com/linpigeon/UniversityTodos/blob/fd1890ad2d20b3fa1f36a1f5d080d785074e95eb/UniversityTodos/Services/ChaoxingApiClient.cs",
+          "lines": 380,
+          "sha256": "ef776d5fef939a8428dd5b43959488c80a5030c3a7978c04804ee101f9a4ce9d"
+        }
+      ]
+    },
+    {
+      "full_name": "Marshmellond/XuexitongJob",
+      "html_url": "https://github.com/Marshmellond/XuexitongJob",
+      "description": "超星学习通每日作业提醒",
+      "language": "Python",
+      "archived": false,
+      "pushed_at": "2023-11-08T10:34:33Z",
+      "default_branch": "main",
+      "commit": "97c5ab366ddb240ec0edc0032beff855291dcaf4",
+      "license": {
+        "key": "gpl-3.0",
+        "name": "GNU General Public License v3.0",
+        "spdx_id": "GPL-3.0",
+        "url": "https://api.github.com/licenses/gpl-3.0",
+        "node_id": "MDc6TGljZW5zZTk="
+      },
+      "license_file": {
+        "path": "LICENSE",
+        "html_url": "https://github.com/Marshmellond/XuexitongJob/blob/97c5ab366ddb240ec0edc0032beff855291dcaf4/LICENSE",
+        "sha": "f288702d2fa16d3cdf0035b15a9fcbc552cd88e7",
+        "license": {
+          "key": "gpl-3.0",
+          "name": "GNU General Public License v3.0",
+          "spdx_id": "GPL-3.0",
+          "url": "https://api.github.com/licenses/gpl-3.0",
+          "node_id": "MDc6TGljZW5zZTk="
+        }
+      },
+      "snapshot_url": "https://github.com/Marshmellond/XuexitongJob/tree/97c5ab366ddb240ec0edc0032beff855291dcaf4",
+      "review_level": "metadata_and_license_identification",
+      "inspected_files": []
+    },
+    {
+      "full_name": "xsk666/xxt_work_notice",
+      "html_url": "https://github.com/xsk666/xxt_work_notice",
+      "description": "学习通作业提醒",
+      "language": "Python",
+      "archived": false,
+      "pushed_at": "2022-10-23T15:15:45Z",
+      "default_branch": "master",
+      "commit": "e5010f349b7fca0568bbbe893497560dfc422288",
+      "license": null,
+      "license_file": {
+        "error": "gh: Not Found (HTTP 404)"
+      },
+      "snapshot_url": "https://github.com/xsk666/xxt_work_notice/tree/e5010f349b7fca0568bbbe893497560dfc422288",
+      "review_level": "metadata_and_license_identification",
+      "inspected_files": []
+    },
+    {
+      "full_name": "heyblackC/yuketangHelper",
+      "html_url": "https://github.com/heyblackC/yuketangHelper",
+      "description": "大学研究生院雨课堂的脚本仓库，该仓库下的脚本经过小改动后也适用于其他院校的雨课堂网课作业和视频。",
+      "language": "Python",
+      "archived": false,
+      "pushed_at": "2024-04-02T08:52:17Z",
+      "default_branch": "master",
+      "commit": "f1edbf8d3f8de007741c50cd5cbb226b2f1b8b5b",
+      "license": null,
+      "license_file": {
+        "error": "gh: Not Found (HTTP 404)"
+      },
+      "snapshot_url": "https://github.com/heyblackC/yuketangHelper/tree/f1edbf8d3f8de007741c50cd5cbb226b2f1b8b5b",
+      "review_level": "metadata_and_license_identification",
+      "inspected_files": []
+    },
+    {
+      "full_name": "wxt-dev/wxt",
+      "html_url": "https://github.com/wxt-dev/wxt",
+      "description": "⚡ Next-gen Web Extension Framework",
+      "language": "TypeScript",
+      "archived": false,
+      "pushed_at": "2026-11-11T15:02:14Z",
+      "default_branch": "main",
+      "commit": "64439559a7b745157ddbe3be67d3ba13ae3491e1",
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdx_id": "MIT",
+        "url": "https://api.github.com/licenses/mit",
+        "node_id": "MDc6TGljZW5zZTEz"
+      },
+      "license_file": {
+        "path": "LICENSE",
+        "html_url": "https://github.com/wxt-dev/wxt/blob/64439559a7b745157ddbe3be67d3ba13ae3491e1/LICENSE",
+        "sha": "5d1a7c76daa510b00a6a04079aed9cc6b98502b4",
+        "license": {
+          "key": "mit",
+          "name": "MIT License",
+          "spdx_id": "MIT",
+          "url": "https://api.github.com/licenses/mit",
+          "node_id": "MDc6TGljZW5zZTEz"
+        }
+      },
+      "snapshot_url": "https://github.com/wxt-dev/wxt/tree/64439559a7b745157ddbe3be67d3ba13ae3491e1",
+      "review_level": "selected_files_read",
+      "inspected_files": [
+        {
+          "path": "packages/module-vue/README.md",
+          "url": "https://github.com/wxt-dev/wxt/blob/64439559a7b745157ddbe3be67d3ba13ae3491e1/packages/module-vue/README.md",
+          "lines": 36,
+          "sha256": "63b6898bd70db17c92cb859fc5b1926d2b8f8275928aaec4d69a6278e1f95524"
+        },
+        {
+          "path": "packages/module-vue/package.json",
+          "url": "https://github.com/wxt-dev/wxt/blob/64439559a7b745157ddbe3be67d3ba13ae3491e1/packages/module-vue/package.json",
+          "lines": 61,
+          "sha256": "c185bc8d4816603d290e80c9800c889237a8383ed9c819e1f50a7e400a3103a0"
+        }
+      ]
+    },
+    {
+      "full_name": "vuejs/core",
+      "html_url": "https://github.com/vuejs/core",
+      "description": "🖖 Vue.js is a progressive, incrementally-adoptable JavaScript framework for building UI on the web.",
+      "language": "TypeScript",
+      "archived": false,
+      "pushed_at": "2026-11-11T21:33:35Z",
+      "default_branch": "main",
+      "commit": "7ef6817112bb420ef47a7252821b37caae016ac9",
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdx_id": "MIT",
+        "url": "https://api.github.com/licenses/mit",
+        "node_id": "MDc6TGljZW5zZTEz"
+      },
+      "license_file": {
+        "path": "LICENSE",
+        "html_url": "https://github.com/vuejs/core/blob/7ef6817112bb420ef47a7252821b37caae016ac9/LICENSE",
+        "sha": "8fd17290c81906dc34d5a12c41609fcb9f810e62",
+        "license": {
+          "key": "mit",
+          "name": "MIT License",
+          "spdx_id": "MIT",
+          "url": "https://api.github.com/licenses/mit",
+          "node_id": "MDc6TGljZW5zZTEz"
+        }
+      },
+      "snapshot_url": "https://github.com/vuejs/core/tree/7ef6817112bb420ef47a7252821b37caae016ac9",
+      "review_level": "metadata_and_license_identification",
+      "inspected_files": []
+    },
+    {
+      "full_name": "tusen-ai/naive-ui",
+      "html_url": "https://github.com/tusen-ai/naive-ui",
+      "description": "A Vue 3 Component Library. Fairly Complete. Theme Customizable. Uses TypeScript. Fast.",
+      "language": "TypeScript",
+      "archived": false,
+      "pushed_at": "2026-10-26T03:58:53Z",
+      "default_branch": "main",
+      "commit": "8b249214f17328a47eeb57dd5c7b80a47c94d116",
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdx_id": "MIT",
+        "url": "https://api.github.com/licenses/mit",
+        "node_id": "MDc6TGljZW5zZTEz"
+      },
+      "license_file": {
+        "path": "LICENSE",
+        "html_url": "https://github.com/tusen-ai/naive-ui/blob/8b249214f17328a47eeb57dd5c7b80a47c94d116/LICENSE",
+        "sha": "cdebdbd1992b68c4255714bbc66229ad2193a7f9",
+        "license": {
+          "key": "mit",
+          "name": "MIT License",
+          "spdx_id": "MIT",
+          "url": "https://api.github.com/licenses/mit",
+          "node_id": "MDc6TGljZW5zZTEz"
+        }
+      },
+      "snapshot_url": "https://github.com/tusen-ai/naive-ui/tree/8b249214f17328a47eeb57dd5c7b80a47c94d116",
+      "review_level": "metadata_and_license_identification",
+      "inspected_files": []
+    },
+    {
+      "full_name": "fastify/fastify",
+      "html_url": "https://github.com/fastify/fastify",
+      "description": "Fast and low overhead web framework, for Node.js",
+      "language": "JavaScript",
+      "archived": false,
+      "pushed_at": "2026-11-07T17:47:01Z",
+      "default_branch": "main",
+      "commit": "0b076ca595d19951c536daf515c778b38cf6ba69",
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdx_id": "MIT",
+        "url": "https://api.github.com/licenses/mit",
+        "node_id": "MDc6TGljZW5zZTEz"
+      },
+      "license_file": {
+        "path": "LICENSE",
+        "html_url": "https://github.com/fastify/fastify/blob/0b076ca595d19951c536daf515c778b38cf6ba69/LICENSE",
+        "sha": "266e719722c4d45a9d6282e5ca9e8a77b2b67f8c",
+        "license": {
+          "key": "mit",
+          "name": "MIT License",
+          "spdx_id": "MIT",
+          "url": "https://api.github.com/licenses/mit",
+          "node_id": "MDc6TGljZW5zZTEz"
+        }
+      },
+      "snapshot_url": "https://github.com/fastify/fastify/tree/0b076ca595d19951c536daf515c778b38cf6ba69",
+      "review_level": "metadata_and_license_identification",
+      "inspected_files": []
+    },
+    {
+      "full_name": "drizzle-team/drizzle-orm",
+      "html_url": "https://github.com/drizzle-team/drizzle-orm",
+      "description": "ORM",
+      "language": "TypeScript",
+      "archived": false,
+      "pushed_at": "2026-11-11T10:22:25Z",
+      "default_branch": "main",
+      "commit": "bea7dd3623279ec2a12ca6c838cf5c8b17d3de42",
+      "license": {
+        "key": "apache-2.0",
+        "name": "Apache License 2.0",
+        "spdx_id": "Apache-2.0",
+        "url": "https://api.github.com/licenses/apache-2.0",
+        "node_id": "MDc6TGljZW5zZTI="
+      },
+      "license_file": {
+        "path": "LICENSE",
+        "html_url": "https://github.com/drizzle-team/drizzle-orm/blob/bea7dd3623279ec2a12ca6c838cf5c8b17d3de42/LICENSE",
+        "sha": "261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64",
+        "license": {
+          "key": "apache-2.0",
+          "name": "Apache License 2.0",
+          "spdx_id": "Apache-2.0",
+          "url": "https://api.github.com/licenses/apache-2.0",
+          "node_id": "MDc6TGljZW5zZTI="
+        }
+      },
+      "snapshot_url": "https://github.com/drizzle-team/drizzle-orm/tree/bea7dd3623279ec2a12ca6c838cf5c8b17d3de42",
+      "review_level": "metadata_and_license_identification",
+      "inspected_files": []
+    },
+    {
+      "full_name": "WiseLibs/better-sqlite3",
+      "html_url": "https://github.com/WiseLibs/better-sqlite3",
+      "description": "The fastest and simplest library for SQLite3 in Node.js.",
+      "language": "JavaScript",
+      "archived": false,
+      "pushed_at": "2026-11-11T17:43:21Z",
+      "default_branch": "master",
+      "commit": "0d704b07468d7a8d993badce89cf2b0fbfb8dda1",
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdx_id": "MIT",
+        "url": "https://api.github.com/licenses/mit",
+        "node_id": "MDc6TGljZW5zZTEz"
+      },
+      "license_file": {
+        "path": "LICENSE",
+        "html_url": "https://github.com/WiseLibs/better-sqlite3/blob/0d704b07468d7a8d993badce89cf2b0fbfb8dda1/LICENSE",
+        "sha": "228f29b4f768cda5e982949bd93c0032d0440c9b",
+        "license": {
+          "key": "mit",
+          "name": "MIT License",
+          "spdx_id": "MIT",
+          "url": "https://api.github.com/licenses/mit",
+          "node_id": "MDc6TGljZW5zZTEz"
+        }
+      },
+      "snapshot_url": "https://github.com/WiseLibs/better-sqlite3/tree/0d704b07468d7a8d993badce89cf2b0fbfb8dda1",
+      "review_level": "metadata_and_license_identification",
+      "inspected_files": []
+    },
+    {
+      "full_name": "colinhacks/zod",
+      "html_url": "https://github.com/colinhacks/zod",
+      "description": "TypeScript-first schema validation with static type inference",
+      "language": "TypeScript",
+      "archived": false,
+      "pushed_at": "2026-11-06T15:57:41Z",
+      "default_branch": "main",
+      "commit": "19c40d2072288b4cafec851e9d056a72a88e5973",
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdx_id": "MIT",
+        "url": "https://api.github.com/licenses/mit",
+        "node_id": "MDc6TGljZW5zZTEz"
+      },
+      "license_file": {
+        "path": "LICENSE",
+        "html_url": "https://github.com/colinhacks/zod/blob/19c40d2072288b4cafec851e9d056a72a88e5973/LICENSE",
+        "sha": "c06579627b432d09779094cd0166b7f37fe51db8",
+        "license": {
+          "key": "mit",
+          "name": "MIT License",
+          "spdx_id": "MIT",
+          "url": "https://api.github.com/licenses/mit",
+          "node_id": "MDc6TGljZW5zZTEz"
+        }
+      },
+      "snapshot_url": "https://github.com/colinhacks/zod/tree/19c40d2072288b4cafec851e9d056a72a88e5973",
+      "review_level": "metadata_and_license_identification",
+      "inspected_files": []
+    },
+    {
+      "full_name": "cheeriojs/cheerio",
+      "html_url": "https://github.com/cheeriojs/cheerio",
+      "description": "The fast, flexible, and elegant library for parsing and manipulating HTML and XML.",
+      "language": "TypeScript",
+      "archived": false,
+      "pushed_at": "2026-11-11T03:18:53Z",
+      "default_branch": "main",
+      "commit": "b10f611c1d62a730a96778a950d67f68c44d3b64",
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdx_id": "MIT",
+        "url": "https://api.github.com/licenses/mit",
+        "node_id": "MDc6TGljZW5zZTEz"
+      },
+      "license_file": {
+        "path": "LICENSE",
+        "html_url": "https://github.com/cheeriojs/cheerio/blob/b10f611c1d62a730a96778a950d67f68c44d3b64/LICENSE",
+        "sha": "b0c8b1935816c646c0d6707cf4e2cdcd16c447f3",
+        "license": {
+          "key": "mit",
+          "name": "MIT License",
+          "spdx_id": "MIT",
+          "url": "https://api.github.com/licenses/mit",
+          "node_id": "MDc6TGljZW5zZTEz"
+        }
+      },
+      "snapshot_url": "https://github.com/cheeriojs/cheerio/tree/b10f611c1d62a730a96778a950d67f68c44d3b64",
+      "review_level": "metadata_and_license_identification",
+      "inspected_files": []
+    },
+    {
+      "full_name": "microsoft/playwright",
+      "html_url": "https://github.com/microsoft/playwright",
+      "description": "Playwright is a framework for Web Testing and Automation. It allows testing Chromium, Firefox and WebKit with a single API. ",
+      "language": "TypeScript",
+      "archived": false,
+      "pushed_at": "2026-11-11T23:41:31Z",
+      "default_branch": "main",
+      "commit": "0921375af7db0e1cc74811858b392d376aed78eb",
+      "license": {
+        "key": "apache-2.0",
+        "name": "Apache License 2.0",
+        "spdx_id": "Apache-2.0",
+        "url": "https://api.github.com/licenses/apache-2.0",
+        "node_id": "MDc6TGljZW5zZTI="
+      },
+      "license_file": {
+        "path": "LICENSE",
+        "html_url": "https://github.com/microsoft/playwright/blob/0921375af7db0e1cc74811858b392d376aed78eb/LICENSE",
+        "sha": "df112373eb2e23e459bf93ec412be1764dc5a38b",
+        "license": {
+          "key": "apache-2.0",
+          "name": "Apache License 2.0",
+          "spdx_id": "Apache-2.0",
+          "url": "https://api.github.com/licenses/apache-2.0",
+          "node_id": "MDc6TGljZW5zZTI="
+        }
+      },
+      "snapshot_url": "https://github.com/microsoft/playwright/tree/0921375af7db0e1cc74811858b392d376aed78eb",
+      "review_level": "metadata_and_license_identification",
+      "inspected_files": []
+    },
+    {
+      "full_name": "pinojs/pino",
+      "html_url": "https://github.com/pinojs/pino",
+      "description": "🌲 super fast, all natural json logger",
+      "language": "JavaScript",
+      "archived": false,
+      "pushed_at": "2026-10-06T15:34:15Z",
+      "default_branch": "main",
+      "commit": "b29dbe97820630e7128e464c50263b427965ec99",
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdx_id": "MIT",
+        "url": "https://api.github.com/licenses/mit",
+        "node_id": "MDc6TGljZW5zZTEz"
+      },
+      "license_file": {
+        "path": "LICENSE",
+        "html_url": "https://github.com/pinojs/pino/blob/b29dbe97820630e7128e464c50263b427965ec99/LICENSE",
+        "sha": "f694464b7bb32b56d128f4a707e3d554d670ce0a",
+        "license": {
+          "key": "mit",
+          "name": "MIT License",
+          "spdx_id": "MIT",
+          "url": "https://api.github.com/licenses/mit",
+          "node_id": "MDc6TGljZW5zZTEz"
+        }
+      },
+      "snapshot_url": "https://github.com/pinojs/pino/tree/b29dbe97820630e7128e464c50263b427965ec99",
+      "review_level": "metadata_and_license_identification",
+      "inspected_files": []
+    },
+    {
+      "full_name": "iamkun/dayjs",
+      "html_url": "https://github.com/iamkun/dayjs",
+      "description": "⏰ Day.js 2kB immutable date-time library alternative to Moment.js with the same modern API",
+      "language": "JavaScript",
+      "archived": false,
+      "pushed_at": "2026-11-06T08:47:24Z",
+      "default_branch": "dev",
+      "commit": "d3e43be0489ff1d010aca42b3115b6059215ed60",
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdx_id": "MIT",
+        "url": "https://api.github.com/licenses/mit",
+        "node_id": "MDc6TGljZW5zZTEz"
+      },
+      "license_file": {
+        "path": "LICENSE",
+        "html_url": "https://github.com/iamkun/dayjs/blob/d3e43be0489ff1d010aca42b3115b6059215ed60/LICENSE",
+        "sha": "caf9315493c66640ca870078cb54fcc762921db6",
+        "license": {
+          "key": "mit",
+          "name": "MIT License",
+          "spdx_id": "MIT",
+          "url": "https://api.github.com/licenses/mit",
+          "node_id": "MDc6TGljZW5zZTEz"
+        }
+      },
+      "snapshot_url": "https://github.com/iamkun/dayjs/tree/d3e43be0489ff1d010aca42b3115b6059215ed60",
+      "review_level": "metadata_and_license_identification",
+      "inspected_files": []
+    },
+    {
+      "full_name": "vitest-dev/vitest",
+      "html_url": "https://github.com/vitest-dev/vitest",
+      "description": "Next generation testing framework powered by Vite.",
+      "language": "TypeScript",
+      "archived": false,
+      "pushed_at": "2026-11-11T15:20:30Z",
+      "default_branch": "main",
+      "commit": "f4fdbcae08ec365f35d9e1866ce3e7d04880ea60",
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdx_id": "MIT",
+        "url": "https://api.github.com/licenses/mit",
+        "node_id": "MDc6TGljZW5zZTEz"
+      },
+      "license_file": {
+        "path": "LICENSE",
+        "html_url": "https://github.com/vitest-dev/vitest/blob/f4fdbcae08ec365f35d9e1866ce3e7d04880ea60/LICENSE",
+        "sha": "0e5771dddf4e96ebc77c349f53fc763b910e63c0",
+        "license": {
+          "key": "mit",
+          "name": "MIT License",
+          "spdx_id": "MIT",
+          "url": "https://api.github.com/licenses/mit",
+          "node_id": "MDc6TGljZW5zZTEz"
+        }
+      },
+      "snapshot_url": "https://github.com/vitest-dev/vitest/tree/f4fdbcae08ec365f35d9e1866ce3e7d04880ea60",
+      "review_level": "metadata_and_license_identification",
+      "inspected_files": []
+    },
+    {
+      "full_name": "fullcalendar/fullcalendar",
+      "html_url": "https://github.com/fullcalendar/fullcalendar",
+      "description": "Full-sized drag & drop event calendar in JavaScript",
+      "language": "TypeScript",
+      "archived": false,
+      "pushed_at": "2026-11-04T04:07:54Z",
+      "default_branch": "main",
+      "commit": "31a0d960920abbe0436e65c8cb0a4cc9a661438f",
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdx_id": "MIT",
+        "url": "https://api.github.com/licenses/mit",
+        "node_id": "MDc6TGljZW5zZTEz"
+      },
+      "license_file": {
+        "path": "LICENSE.md",
+        "html_url": "https://github.com/fullcalendar/fullcalendar/blob/31a0d960920abbe0436e65c8cb0a4cc9a661438f/LICENSE.md",
+        "sha": "c07376ab10d1a621f67a8572e2f35963bda11646",
+        "license": {
+          "key": "mit",
+          "name": "MIT License",
+          "spdx_id": "MIT",
+          "url": "https://api.github.com/licenses/mit",
+          "node_id": "MDc6TGljZW5zZTEz"
+        }
+      },
+      "snapshot_url": "https://github.com/fullcalendar/fullcalendar/tree/31a0d960920abbe0436e65c8cb0a4cc9a661438f",
+      "review_level": "metadata_and_license_identification",
+      "inspected_files": []
+    },
+    {
+      "full_name": "mikaelbr/node-notifier",
+      "html_url": "https://github.com/mikaelbr/node-notifier",
+      "description": "A Node.js module for sending notifications on native Mac, Windows and Linux (or Growl as fallback)",
+      "language": "TypeScript",
+      "archived": false,
+      "pushed_at": "2026-10-31T22:25:35Z",
+      "default_branch": "master",
+      "commit": "03e8e66ae30387b51991d413bcb876403047d6aa",
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdx_id": "MIT",
+        "url": "https://api.github.com/licenses/mit",
+        "node_id": "MDc6TGljZW5zZTEz"
+      },
+      "license_file": {
+        "path": "LICENSE",
+        "html_url": "https://github.com/mikaelbr/node-notifier/blob/03e8e66ae30387b51991d413bcb876403047d6aa/LICENSE",
+        "sha": "11f1b52f4d7a57e3d895bf571bba0937557f56bc",
+        "license": {
+          "key": "mit",
+          "name": "MIT License",
+          "spdx_id": "MIT",
+          "url": "https://api.github.com/licenses/mit",
+          "node_id": "MDc6TGljZW5zZTEz"
+        }
+      },
+      "snapshot_url": "https://github.com/mikaelbr/node-notifier/tree/03e8e66ae30387b51991d413bcb876403047d6aa",
+      "review_level": "selected_files_read",
+      "inspected_files": [
+        {
+          "path": "README.md",
+          "url": "https://github.com/mikaelbr/node-notifier/blob/03e8e66ae30387b51991d413bcb876403047d6aa/README.md",
+          "lines": 320,
+          "sha256": "31ceae80537f78b99cb7d4c350e8879c3ac9f8b72cde79a783d173541f2faed9"
+        },
+        {
+          "path": "vendor/snoreToast/LICENSE",
+          "url": "https://github.com/mikaelbr/node-notifier/blob/03e8e66ae30387b51991d413bcb876403047d6aa/vendor/snoreToast/LICENSE",
+          "lines": 166,
+          "sha256": "070115d282f38717e870cddccfdfa732234ebe85a530edb6ebdd2e10dc149a3f"
+        },
+        {
+          "path": "vendor/terminal-notifier-LICENSE",
+          "url": "https://github.com/mikaelbr/node-notifier/blob/03e8e66ae30387b51991d413bcb876403047d6aa/vendor/terminal-notifier-LICENSE",
+          "lines": 9,
+          "sha256": "77a2769c8dc103f8051ccabab083c18e4cfbd26ba51589f26278c94dee997e56"
+        }
+      ],
+      "manual_license_assessment": "Root MIT; bundled SnoreToast LGPL-3.0; terminal-notifier has separate MIT text and icon exception."
+    },
+    {
+      "full_name": "binwiederhier/ntfy",
+      "html_url": "https://github.com/binwiederhier/ntfy",
+      "description": "Send push notifications to your phone or desktop using PUT/POST",
+      "language": "Go",
+      "archived": false,
+      "pushed_at": "2026-11-11T06:58:21Z",
+      "default_branch": "main",
+      "commit": "a331a5c8db86d8e0fa743de5af98be586afe3b0a",
+      "license": {
+        "key": "apache-2.0",
+        "name": "Apache License 2.0",
+        "spdx_id": "Apache-2.0",
+        "url": "https://api.github.com/licenses/apache-2.0",
+        "node_id": "MDc6TGljZW5zZTI="
+      },
+      "license_file": {
+        "path": "LICENSE",
+        "html_url": "https://github.com/binwiederhier/ntfy/blob/a331a5c8db86d8e0fa743de5af98be586afe3b0a/LICENSE",
+        "sha": "808776930891f8a100c9db6e4455f03eb49566ef",
+        "license": {
+          "key": "other",
+          "name": "Other",
+          "spdx_id": "NOASSERTION",
+          "url": null,
+          "node_id": "MDc6TGljZW5zZTA="
+        }
+      },
+      "snapshot_url": "https://github.com/binwiederhier/ntfy/tree/a331a5c8db86d8e0fa743de5af98be586afe3b0a",
+      "review_level": "selected_files_read",
+      "inspected_files": [
+        {
+          "path": "LICENSE",
+          "url": "https://github.com/binwiederhier/ntfy/blob/a331a5c8db86d8e0fa743de5af98be586afe3b0a/LICENSE",
+          "lines": 201,
+          "sha256": "41c6b5205cdb17128b6d003732c48e1d1cdf1080160fc8ac8dc9d992dd8dc398"
+        },
+        {
+          "path": "README.md",
+          "url": "https://github.com/binwiederhier/ntfy/blob/a331a5c8db86d8e0fa743de5af98be586afe3b0a/README.md"
+        }
+      ],
+      "manual_license_assessment": "README declares Apache-2.0 OR GPL-2.0; LICENSE contains Apache-2.0. API automatic SPDX is NOASSERTION."
+    },
+    {
+      "full_name": "caronc/apprise",
+      "html_url": "https://github.com/caronc/apprise",
+      "description": "Apprise - Push Notifications that work with just about every platform!",
+      "language": "Python",
+      "archived": false,
+      "pushed_at": "2026-11-11T20:13:07Z",
+      "default_branch": "master",
+      "commit": "11936de49694770dd1a32538456150a31b54f0ab",
+      "license": {
+        "key": "bsd-2-clause",
+        "name": "BSD 2-Clause \"Simplified\" License",
+        "spdx_id": "BSD-2-Clause",
+        "url": "https://api.github.com/licenses/bsd-2-clause",
+        "node_id": "MDc6TGljZW5zZTQ="
+      },
+      "license_file": {
+        "path": "LICENSE",
+        "html_url": "https://github.com/caronc/apprise/blob/11936de49694770dd1a32538456150a31b54f0ab/LICENSE",
+        "sha": "8ff150bc0810ff037d81a7f91369bc2671468959",
+        "license": {
+          "key": "bsd-2-clause",
+          "name": "BSD 2-Clause \"Simplified\" License",
+          "spdx_id": "BSD-2-Clause",
+          "url": "https://api.github.com/licenses/bsd-2-clause",
+          "node_id": "MDc6TGljZW5zZTQ="
+        }
+      },
+      "snapshot_url": "https://github.com/caronc/apprise/tree/11936de49694770dd1a32538456150a31b54f0ab",
+      "review_level": "selected_files_read",
+      "inspected_files": [
+        {
+          "path": "README.md",
+          "url": "https://github.com/caronc/apprise/blob/11936de49694770dd1a32538456150a31b54f0ab/README.md",
+          "lines": 915,
+          "sha256": "1a8832880f7ff2eac1be9eec2b8c860c44889631968d655e80651636e36c90e5"
+        }
+      ]
+    },
+    {
+      "full_name": "dgtlmoon/changedetection.io",
+      "html_url": "https://github.com/dgtlmoon/changedetection.io",
+      "description": "Best and simplest tool for website change detection, web page monitoring, and website change alerts. Perfect for tracking content changes, price drops, restock alerts, and website defacement monitoring— MCP included! all for free or enjoy our SaaS plan!",
+      "language": "Python",
+      "archived": false,
+      "pushed_at": "2026-11-10T08:51:38Z",
+      "default_branch": "master",
+      "commit": "1882705fd7f34aa74b9ee8512b242f7d402821e5",
+      "license": {
+        "key": "apache-2.0",
+        "name": "Apache License 2.0",
+        "spdx_id": "Apache-2.0",
+        "url": "https://api.github.com/licenses/apache-2.0",
+        "node_id": "MDc6TGljZW5zZTI="
+      },
+      "license_file": {
+        "path": "LICENSE",
+        "html_url": "https://github.com/dgtlmoon/changedetection.io/blob/1882705fd7f34aa74b9ee8512b242f7d402821e5/LICENSE",
+        "sha": "a6e09a45199d495dd9ff687399fb4835acb0b843",
+        "license": {
+          "key": "apache-2.0",
+          "name": "Apache License 2.0",
+          "spdx_id": "Apache-2.0",
+          "url": "https://api.github.com/licenses/apache-2.0",
+          "node_id": "MDc6TGljZW5zZTI="
+        }
+      },
+      "snapshot_url": "https://github.com/dgtlmoon/changedetection.io/tree/1882705fd7f34aa74b9ee8512b242f7d402821e5",
+      "review_level": "selected_files_read",
+      "inspected_files": [
+        {
+          "path": "README.md",
+          "url": "https://github.com/dgtlmoon/changedetection.io/blob/1882705fd7f34aa74b9ee8512b242f7d402821e5/README.md",
+          "lines": 353,
+          "sha256": "c803db49b4b0fb2519798b26a863cdde4b7a9bf375f77d64e164913f80dae043"
+        }
+      ]
+    },
+    {
+      "full_name": "SGrondin/bottleneck",
+      "html_url": "https://github.com/SGrondin/bottleneck",
+      "description": "Job scheduler and rate limiter, supports Clustering",
+      "language": "JavaScript",
+      "archived": false,
+      "pushed_at": "2024-01-23T06:09:35Z",
+      "default_branch": "master",
+      "commit": "b83528333ba4d27cf70b81cc2be12e09d7ff692f",
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdx_id": "MIT",
+        "url": "https://api.github.com/licenses/mit",
+        "node_id": "MDc6TGljZW5zZTEz"
+      },
+      "license_file": {
+        "path": "LICENSE",
+        "html_url": "https://github.com/SGrondin/bottleneck/blob/b83528333ba4d27cf70b81cc2be12e09d7ff692f/LICENSE",
+        "sha": "835fc314528e99ad0fa3d1ca7ee8b3570b35840c",
+        "license": {
+          "key": "mit",
+          "name": "MIT License",
+          "spdx_id": "MIT",
+          "url": "https://api.github.com/licenses/mit",
+          "node_id": "MDc6TGljZW5zZTEz"
+        }
+      },
+      "snapshot_url": "https://github.com/SGrondin/bottleneck/tree/b83528333ba4d27cf70b81cc2be12e09d7ff692f",
+      "review_level": "metadata_and_license_identification",
+      "inspected_files": []
+    },
+    {
+      "full_name": "sindresorhus/p-retry",
+      "html_url": "https://github.com/sindresorhus/p-retry",
+      "description": "Retry a promise-returning or async function",
+      "language": "JavaScript",
+      "archived": false,
+      "pushed_at": "2026-11-02T20:38:40Z",
+      "default_branch": "main",
+      "commit": "ac3c4cdb7f015e1f71825e4274e2323a49b615eb",
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdx_id": "MIT",
+        "url": "https://api.github.com/licenses/mit",
+        "node_id": "MDc6TGljZW5zZTEz"
+      },
+      "license_file": {
+        "path": "license",
+        "html_url": "https://github.com/sindresorhus/p-retry/blob/ac3c4cdb7f015e1f71825e4274e2323a49b615eb/license",
+        "sha": "fa7ceba3eb4a9657a9db7f3ffca4e4e97a9019de",
+        "license": {
+          "key": "mit",
+          "name": "MIT License",
+          "spdx_id": "MIT",
+          "url": "https://api.github.com/licenses/mit",
+          "node_id": "MDc6TGljZW5zZTEz"
+        }
+      },
+      "snapshot_url": "https://github.com/sindresorhus/p-retry/tree/ac3c4cdb7f015e1f71825e4274e2323a49b615eb",
+      "review_level": "metadata_and_license_identification",
+      "inspected_files": []
+    },
+    {
+      "full_name": "electron/electron",
+      "html_url": "https://github.com/electron/electron",
+      "description": ":electron: Build cross-platform desktop apps with JavaScript, HTML, and CSS",
+      "language": "C++",
+      "archived": false,
+      "pushed_at": "2026-11-12T00:27:14Z",
+      "default_branch": "main",
+      "commit": "0b0dd43c1d85ec60f88eb05b606c061f88afb10a",
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdx_id": "MIT",
+        "url": "https://api.github.com/licenses/mit",
+        "node_id": "MDc6TGljZW5zZTEz"
+      },
+      "license_file": {
+        "path": "LICENSE",
+        "html_url": "https://github.com/electron/electron/blob/0b0dd43c1d85ec60f88eb05b606c061f88afb10a/LICENSE",
+        "sha": "536d54efc3fd36ff7e079f82ce55f82c887758cd",
+        "license": {
+          "key": "mit",
+          "name": "MIT License",
+          "spdx_id": "MIT",
+          "url": "https://api.github.com/licenses/mit",
+          "node_id": "MDc6TGljZW5zZTEz"
+        }
+      },
+      "snapshot_url": "https://github.com/electron/electron/tree/0b0dd43c1d85ec60f88eb05b606c061f88afb10a",
+      "review_level": "metadata_and_license_identification",
+      "inspected_files": []
+    }
+  ],
+  "web_sources": [
+    {
+      "title": "Chrome extension service worker lifecycle",
+      "url": "https://developer.chrome.com/docs/extensions/develop/concepts/service-workers/lifecycle",
+      "basis": "official documentation read"
+    },
+    {
+      "title": "Chrome extension cross-origin network requests",
+      "url": "https://developer.chrome.com/docs/extensions/develop/concepts/network-requests",
+      "basis": "official documentation read"
+    },
+    {
+      "title": "Playwright authentication",
+      "url": "https://playwright.dev/docs/auth",
+      "basis": "official documentation read"
+    },
+    {
+      "title": "Playwright APIRequestContext cookie management",
+      "url": "https://playwright.dev/docs/api/class-apirequestcontext",
+      "basis": "official documentation read"
+    },
+    {
+      "title": "FullCalendar license",
+      "url": "https://fullcalendar.io/license",
+      "basis": "official license page read"
+    },
+    {
+      "title": "Renwei login entry",
+      "url": "https://tk.ipmph.com/exam/a/adminlogin",
+      "basis": "direct unauthenticated HTTP GET and public text read"
+    },
+    {
+      "title": "Renwei task entry",
+      "url": "https://tk.ipmph.com/exam/a/exam/examTask",
+      "basis": "direct unauthenticated HTTP GET; redirects to login with final status 200; session URL parameter omitted"
+    },
+    {
+      "title": "Yunnan examination registration entry",
+      "url": "https://jsjks.ynjy.cn/yncre/",
+      "basis": "direct unauthenticated HTTP GET; redirects to /yncre/student/; page identifies the examination registration platform"
+    },
+    {
+      "title": "Yunnan Technology and Business University 2026 first-half examination registration notice",
+      "url": "https://www.ytbu.edu.cn/2026/0414/c42a31898/page.htm",
+      "basis": "university notice body read; confirms platform URL, not other students deadlines"
+    }
+  ],
+  "prd_sha256": "57d3b56f88065a6533fb489ad892a5f77810711a4bb2de818ec70da6f6b3c154",
+  "ui_observations": [
+    {
+      "date": "2026-11-12",
+      "platform": "ynjy",
+      "basis": "page screenshot and authenticated Chrome UI, read only",
+      "host": "jsjks.ynjy.cn",
+      "route_templates": [
+        "/users/{userId}/classrooms",
+        "/classrooms/{classroomId}/announcement",
+        "/classrooms/{classroomId}/program_homework",
+        "/classrooms/{classroomId}/program_homework/{taskId}/detail?tabs=1",
+        "/classrooms/{classroomId}/exercise"
+      ],
+      "verified_ui_fields": [
+        "classroom and subgroup context",
+        "program-homework title",
+        "displayed time range",
+        "availability phase",
+        "separate progress display"
+      ],
+      "limits": "Detail route observed from link only. Exercise route navigation observed but content remained previous homework list; no exam field verification. No credential, user id, classroom id or task id copied."
+    },
+    {
+      "date": "2026-11-12",
+      "platform": "renwei",
+      "basis": "page screenshot, not authenticated live inspection",
+      "host": "tk.ipmph.com",
+      "route_templates": [
+        "/exam/a/exam/examTask"
+      ],
+      "verified_ui_fields": [
+        "assignment title",
+        "subject",
+        "start time",
+        "end time",
+        "displayed completed status"
+      ],
+      "limits": "No stable task identifiers, API, exam fields or pagination verified; screenshot itself is not copied to repository."
+    }
+  ]
+}

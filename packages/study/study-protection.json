@@ -1,0 +1,78 @@
+{
+  "version": 1,
+  "note": "严禁删除。维护须同步实现、行为测试和本清单，不得跳过检查。",
+  "files": {
+    "packages/study/src/video-quiz.ts": "d19aaf31fc0bac61596a498fc692a48d59015663e08e3bbfa6180080ae55cbd9",
+    "packages/study/src/unipus-activity.ts": "fd062147e37cc4fbed7b3763c23b5ac36d88e63a5ab210ded9a67f7645402514",
+    "tests/study-automation.test.ts": "e46a5fcfd096ebbbc822ef73eb5fa8d5febd9f420f95851fad7c10cddb6a30e9",
+    "packages/study/src/unipus-window.ts": "902b8a616d460793fe4ce2273e6928e928293d267c408e8e5ba81f82f1019056",
+    "tests/unipus-window.test.ts": "845c9e2caf60d59ea605d0a0bd3df449a3b97aab87560b9926568267cc27c47d"
+  },
+  "wiring": [
+    {
+      "file": "packages/study/src/worker.ts",
+      "required": [
+        "import { solveVideoQuizzes",
+        "const videoAttempts: VideoQuizAttempts = new Map();",
+        "await solveVideoQuizzes(page, videoAttempts, signal, log)"
+      ]
+    },
+    {
+      "file": "packages/study/src/unipus-worker.ts",
+      "required": [
+        "await keepUnipusActive(page, signal);",
+        "new UnipusWindow(await browserLaunchOptions(), backgroundRun)",
+        "send, () => stopping, () => pending.signal, work => { iterationDone = work; }",
+        "if (windowSession?.background) await switchWindow(false);",
+        "if (backgroundRun && !windowSession?.background) await switchWindow(true);"
+      ]
+    },
+    {
+      "file": "packages/study/src/keep-open.ts",
+      "required": [
+        "if (status.phase === 'paused')",
+        "await keepUnipusActive(page,signal?.())",
+        "await releaseUnipusActivity(page)"
+      ]
+    },
+    {
+      "file": "scripts/build-server.mjs",
+      "required": [
+        "verifyStudyProtection();"
+      ]
+    },
+    {
+      "file": "scripts/build-macos.ts",
+      "required": [
+        "scripts/verify-study-protection.mjs"
+      ]
+    },
+    {
+      "file": "scripts/build-windows.ts",
+      "required": [
+        "scripts/verify-study-protection.mjs"
+      ]
+    },
+    {
+      "file": "package.json",
+      "required": [
+        "\"pretest\": \"npm run check:study-protection\"",
+        "\"check:study-protection\": \"node scripts/verify-study-protection.mjs\""
+      ]
+    },
+    {
+      "file": "vitest.config.ts",
+      "required": [
+        "tests/**/*.test.ts"
+      ]
+    },
+    {
+      "file": "packages/study/src/unipus-window.ts",
+      "required": [
+        "headless: background",
+        "...studyBrowserArgs",
+        "this.background = background"
+      ]
+    }
+  ]
+}

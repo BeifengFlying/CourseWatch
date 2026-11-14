@@ -1,0 +1,440 @@
+    // 课程目录只读取页面已有 DOM；点击委托给原章节节点，不构造提交请求。
+    const COURSE_CATALOG_SELECTOR = '#content1 #coursetree';
+    const COURSE_SCORE_PREFIX = 'cx_quiz_scores:';
+
+    function pageURL(doc) {
+        try {
+            const href = doc.defaultView.location.href;
+            return new URL(/^about:/.test(href) ? doc.baseURI : href);
+        } catch { return null; }
+    }
+
+    function resolveCourseCatalog(doc = document) {
+        let view = doc.defaultView;
+        const seen = new Set();
+        for (let depth = 0; view && depth < 12 && !seen.has(view); depth++) {
+            seen.add(view);
+            try {
+                const sourceDoc = view.document;
+                const root = sourceDoc.querySelector(COURSE_CATALOG_SELECTOR);
+                if (root) return { sourceDoc, root };
+                if(isCourseHomeURL(pageURL(sourceDoc))||isCourseHomeURL(pageURL(sourceDoc),true))return resolveCourseHomeCatalog(sourceDoc);
+            } catch { /* 跨域祖先不可读时继续检查更上层，不绕过浏览器同源规则。 */ }
+            try { if (view.parent === view) break; view = view.parent; }
+            catch { break; }
+        }
+        return null;
+    }
+
+    function readQuizScore(doc = document) {
+        const status = clean(doc.querySelector('#RightCon .testTit_status')?.textContent);
+        if (status !== '已完成') return null;
+        const text = clean(doc.querySelector('#RightCon .ceyan_name .Finalresult i')?.textContent);
+        if (!/^\d+(?:\.\d+)?$/.test(text)) return null;
+        const score = Number(text);
+        if (!Number.isFinite(score)) return null;
+        const params = pageURL(doc)?.searchParams;
+        const chapterId = params?.get('knowledgeid') || params?.get('chapterId');
+        const quizId = params?.get('workId');
+        return { score, chapterId, quizId, title: clean(doc.querySelector('#RightCon .ceyan_name h3')?.textContent) };
+    }
+
+    function courseURLContext(url) {
+        let conflict = false;
+        const read = names => {
+            const values = new Set([...(url?.searchParams || [])].filter(([key]) => names.includes(key.toLowerCase())).map(([,value]) => value.trim()).filter(Boolean));
+            if (values.size > 1) conflict = true;
+            return values.size === 1 ? [...values][0] : '';
+        };
+        const course = read(['courseid']), classroom = read(['clazzid','classid']), student = read(['cpi']);
+        const chapterId = read(['chapterid','knowledgeid']);
+        return {course,classroom,student,chapterId,conflict};
+    }
+    function courseStudyContext(sourceDoc) {
+        const base = pageURL(sourceDoc), top = courseURLContext(base);
+        let frame = null, declared = null, loaded = null;
+        const view = sourceDoc?.defaultView;
+        // Only the real top-level course frame may supply missing identity fields.
+        if (view && view === view.top && isCourseStudyURL(base)) frame = sourceDoc.querySelector('#mainid #iframe');
+        const cards = raw => {
+            if (!raw) return null;
+            try {
+                const url = new URL(raw,base);
+                return url.origin === base.origin && !url.username && !url.password && url.pathname === '/mooc-ans/knowledge/cards'
+                    ? {...courseURLContext(url),url} : null;
+            } catch { return null; }
+        };
+        if (frame) {
+            declared = cards(frame.getAttribute('src'));
+            try { loaded = cards(frame.contentDocument?.URL); } catch { /* Cross-origin content never supplies identity. */ }
+        }
+        const {course,classroom} = top;
+        let student = top.student, reason = top.conflict ? 'parameter-conflict' : '';
+        for (const candidate of [declared,loaded].filter(Boolean)) {
+            if (candidate.conflict) reason = 'parameter-conflict';
+            if (course && candidate.course && course !== candidate.course || classroom && candidate.classroom && classroom !== candidate.classroom
+                || student && candidate.student && student !== candidate.student) reason = 'identity-conflict';
+            // A cpi is usable only after both course and class agree with the top page.
+            if (course && classroom && candidate.course === course && candidate.classroom === classroom && candidate.student && !student) student = candidate.student;
+        }
+        const complete = Boolean(!reason && course && classroom && student);
+        if (!reason && !complete) reason = 'identity-incomplete';
+        // The loaded cards URL proves the current chapter; clicking a link or its colour does not.
+        const chapterId = complete && loaded && loaded.course === course && loaded.classroom === classroom && loaded.chapterId
+            && (!declared?.chapterId || declared.chapterId === loaded.chapterId) ? loaded.chapterId : null;
+        return {course,classroom,student,complete,reason,chapterId,frame,cardsURL:declared?.url || null,loadedCardsURL:loaded?.url || null};
+    }
+    function courseScoreKey(sourceDoc) {
+        const context = courseStudyContext(sourceDoc);
+        // Keep course, class and account isolation; incomplete/conflicting identities never persist.
+        return context.complete ? COURSE_SCORE_PREFIX + [context.course,context.classroom,context.student].map(encodeURIComponent).join(':') : null;
+    }
+
+    function courseCatalogMarker(row, selector) {
+        // 目录折叠不改变完成状态；只忽略行内部隐藏的状态模板。
+        return [...row.querySelectorAll(selector)].find(node=>{
+            for(let current=node;current && current!==row;current=current.parentElement) {
+                if(current.hidden || current.getAttribute('aria-hidden')==='true')return false;
+                const style=current.ownerDocument.defaultView.getComputedStyle(current);
+                if(style.display==='none'||style.visibility==='hidden')return false;
+            }
+            return true;
+        });
+    }
+    function courseNativeChapterCall(node) {
+        return /^\s*(?:return\s+)?(?:window\.)?getTeacherAjax\s*\(/.test(node?.getAttribute('onclick') || '')
+            || /^\s*javascript:\s*(?:return\s+)?(?:window\.)?getTeacherAjax\s*\(/.test(node?.getAttribute('href') || '');
+    }
+    function courseChapterNavigation(row, label, nativeMode = false) {
+        if (!label) return {status:'group',target:null,evidence:'catalog-group'};
+        const path=[];
+        for(let node=label;node;node=node.parentElement) {path.push(node);if(node===row)break;}
+        if(path[path.length-1]!==row || !row.isConnected)return {status:'unknown',target:null,evidence:'entry-detached'};
+        if(path.some(node=>node.hasAttribute('disabled')||node.getAttribute('aria-disabled')==='true'))
+            return {status:nativeMode?'sequence-locked':'unknown',target:null,evidence:'native-disabled'};
+        const handler=path.find(courseNativeChapterCall);
+        if(handler)return {status:'available',target:label,evidence:'getTeacherAjax'};
+        // A property-bound native handler has no onclick attribute. Delegate the click;
+        // do not infer DOM2/delegated listeners from cursor styles or guess their functions.
+        if(path.some(node=>!node.hasAttribute('onclick') && typeof node.onclick==='function'))
+            return {status:'available',target:label,evidence:'onclick-property'};
+        return {status:nativeMode?'sequence-locked':'unknown',target:null,evidence:nativeMode?'native-entry-missing':'navigation-unconfirmed'};
+    }
+    function courseChapterAccess(owner, chapter, catalog = readCourseCatalog(owner)) {
+        const entry=catalog&&catalog.sourceDoc===owner?catalog.entries.find(item=>item.id===chapter?.id&&!item.isGroup):null;
+        if(!entry?.node?.isConnected)return {entry,allowed:false,status:'unknown',reason:'chapter-entry-missing'};
+        const current=entry.active===true && courseStudyContext(owner).chapterId===entry.chapterId;
+        return {entry,current,allowed:current||entry.navigation.status==='available'&&entry.target?.isConnected===true,
+            status:entry.navigation.status,reason:entry.navigation.evidence};
+    }
+    function courseRequireChapterAccess(owner, chapter, catalog) {
+        const access=courseChapterAccess(owner,chapter,catalog);
+        if(!access.allowed)throw Object.assign(new Error(access.status==='sequence-locked'?'章节尚未解锁':'章节原生入口尚未确认'),{
+            code:access.status==='sequence-locked'?'COURSE_SEQUENCE_LOCKED':'COURSE_NAVIGATION_UNKNOWN',
+            navigationBoundary:{id:chapter.id,status:access.status,reason:access.reason}});
+        return access.entry;
+    }
+    function readCourseCatalog(doc = document) {
+        const context = resolveCourseCatalog(doc);
+        if (!context) return null;
+        if(context.remote)return context;
+        if(context.structure==='course-home')return readCourseHomeCatalog(context);
+        const { sourceDoc, root } = context;
+        const entries = [];
+        const seenIds = new Set();
+        let structure = 'pos-catalog';
+        const modernRows=[...root.querySelectorAll('.posCatalog_select')];
+        const nativeMode=modernRows.some(row=>courseNativeChapterCall(row)||courseNativeChapterCall(row.querySelector(':scope > .posCatalog_name')));
+        for (const row of modernRows) {
+            const target = row.querySelector(':scope > .posCatalog_name');
+            const label = target || row.querySelector(':scope > .posCatalog_title');
+            if (!label || !row.id || seenIds.has(row.id)) continue;
+            const number = clean(label.querySelector('.posCatalog_sbar')?.textContent);
+            const title = clean(label.getAttribute('title')) || clean([...label.childNodes].filter(n => n.nodeType === 3).map(n => n.textContent).join(' '));
+            if (!title) continue;
+            seenIds.add(row.id);
+            const parentLi = row.closest('li')?.parentElement?.closest('li');
+            const parentId = parentLi?.querySelector(':scope > .posCatalog_select')?.id || null;
+            const pendingText = clean(courseCatalogMarker(row,'.orangeNew')?.textContent);
+            const pending = /^\d+$/.test(pendingText) ? Number(pendingText) : null;
+            const completed = Boolean(courseCatalogMarker(row,'.icon_Completed'));
+            const navigation=courseChapterNavigation(row,target,nativeMode);
+            entries.push({ id: row.id, chapterId: row.id.replace(/^cur/, ''), number, title, parentId, node:row, navigation,
+                isGroup: !target, target:navigation.target, active: row.classList.contains('posCatalog_active'),
+                completed, pending, scores: [] });
+        }
+        if (!entries.length) {
+            // Confirmed legacy layout: no li ancestry or colour-to-status mapping is known.
+            structure = 'legacy-h4';
+            const currentChapterId = courseStudyContext(sourceDoc).chapterId;
+            for (const row of root.querySelectorAll('h4[id^="cur"]')) {
+                if (row.id.length <= 3 || seenIds.has(row.id)) continue;
+                const links = [...row.querySelectorAll('a[title]')].filter(link => link.closest('h4[id^="cur"]') === row);
+                if (links.length !== 1) continue;
+                const link = links[0], title = clean(link.getAttribute('title'));
+                if (!title) continue;
+                const number = clean(row.querySelector('.hideChapterNumber')?.textContent);
+                // Delegate to the original link/row handler; never evaluate its arguments ourselves.
+                const navigation=courseChapterNavigation(row,link);
+                const target=navigation.target;
+                seenIds.add(row.id);
+                entries.push({ id:row.id, chapterId:row.id.replace(/^cur/, ''), number, title,
+                    parentId:null, hierarchyKnown:false, isGroup:false, node:row, navigation, target,
+                    active:currentChapterId ? row.id.replace(/^cur/, '') === currentChapterId : null, completed:null, pending:null, scores:[] });
+            }
+        }
+        const scopeKey = courseScoreKey(sourceDoc);
+        const stored = scopeKey ? get(scopeKey, {}) : {};
+        const scores = stored && typeof stored === 'object' && !Array.isArray(stored) ? stored : {};
+        const observed = readQuizScore(doc);
+        if (scopeKey && observed?.chapterId && observed.quizId && entries.some(e => e.chapterId === observed.chapterId)) {
+            const chapter = scores[observed.chapterId] || {};
+            const old = chapter[observed.quizId];
+            if (old?.score !== observed.score || old?.title !== observed.title) {
+                const updated = { ...scores, [observed.chapterId]: { ...chapter,
+                    [observed.quizId]: { score: observed.score, title: observed.title, updatedAt: Date.now() } } };
+                set(scopeKey, updated);
+                Object.assign(scores, updated);
+            }
+        }
+        for (const entry of entries) {
+            entry.scores = Object.values(scores[entry.chapterId] || {}).filter(item => item && Number.isFinite(item.score) && item.score >= 0);
+        }
+        // An existing container with unknown rows is not an empty/completed course.
+        return { ...context, entries, scopeKey, structure: entries.length ? structure : 'unrecognized' };
+    }
+
+    function catalogStatus(entry) {
+        if(!entry.active&&entry.navigation?.status==='sequence-locked')return '待解锁';
+        if(!entry.active&&entry.navigation?.status==='unknown')return '入口未确认';
+        if (entry.completed) return '已完成';
+        if (entry.pending > 0) return `待完成 · ${entry.pending}项`;
+        if (entry.pending === 0) return '无任务点';
+        return '状态未提供';
+    }
+
+    function renderCourseCatalog() {
+        if (!panelView?.catalog) return;
+        const { shadow, catalog } = panelView;
+        const list = shadow.getElementById('catalog-list');
+        const doc = list.ownerDocument;
+        const entries = catalog.context?.entries || [];
+        const query = clean(shadow.getElementById('catalog-search').value).toLocaleLowerCase();
+        const home=isCourseHomeURL(pageURL(panelView.sourceDoc));
+        const located=entries.find(entry=>!entry.isGroup&&(home||entry.active)&&entry.id===catalog.locatedId&&catalog.locatedScope===catalog.context?.scopeKey&&Date.now()<catalog.locatedUntil);
+        const byId = new Map(entries.map(entry => [entry.id, entry]));
+        const included = new Set();
+        for (const entry of entries) {
+            if (!query || `${entry.number} ${entry.title}`.toLocaleLowerCase().includes(query)) {
+                included.add(entry.id);
+                for (let parent = byId.get(entry.parentId); parent && !included.has(parent.id); parent = byId.get(parent.parentId)) included.add(parent.id);
+                // 搜索到一个目录分组时保留其子目录。
+                if (entry.isGroup && query) {
+                    for (const child of entries) {
+                        for (let p = byId.get(child.parentId); p; p = byId.get(p.parentId)) {
+                            if (p.id === entry.id) { included.add(child.id); break; }
+                        }
+                    }
+                }
+            }
+        }
+        const children = new Map();
+        for (const entry of entries.filter(entry => included.has(entry.id))) {
+            const parent = byId.has(entry.parentId) ? entry.parentId : null;
+            if (!children.has(parent)) children.set(parent, []);
+            children.get(parent).push(entry);
+        }
+        const make = (tag, className, text) => {
+            const element = doc.createElement(tag); element.className = className;
+            if (text !== undefined) element.textContent = text;
+            return element;
+        };
+        const appendEntries = (parentId, container) => {
+            for (const entry of children.get(parentId) || []) {
+                const item = make('li', 'catalog-item'); item.dataset.chapterId = entry.id;
+                const row = make('div', `catalog-row${entry.active ? ' is-active' : ''}${entry.isGroup ? ' is-group' : ''}${located===entry?' is-located':''}`);
+                const nested = children.get(entry.id) || [];
+                if(entry.isGroup)item.classList.add('is-group-item');
+                const expanded = Boolean(query) || !catalog.collapsed.has(entry.id);
+                if (nested.length) {
+                    const fold = make('button', 'catalog-fold'); fold.type = 'button';
+                    fold.setAttribute('aria-label', `${expanded ? '收起' : '展开'} ${entry.title}`);
+                    fold.setAttribute('aria-expanded', String(expanded));
+                    fold.onclick = () => {
+                        if (catalog.collapsed.has(entry.id)) catalog.collapsed.delete(entry.id); else catalog.collapsed.add(entry.id);
+                        renderCourseCatalog();
+                    };
+                    row.append(fold);
+                } else row.append(make('span', 'catalog-fold-space'));
+                const button = make('button', 'catalog-link'); button.type = 'button';
+                if (!entry.isGroup) {
+                    button.dataset.chapterButton = entry.id;
+                    button.dataset.navigationAvailable=String(Boolean(catalog.context?.remote?entry.navigation?.status==='available':entry.target?.isConnected));
+                    button.dataset.navigationReason=entry.navigation?.status==='sequence-locked'?'本章尚未解锁，请先完成前置章节':'章节原生入口尚未就绪，请刷新目录';
+                    setAssistantControlDisabled(button,button.dataset.navigationAvailable!=='true' || controller.state.busy || courseRunActive(),controller.state.busy || courseRunActive()?'任务运行中，请结束后手动切换章节':button.dataset.navigationReason);
+                }
+                if (entry.active) button.setAttribute('aria-current', 'page');
+                button.title=`${entry.number} ${entry.title}`.trim();
+                const main=make('span','catalog-main');
+                if(entry.number)main.append(make('span','catalog-number',entry.number+' '));
+                main.append(make('span','catalog-title',entry.title));button.append(main);
+                const meta = make('span', 'catalog-meta');
+                if (entry.isGroup) {
+                    const descendants = entries.filter(candidate => !candidate.isGroup && (() => {
+                        for (let p = byId.get(candidate.parentId); p; p = byId.get(p.parentId)) if (p.id === entry.id) return true;
+                        return false;
+                    })());
+                    if (descendants.length) {
+                        const completed=descendants.filter(e=>e.completed).length;
+                        const progress=make('progress','catalog-group-progress');progress.max=descendants.length;progress.value=completed;
+                        progress.setAttribute('aria-label',`${entry.title}：${completed}/${descendants.length} 已完成`);
+                        const state=make('span',`catalog-state is-group-count${completed===descendants.length?' is-complete':''}`,`${completed}/${descendants.length}`);
+                        state.title='已完成章节 / 章节总数';meta.append(progress,state);
+                    }
+                } else {
+                    if(entry.active)meta.append(make('span',`catalog-current${located===entry?' is-located-label':''}`,located===entry?'已定位':'当前'));
+                    else if(located===entry)meta.append(make('span','catalog-current is-located-label','已定位'));
+                    const locked=!entry.active&&entry.navigation?.status==='sequence-locked';
+                    const unknown=!entry.active&&entry.navigation?.status==='unknown';
+                    const tone=locked?' is-locked':unknown?'':entry.completed?' is-complete':entry.pending>0?' is-pending':'';
+                    meta.append(make('span',`catalog-state${tone}`,catalogStatus(entry)));
+                    if(home&&(locked||unknown)&&(entry.completed===true||entry.pending!==null)) {
+                        meta.append(make('span',`catalog-state${entry.completed?' is-complete':entry.pending>0?' is-pending':''}`,entry.completed?'已完成':entry.pending>0?`待完成 · ${entry.pending}项`:'无任务点'));
+                    }
+                }
+                for (const score of entry.scores) {
+                    const badge = make('span', 'catalog-score', `测验 ${score.score} 分`);
+                    badge.title = score.title || '已查看的测验成绩'; meta.append(badge);
+                }
+                button.append(meta);
+                button.onclick = event => {
+                    if(catalog.context?.remote&&!trustedAssistantActivation(event,button))return;
+                    if (entry.isGroup) row.querySelector('.catalog-fold')?.click();
+                    else navigateCourseChapter(entry.id);
+                };
+                row.append(button); item.append(row);
+                if (nested.length) {
+                    const sublist = make('ol', 'catalog-children'); sublist.hidden = !expanded;
+                    appendEntries(entry.id, sublist); item.append(sublist);
+                }
+                container.append(item);
+            }
+        };
+        const fragment = doc.createDocumentFragment();
+        appendEntries(null, fragment);
+        if (!fragment.childNodes.length) fragment.append(make('li', 'catalog-empty', entries.length ? '没有匹配的章节' : catalog.context?.empty ? '暂无章节，无需刷课' : home ? '章节目录加载中，请稍候或刷新' : catalog.context ? '已找到目录容器，尚未识别章节；若加载后仍为空，请提供章节项 HTML 以适配。' : '未读取到课程目录，请在课程学习页面打开。'));
+        list.replaceChildren(fragment);
+        shadow.getElementById('catalog-locate').textContent=located?'已定位':home?'定位未完成':'定位当前';
+        shadow.getElementById('catalog-locate').title=home?'定位目录中首个未完成或需核对的章节':'定位当前章节';
+        shadow.getElementById('catalog-status').textContent = located ? `已定位：${located.number} ${located.title}`.trim() : entries.length ? catalog.context?.structure === 'legacy-h4'
+            ? `共 ${entries.length} 个章节；旧版目录层级与完成状态未确认`
+            : `共 ${entries.filter(e => e.isGroup).length} 个目录分组，${entries.filter(e => !e.isGroup).length} 个章节` : '';
+    }
+
+    function locateCurrentCourseChapter() {
+        if(!panelView?.catalog)return;
+        refreshCourseSidebar();
+        const {catalog,shadow}=panelView;
+        const entries=catalog.context?.entries||[],home=isCourseHomeURL(pageURL(panelView.sourceDoc));
+        const selection=home?courseHomeSelection(catalog.context,true):null;
+        if(home&&selection.status!=='target'){shadow.getElementById('catalog-status').textContent=selection.message;return;}
+        const current=home?[selection.entry]:entries.filter(entry=>!entry.isGroup&&entry.active);
+        if(current.length!==1){
+            shadow.getElementById('catalog-status').textContent=current.length?'当前章节尚未明确，请刷新目录后重试':'暂未找到当前章节，请刷新目录后重试';return;
+        }
+        const entry=current[0],byId=new Map(entries.map(item=>[item.id,item])),seen=new Set([entry.id]);
+        shadow.getElementById('catalog-search').value='';
+        for(let parent=byId.get(entry.parentId);parent&&!seen.has(parent.id);parent=byId.get(parent.parentId)){
+            seen.add(parent.id);catalog.collapsed.delete(parent.id);
+        }
+        clearTimeout(catalog.locateTimer);
+        catalog.locatedId=entry.id;catalog.locatedScope=catalog.context.scopeKey;catalog.locatedUntil=Date.now()+1800;
+        renderCourseCatalog();
+        panelView.renderCoursePreview?.();
+        const list=shadow.getElementById('catalog-list');
+        const row=[...list.querySelectorAll(home?'.catalog-row.is-located':'.catalog-row.is-active')].find(item=>item.parentElement.dataset.chapterId===entry.id);
+        if(row){
+            const bounds=list.getBoundingClientRect(),target=row.getBoundingClientRect();
+            const top=Math.max(0,Math.min(list.scrollHeight-list.clientHeight,list.scrollTop+target.top-bounds.top-(list.clientHeight-target.height)/2));
+            const reduced=list.ownerDocument.defaultView.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+            list.scrollTo({top,behavior:reduced?'auto':'smooth'});
+        }
+        catalog.locateTimer=setTimeout(()=>{
+            catalog.locateTimer=null;catalog.locatedId=null;catalog.locatedUntil=0;
+            if(panelView?.catalog===catalog)renderCourseCatalog();
+        },1800);
+    }
+
+    function navigateCourseChapter(id) {
+        if (controller.state.busy || courseRunActive()) return controller.report('请等待本次操作完成后切换章节');
+        const catalog=readCourseCatalog();
+        if(catalog?.remote) {
+            const entry=catalog.entries.find(item=>item.id===id&&!item.isGroup);
+            if(!entry)return controller.report('章节入口已变化，请刷新课程目录');
+            controller.report(`正在切换至：${entry.title}`);
+            navigateCourseHomeRemoteChapter(catalog,id).catch(error=>{if(!courseHomeClosed)controller.report(error.message);});return;
+        }
+        const access=courseChapterAccess(catalog?.sourceDoc,{id},catalog),entry=access.entry;
+        if (!entry) return controller.report('章节入口已变化，请刷新课程目录');
+        if (entry.active) return controller.report(`当前章节：${entry.title}`);
+        if(!access.allowed)return controller.report(access.status==='sequence-locked'?'该章节尚未解锁，请先完成前置任务':'该章节原生入口尚未确认，请刷新课程目录');
+        controller.last = null; controller.clearOutput();
+        controller.report(`正在切换至：${entry.title}`);
+        entry.target.click();
+    }
+
+    function refreshCourseSidebar() {
+        if (!panelView?.catalog) return;
+        if(isCourseHomeURL(pageURL(panelView.sourceDoc)))mountCourseHomeChapterEntry(panelView.sourceDoc);
+        const catalog = panelView.catalog;
+        const previousScope=catalog.context?.scopeKey;
+        catalog.context = readCourseCatalog(panelView.sourceDoc || panelView.host.ownerDocument);
+        if(previousScope!==catalog.context?.scopeKey){catalog.collapsed.clear();catalog.locatedId=null;catalog.locatedUntil=0;}
+        const source = catalog.context?.structure==='course-home'?catalog.context.root:catalog.context?.sourceDoc.querySelector('#content1');
+        if (source !== catalog.observedRoot) {
+            catalog.observer?.disconnect(); catalog.observedRoot = source;
+            if (source) {
+                catalog.observer = new MutationObserver(() => {
+                    if (catalog.timer) return;
+                    catalog.timer = setTimeout(() => { catalog.timer = null; refreshCourseSidebar(); }, 100);
+                });
+                const attributes=['class','title','id','onclick','href','disabled','aria-disabled'];
+                if(catalog.context?.structure==='course-home')attributes.push('data-locked','aria-label','hidden','aria-hidden','style','inert');
+                catalog.observer.observe(source, { childList: true, subtree: true, attributes: true, attributeFilter:attributes, characterData: true });
+            }
+        }
+        renderCourseCatalog();
+        panelView.renderCoursePreview?.();
+    }
+
+    function initCourseSidebar() {
+        panelView.catalog = { context: null, collapsed: new Set(), observer: null, observedRoot: null, timer: null };
+        const { shadow } = panelView;
+        shadow.getElementById('catalog-search').oninput = renderCourseCatalog;
+        shadow.getElementById('catalog-refresh').onclick = ()=>{
+            if(isCourseHomeURL(pageURL(panelView.sourceDoc)))resetCourseHomeFrameBridge();
+            refreshCourseSidebar();
+        };
+        shadow.getElementById('catalog-locate').onclick = locateCurrentCourseChapter;
+        refreshCourseSidebar();
+        const doc=panelView.sourceDoc;
+        let frameObserver=null;
+        const frameChanged=()=>{
+            if(!isCourseHomeURL(pageURL(doc)))return;
+            const context=panelView?.catalog?.context,frame=doc.getElementById('frame_content-zj');
+            let loaded=null,source='';try{loaded=frame?.contentDocument;const url=new URL(frame.getAttribute('src'),doc.baseURI);url.hash='';source=url.href;}catch{}
+            if(frame!==context?.frame||source!==context?.frameSource||loaded!==context?.sourceDoc||!sameCourseHomeIdentity(context?.identity,courseHomeIdentity(doc)))refreshCourseSidebar();
+        };
+        const frameLoaded=event=>{if(event.target?.id==='frame_content-zj')refreshCourseSidebar();};
+        if(isCourseHomeURL(pageURL(doc))) {
+            frameObserver=new doc.defaultView.MutationObserver(frameChanged);
+            frameObserver.observe(doc.documentElement,{subtree:true,childList:true,attributes:true,attributeFilter:['src','id']});
+            doc.addEventListener('load',frameLoaded,true);doc.defaultView.addEventListener('popstate',frameChanged);
+        }
+        window.addEventListener('pagehide', () => {
+            frameObserver?.disconnect();doc.removeEventListener('load',frameLoaded,true);doc.defaultView?.removeEventListener('popstate',frameChanged);
+            panelView?.catalog?.observer?.disconnect();
+            clearTimeout(panelView?.catalog?.timer);
+            clearTimeout(panelView?.catalog?.locateTimer);
+        }, { once: true });
+    }

@@ -1,0 +1,19 @@
+{
+  "id": "./",
+  "start_url": "./index.html",
+  "name": "CourseWatch 手机通知",
+  "short_name": "CourseWatch",
+  "lang": "zh-CN",
+  "display": "standalone",
+  "scope": "./",
+  "background_color": "#f5f4f0",
+  "theme_color": "#f5f4f0",
+  "icons": [
+    {
+      "src": "./icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
