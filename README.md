@@ -5,7 +5,7 @@
 <p align="center">
   <a href="https://github.com/BeifengFlying/CourseWatch/actions/workflows/ci.yml"><img src="https://img.shields.io/badge/CI-GitHub%20Actions-2088FF?logo=githubactions&amp;logoColor=white" alt="CI：GitHub Actions"></a>
   <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-0.2.33%20beta-orange" alt="版本：0.2.33 测试版"></a>
-  <a href="TERMS.md"><img src="https://img.shields.io/badge/license-Apache--2.0%20%2B%20Terms-red" alt="许可：Apache-2.0 正文与自定义条款，禁止商用"></a>
+  <a href="TERMS.md"><img src="https://img.shields.io/badge/license-Apache--2.0%20%2B%20Terms-green" alt="许可：Apache-2.0 正文与自定义条款，禁止商用"></a>
   <a href="package.json"><img src="https://img.shields.io/badge/Node.js-24-339933" alt="Node.js 24"></a>
   <a href="#安装"><img src="https://img.shields.io/badge/platform-macOS%2014%2B-blue" alt="平台：macOS 14 及以上"></a>
   <a href="docs/guides/WINDOWS.md"><img src="https://img.shields.io/badge/platform-Windows%2010%2B%20x64-blue" alt="平台：Windows 10+ x64，待实机验收"></a>
