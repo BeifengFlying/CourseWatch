@@ -12,8 +12,6 @@
 </p>
 <p align="center"><a href="#安装">安装</a> · <a href="#功能与演示">功能演示</a> · <a href="#平台适配">平台适配</a> · <a href="#技术栈">技术栈</a> · <a href="#mac-性能与能耗实测">性能与能耗</a> · <a href="docs/guides/BUILD_HISTORY.md">更新记录</a></p>
 
-**从构建 32（0.2.32）起，新版有权许可的原创内容仅限非商业使用，禁止商用。** 构建 33 采用 [Apache-2.0 正文](LICENSE)与[项目补充协议](TERMS.md)，在适用范围内，冲突按 TERMS 的明确自定义条款处理。历史版本继续按原许可使用。非商业许可生效前的安装包下载入口已下架。适用范围及再分发要求见[项目协议第八部分](TERMS.md#八禁止商用与再分发)。
-
 CourseWatch 是面向 macOS 与 Windows 的课程任务管理工具，集中展示多个教学平台的作业、考试及截止时间。应用在本机定期同步所选课程，记录新任务与时间变化，并按配置发送提醒。个人日程可独立使用，无需绑定课程账号。
 
 macOS 关闭主窗口后继续在菜单栏运行；Windows 可选择隐藏到系统托盘并保留后台，或退出应用。后台运行时保留任务检查与提醒。通知渠道包括桌面通知、邮件、网页推送和 iCloud 日历。
@@ -32,7 +30,7 @@ macOS 关闭主窗口后继续在菜单栏运行；Windows 可选择隐藏到系
 
 Windows 最低版本为 Windows 10 2004（内部版本 19041），建议使用 22H2 或更新版本。当前源码生成 `CourseWatch-0.2.33-build33-win-x64-setup.exe`、同名前缀的 ZIP 便携包及对应 `.sha256`；Actions 下载以对应运行实际上传的文件为准。0.2.30 r2 已在 Windows 11、150% 缩放下完成原生窗口检查；Windows 10、完整安装／升级／卸载及真实通知仍待实测。合并后的验证范围见 [Windows 0.2.31 合并检查](docs/verification/WINDOWS-0.2.31-MERGE.md)。
 
-macOS 安装：打开 DMG，将 CourseWatch 拖入 Applications。升级前应从菜单栏退出应用，再替换旧版本；升级沿用原数据目录，建议提前备份重要数据。目前采用手动更新。非商业许可生效前的安装包与校验文件仅保留本地归档，GitHub 下载入口下架。
+macOS 安装：打开 DMG，将 CourseWatch 拖入 Applications。升级前应从菜单栏退出应用，再替换旧版本；升级沿用原数据目录，建议提前备份重要数据。目前采用手动更新。
 
 **安装包不附带浏览器。** 同步教学平台前需安装 [Chrome](https://www.google.com/chrome/) 或 [Edge](https://www.microsoft.com/edge)，并在“设置 → 通用”选择自动、Chrome 或 Edge。指定浏览器缺失时，应用提示安装或切换。CourseWatch 使用独立的浏览器资料目录；个人日程与本地提醒无需浏览器。
 
@@ -245,4 +243,4 @@ npm run build:win
 
 问题反馈请提交至 [Issues](https://github.com/BeifengFlying/CourseWatch/issues)，注明版本与构建号、操作系统、教学平台及复现步骤。涉及页面差异时请附脱敏截图。账号、Cookie、数据库及浏览器资料不得公开上传，日志应检查并脱敏后提交。
 
-**禁止商用，包括收费分发、收费服务及集成到收费产品。** 禁止商用要求自构建 32 起实施；构建 33 采用 [Apache-2.0 正文](LICENSE)与[项目补充协议](TERMS.md)的组合许可。对有权按该条件许可的适用内容，明确冲突按 TERMS 处理，未冲突部分仍按 Apache 正文处理。自定义条款及逐项对应见项目协议第零、八部分。整体含非商业限制，不是标准 Apache-2.0 或 OSI 定义的开源许可；第三方许可、有效历史授权及法定权利不受冲突规则覆盖。构建 32 已交付的独立非商业许可继续适用，旧包下架不撤回旧授权。当前测试版免费，不接受广告合作或捐赠。第三方来源见[第三方声明](THIRD_PARTY_NOTICES.md)，权利未决项见[许可核查](docs/legal/RELEASE_LICENSE_REVIEW.md)。
+**仅限非商业使用，禁止商用。** 项目采用 [Apache-2.0 正文](LICENSE)与[自定义补充协议](TERMS.md)的组合许可，具体限制、适用顺序及历史版本规则见补充协议。整体不是标准 Apache-2.0 或 OSI 定义的开源许可。当前测试版免费，不接受广告合作或捐赠。第三方来源见[第三方声明](THIRD_PARTY_NOTICES.md)，权利未决项见[许可核查](docs/legal/RELEASE_LICENSE_REVIEW.md)。
