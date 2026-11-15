@@ -168,7 +168,7 @@ final class StudyPreviewCard: NSView {
 
 // Acceptance precedes the local service, notifications and course operations.
 final class FirstRunConsent: NSObject {
-    static let revision = "2026-11-15"
+    static let revision = "2026-11-15.1"
     static let acceptanceKey = "CourseWatch.UserAgreement." + revision
     static let projectURL = URL(string: "https://github.com/BeifengFlying/CourseWatch")!
 

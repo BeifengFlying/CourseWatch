@@ -4,13 +4,15 @@
 <p align="center">Course task management, personal schedules and deadline reminders. macOS 14+ / Windows 10+ x64.</p>
 <p align="center">
   <a href="https://github.com/BeifengFlying/CourseWatch/actions/workflows/ci.yml"><img src="https://img.shields.io/badge/CI-GitHub%20Actions-2088FF?logo=githubactions&amp;logoColor=white" alt="CI: GitHub Actions"></a>
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-0.2.34%20beta-orange" alt="Version: 0.2.34 beta"></a>
-  <a href="TERMS.en.md"><img src="https://img.shields.io/badge/license-Apache--2.0%20%2B%20Terms-green" alt="License: Apache-2.0 text plus custom terms; commercial use prohibited"></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-0.2.35%20beta-orange" alt="Version: 0.2.35 beta"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Noncommercial-red" alt="License: CourseWatch Noncommercial License; commercial use prohibited"></a>
   <a href="package.json"><img src="https://img.shields.io/badge/Node.js-24-339933" alt="Node.js 24"></a>
   <a href="#installation"><img src="https://img.shields.io/badge/platform-macOS%2014%2B-blue" alt="Platform: macOS 14+"></a>
   <a href="docs/guides/WINDOWS.md"><img src="https://img.shields.io/badge/platform-Windows%2010%2B%20x64-blue" alt="Platform: Windows 10+ x64, device testing pending"></a>
 </p>
 <p align="center"><a href="#installation">Installation</a> · <a href="#features-and-demos">Demos</a> · <a href="#supported-platforms">Platforms</a> · <a href="#technology-stack">Technology</a> · <a href="#mac-performance-and-energy-measurements">Performance</a> · <a href="docs/guides/BUILD_HISTORY.md">Build history</a></p>
+
+**Noncommercial use only. Commercial use is prohibited.** See [Section 8 of the Project Terms](TERMS.en.md#8-prohibition-of-commercial-use-and-redistribution) for scope, applicable versions and redistribution requirements.
 
 CourseWatch is a course task manager for macOS and Windows. It consolidates homework, exams and deadlines from multiple learning platforms, checks selected courses locally, and sends reminders for new tasks and deadline changes. Personal schedules are available without a course account.
 
@@ -20,28 +22,28 @@ On macOS, closing the main window keeps the app in the menu bar. Windows offers 
 
 ## Installation
 
-Current release: **0.2.34 (beta)**. Download the package for your system from [GitHub Releases](https://github.com/BeifengFlying/CourseWatch/releases/tag/v0.2.34-desktop). Packages omit browser binaries and documentation images:
+Current release: **0.2.35 (beta)**. Download the package for your system from [GitHub Releases](https://github.com/BeifengFlying/CourseWatch/releases/tag/v0.2.35). Packages omit browser binaries and documentation images:
 
 | System | Download |
 | --- | --- |
-| macOS 14+ · Apple Silicon | [CourseWatch-0.2.34-mac-arm64.dmg](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.34-desktop/CourseWatch-0.2.34-mac-arm64.dmg) |
-| macOS 14+ · Intel | [CourseWatch-0.2.34-mac-x64.dmg](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.34-desktop/CourseWatch-0.2.34-mac-x64.dmg) |
-| Windows 10+ · x64 | [Installer](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.34-desktop/CourseWatch-0.2.34-win-x64-setup.exe) · [Portable ZIP](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.34-desktop/CourseWatch-0.2.34-win-x64.zip) |
+| macOS 14+ · Apple Silicon | [CourseWatch-0.2.35-mac-arm64.dmg](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.35/CourseWatch-0.2.35-mac-arm64.dmg) |
+| macOS 14+ · Intel | [CourseWatch-0.2.35-mac-x64.dmg](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.35/CourseWatch-0.2.35-mac-x64.dmg) |
+| Windows 10+ · x64 (0.2.34) | [Installer](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.34-desktop/CourseWatch-0.2.34-win-x64-setup.exe) · [Portable ZIP](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.34-desktop/CourseWatch-0.2.34-win-x64.zip) |
 
 The minimum Windows version is Windows 10 version 2004 (build 19041); version 22H2 or later is recommended. The installer includes Microsoft's online bootstrapper for a missing WebView2 Runtime. To use the portable ZIP, extract it and run `CourseWatch.exe`. Version 0.2.34 passed native window checks on Windows 11 at 150% scaling, plus consent dialog checks at 100% / 150% scaling in light, dark and compact layouts. Windows 10, full installation / upgrade / removal, and real notifications still need testing. See the [Windows 0.2.34 checks](docs/verification/WINDOWS-0.2.34.md).
 
-The release uses tag `v0.2.34-desktop` to provide macOS and Windows attachments together; application and file versions remain 0.2.34. The macOS packages are byte-identical to the original 0.2.34 attachments. The Windows packages include the current interface changes.
+Before acceptance of the current agreement revision is recorded, the first launch displays the complete user agreement, a free-software notice, the source repository and a warning to request a refund and report sellers charging for the app. The background service starts only after acceptance. Quitting saves no acceptance; accepted users are not prompted on normal restarts of the same revision. Version 0.2.35 requires renewed acceptance.
 
-Before acceptance is recorded, the first launch displays the complete user agreement, a free-software notice, the source repository and a warning to request a refund and report sellers charging for the app. The background service starts only after acceptance. Quitting saves no acceptance; accepted users are not prompted on normal restarts.
+On Mac, open the DMG and drag CourseWatch into Applications. To upgrade, quit the old version from the menu bar before replacing it. Upgrades retain the existing data directory. Back up important data before replacing the application. Updates are installed manually. Historical packages and checksums are retained as described in their release records.
 
-On Mac, open the DMG and drag CourseWatch into Applications. To upgrade, quit the old version from the menu bar before replacing it. Upgrades retain the existing data directory. Back up important data before replacing the application. Updates are installed manually.
+Version 0.2.35 adds Settings → General → App Updates, with manual checks and an automatic-check switch. Automatic checking is enabled by default: the first check starts about 30 seconds after the backend starts, then at most once per day, including public project prereleases. Each newer version creates one in-app notification and uses system notifications if already enabled; no email or web push is sent. “View update and download” opens that release's GitHub page to choose a package. Packages are not downloaded or installed automatically. Existing installers do not gain this feature until upgraded to a version containing it. See the [update verification](docs/verification/APP-UPDATES-2026-11-15.md) (Chinese).
 
 **Packages do not include a browser.** Install [Chrome](https://www.google.com/chrome/) or [Edge](https://www.microsoft.com/edge) before connecting a learning platform, and select Automatic, Chrome or Edge in Settings → General. If the selected browser is unavailable, the application prompts for installation or a different selection. CourseWatch uses a separate browser profile. Personal schedules and local reminders work without a browser.
 
 Each package has a matching `.sha256` file. Compare it with the output of:
 
 ```sh
-shasum -a 256 CourseWatch-0.2.34-mac-arm64.dmg
+shasum -a 256 CourseWatch-0.2.35-mac-arm64.dmg
 ```
 
 Mac packages are ad hoc signed and have not been notarized by Apple. The Intel package has passed architecture and Rosetta runtime checks; its interface has not been checked on a physical Intel Mac. Platform coverage and reminder delivery may be incomplete during the beta. School, instructor and platform notices remain the authoritative sources. See [beta limitations](DISCLAIMER.md) for details. The application interface and most documentation are currently in Chinese; this language switch applies to the README.
@@ -66,7 +68,13 @@ Expand chapter groups, choose a starting point, resume the last chapter or tab, 
 
 ### Playback and study controls
 
+**The Chaoxing and Unipus experimental features are solely for technical implementation verification and reference, and must not be used for other purposes.** They must not be used to complete actual course tasks on someone's behalf, obtain grades or study-time credit, establish attendance, provide proxy-study or paid services, or cheat. Users who independently use them outside this scope bear the consequences attributable to their conduct under applicable law; liability that cannot lawfully be excluded remains unaffected. Technical verification does not establish platform authorization or a legal exemption. See the [automation boundaries](docs/legal/AUTOMATION_BOUNDARIES.md) (Chinese) and [Project Terms](TERMS.en.md#6-restrictions-on-use).
+
 Chaoxing and Unipus have separate settings, with experimental features off by default. Playback, keeping a page open and background keepalive do not require a model. To generate answers, configure an endpoint, model ID and API key. Model settings can fetch the model list and test the connection; during a run, you can view reasoning and answers returned by the endpoint.
+
+Chaoxing video pop-up questions enumerate choices and make actual submissions without a model, independently of the practice auto-submission and playback chapter-test switches. Unipus simulates activity on entry to a study page and every five minutes thereafter, and automatically continues through identified ordinary inactivity prompts. The official site may create study or completion records; these do not prove personal participation or authorize obtaining grades, study-time credit or attendance.
+
+After two empty model answers for the same question, its text and options are automatically sent to Bing before a third model attempt. A third empty answer saves the question, raw response and search results in the local `study-model-logs/` folder, which is not automatically deleted on exit. See the [Privacy and Data Notice](PRIVACY.md) (Chinese) for recipients, charges and deletion.
 
 ![Study controls, chapter directory and model output](docs/screenshots/desktop-build31/study-chaoxing-light.png)
 
@@ -245,8 +253,18 @@ Local data directories:
 
 Session snapshots and notification secrets use OS credential protection. The database and browser profiles are not encrypted as a whole. Task exports exclude login sessions; read the [privacy and data notes](PRIVACY.md) before backing up or migrating. More details are in the [documentation index](docs/README.md) and [script guide](scripts/README.md).
 
+## Contributing
+
+PRs are welcome, whether they fix bugs, improve documentation or add features.
+
+- Search for related issues before submitting.
+- Open an issue to discuss larger changes first.
+- Keep commits clear and include necessary tests and documentation.
+
+See the [contribution guidelines](CONTRIBUTING.md#english) for third-party sources, contribution licensing and protected logic.
+
 ## Feedback and licensing
 
 Report problems in [Issues](https://github.com/BeifengFlying/CourseWatch/issues), including the version and build number, system, learning platform and reproduction steps. Include redacted screenshots for page-specific issues. Do not publish accounts, cookies, databases or browser profiles. Review and redact logs before uploading.
 
-**Noncommercial use only. Commercial use is prohibited.** The project uses the [Apache-2.0 text](LICENSE) together with the [custom Additional Terms](TERMS.en.md). See those Terms for restrictions, precedence and historical-version rules. This combination is not an unmodified standard Apache-2.0 grant or an OSI-defined open-source license. The beta is free; advertising partnerships and donations are not accepted. See [third-party notices](THIRD_PARTY_NOTICES.md) and the [license review](docs/legal/RELEASE_LICENSE_REVIEW.md).
+**Commercial use is prohibited, including paid distribution, paid services and integration into paid products.** Starting with 0.2.35, original material in new releases that the project has authority to license uses the [CourseWatch Noncommercial License 1.0](LICENSE); see the [Project Terms](TERMS.en.md) for use requirements. This is a custom noncommercial license, not an open-source license as defined by the OSI. Earlier Apache-2.0 grants are not retroactively revoked, including when old installers are removed. The beta is free. Advertising partnerships and donations are not accepted. Sources for third-party code, platform names and icons are listed in [third-party notices](THIRD_PARTY_NOTICES.md). Outstanding dependency license items are recorded in the [license review](docs/legal/RELEASE_LICENSE_REVIEW.md).

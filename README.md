@@ -4,13 +4,15 @@
 <p align="center">课程任务管理、个人日程与截止提醒。macOS 14+ / Windows 10+ x64。</p>
 <p align="center">
   <a href="https://github.com/BeifengFlying/CourseWatch/actions/workflows/ci.yml"><img src="https://img.shields.io/badge/CI-GitHub%20Actions-2088FF?logo=githubactions&amp;logoColor=white" alt="CI：GitHub Actions"></a>
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-0.2.34%20beta-orange" alt="版本：0.2.34 测试版"></a>
-  <a href="TERMS.md"><img src="https://img.shields.io/badge/license-Apache--2.0%20%2B%20Terms-green" alt="许可：Apache-2.0 正文与自定义条款，禁止商用"></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-0.2.35%20beta-orange" alt="版本：0.2.35 测试版"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Noncommercial-red" alt="许可：CourseWatch 非商业许可证，禁止商用"></a>
   <a href="package.json"><img src="https://img.shields.io/badge/Node.js-24-339933" alt="Node.js 24"></a>
   <a href="#安装"><img src="https://img.shields.io/badge/platform-macOS%2014%2B-blue" alt="平台：macOS 14 及以上"></a>
   <a href="docs/guides/WINDOWS.md"><img src="https://img.shields.io/badge/platform-Windows%2010%2B%20x64-blue" alt="平台：Windows 10+ x64，待实机验收"></a>
 </p>
 <p align="center"><a href="#安装">安装</a> · <a href="#功能与演示">功能演示</a> · <a href="#平台适配">平台适配</a> · <a href="#技术栈">技术栈</a> · <a href="#mac-性能与能耗实测">性能与能耗</a> · <a href="docs/guides/BUILD_HISTORY.md">更新记录</a></p>
+
+**仅限非商业使用，禁止商用。** 适用范围、版本及再分发要求见[项目补充协议第八部分](TERMS.md#八禁止商用与再分发)。
 
 CourseWatch 是面向 macOS 与 Windows 的课程任务管理工具，集中展示多个教学平台的作业、考试及截止时间。应用在本机定期同步所选课程，记录新任务与时间变化，并按配置发送提醒。个人日程可独立使用，无需绑定课程账号。
 
@@ -20,28 +22,28 @@ macOS 关闭主窗口后继续在菜单栏运行；Windows 可选择隐藏到系
 
 ## 安装
 
-当前版本：**0.2.34（测试版）**。从 [GitHub Releases](https://github.com/BeifengFlying/CourseWatch/releases/tag/v0.2.34-desktop) 下载对应安装包。安装包不附带浏览器或文档展示图：
+当前版本：**0.2.35（测试版）**。从 [GitHub Releases](https://github.com/BeifengFlying/CourseWatch/releases/tag/v0.2.35) 下载对应安装包。安装包不附带浏览器或文档展示图：
 
 | 系统 | 下载 |
 | --- | --- |
-| macOS 14+ · Apple Silicon（M 系列） | [CourseWatch-0.2.34-mac-arm64.dmg](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.34-desktop/CourseWatch-0.2.34-mac-arm64.dmg) |
-| macOS 14+ · Intel | [CourseWatch-0.2.34-mac-x64.dmg](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.34-desktop/CourseWatch-0.2.34-mac-x64.dmg) |
-| Windows 10+ · x64 | [安装程序](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.34-desktop/CourseWatch-0.2.34-win-x64-setup.exe) · [便携 ZIP](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.34-desktop/CourseWatch-0.2.34-win-x64.zip) |
+| macOS 14+ · Apple Silicon（M 系列） | [CourseWatch-0.2.35-mac-arm64.dmg](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.35/CourseWatch-0.2.35-mac-arm64.dmg) |
+| macOS 14+ · Intel | [CourseWatch-0.2.35-mac-x64.dmg](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.35/CourseWatch-0.2.35-mac-x64.dmg) |
+| Windows 10+ · x64（0.2.34） | [安装程序](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.34-desktop/CourseWatch-0.2.34-win-x64-setup.exe) · [便携 ZIP](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.34-desktop/CourseWatch-0.2.34-win-x64.zip) |
 
 Windows 最低版本为 Windows 10 2004（内部版本 19041），建议使用 22H2 或更新版本。安装程序包含缺少 WebView2 时使用的微软在线引导程序；便携 ZIP 解压后运行 `CourseWatch.exe`。0.2.34 已完成 Windows 11、150% 缩放下的原生窗口检查，以及协议弹窗在 100%／150% 缩放下的浅深色与窄尺寸检查。Windows 10、完整安装／升级／卸载及真实通知仍待实测，范围见 [Windows 0.2.34 验证](docs/verification/WINDOWS-0.2.34.md)。
 
-发布标签使用 `v0.2.34-desktop`，集中提供 macOS 与 Windows 附件；应用与文件版本仍为 0.2.34。macOS 包与原 0.2.34 发布附件逐字节一致，Windows 包包含本次界面适配。
+首次打开且尚无当前修订确认记录时，应用显示《用户协议》全文、完全免费声明、项目源码地址及付费渠道退款举报提示；点击“同意并继续”后才启动后台。选择“退出软件”不保存确认记录，同一修订已确认后重启不重复弹出。0.2.35 更新协议修订，旧版确认需重新完成。
 
-首次打开且尚无确认记录时，应用显示《用户协议》全文、完全免费声明、项目源码地址及付费渠道退款举报提示；点击“同意并继续”后才启动后台。选择“退出软件”不保存确认记录，已确认后重启不重复弹出。
-
-macOS 安装：打开 DMG，将 CourseWatch 拖入 Applications。升级前应从菜单栏退出应用，再替换旧版本；升级沿用原数据目录，建议提前备份重要数据。目前采用手动更新。
+macOS 安装：打开 DMG，将 CourseWatch 拖入 Applications。升级前应从菜单栏退出应用，再替换旧版本；升级沿用原数据目录，建议提前备份重要数据。安装仍由使用者执行，历史安装包及校验文件按各自记录保留。
 
 **安装包不附带浏览器。** 同步教学平台前需安装 [Chrome](https://www.google.com/chrome/) 或 [Edge](https://www.microsoft.com/edge)，并在“设置 → 通用”选择自动、Chrome 或 Edge。指定浏览器缺失时，应用提示安装或切换。CourseWatch 使用独立的浏览器资料目录；个人日程与本地提醒无需浏览器。
+
+0.2.35 新增“设置 → 通用 → 应用更新”，提供手动检查和自动检查开关。自动检查默认开启，后台启动约 30 秒后检查，此后每天最多一次，包含项目公开测试版。同一版本只生成一条应用通知，并沿用已开启的系统通知；不发送邮件或网页推送。点击“查看更新并下载”进入对应 GitHub Release 页面，自行选择安装包，不自动下载或安装。已有安装包需升级到包含该功能的版本后才能使用，详见[更新验证](docs/verification/APP-UPDATES-2026-11-15.md)。
 
 每个安装包附有同名 `.sha256` 文件，可执行以下命令核对：
 
 ```sh
-shasum -a 256 CourseWatch-0.2.34-mac-arm64.dmg
+shasum -a 256 CourseWatch-0.2.35-mac-arm64.dmg
 ```
 
 macOS 包使用临时签名，尚未通过 Apple 公证。Intel 包已完成架构与 Rosetta 运行检查，Intel Mac 实机界面尚待验证。测试版的平台覆盖和提醒仍可能有遗漏，作业与考试请同时核对学校、教师和平台通知。详细说明见[测试版限制](DISCLAIMER.md)。
@@ -66,6 +68,8 @@ macOS 包使用临时签名，尚未通过 Apple 公证。Intel 包已完成架�
 
 ### 播放与学习控制
 
+**学习通与 U校园实验功能仅用于技术实现验证与参考，不得用于其他目的。** 不得用于实际课程任务代办、获取成绩或学时、出勤证明、代学代刷、作弊或收费服务。使用者自行超出用途范围使用的，应依法承担相应后果；法律规定不能免除的责任不受影响。“技术验证”不构成平台授权或法律豁免，具体见[实验功能用途与自动化边界](docs/legal/AUTOMATION_BOUNDARIES.md)。
+
 学习通与 U校园独立配置，试验功能默认关闭。播放、保持页面打开和后台保活无需模型；生成答案需配置模型地址、模型 ID 和 Key。模型设置支持获取模型列表与测试连接，运行界面展示接口返回的思考内容和答案。
 
 ![学习控制、章节目录与模型输出](docs/screenshots/desktop-build31/study-chaoxing-light.png)
@@ -77,7 +81,9 @@ macOS 包使用临时签名，尚未通过 Apple 公证。Intel 包已完成架�
 
 </details>
 
-学习通支持配置播放期间是否处理章节测试。章节练习的自动填入、提交需要单独开启；课程作业只生成答案，考试及测评不处理。题目替换字体在本机还原，内容无法完整读取时暂停，提交结果不明确时停止重试。
+学习通支持配置播放期间是否处理章节测试。章节练习的自动填入、提交需要单独开启；视频弹题会穷举选项并真实提交，不调用模型，也不受练习自动提交或播放时章节测试开关控制。课程作业只生成答案，不处理已识别的考试及测评。题目替换字体在本机还原，内容无法完整读取时暂停，提交结果不明确时停止重试。
+
+同一题连续两次空答案后，会将题干及选项发送到必应检索，再交给模型第三次作答；第三次仍为空时将题目、原始回复及搜索结果保存在本机 `study-model-logs/`，退出后不自动删除。接收方、费用及清理方式见[隐私说明](PRIVACY.md)。
 
 U校园默认使用无界面浏览器，每 5 分钟保活，普通超时提示自动处理。选择“打开运行窗口”后暂停任务并切换至可见浏览器，继续任务后恢复后台模式；暂停期间停止保活。模式切换会重新载入官网页面，手动输入内容需提前保存，身份验证由使用者本人完成。学时以平台记录为准。
 
@@ -243,8 +249,18 @@ npm run build:win
 
 会话快照与通知密钥使用系统凭据保护，数据库和浏览器资料目录未整体加密。任务导出不包含登录会话，备份或迁移前请查看[数据与隐私说明](PRIVACY.md)。更多内容见[文档目录](docs/README.md)和[脚本说明](scripts/README.md)。
 
+## Contributing
+
+欢迎提交 PR！无论是修复 bug、改进文档还是新增功能都很欢迎。
+
+- 提交前请先搜索是否已有相关 Issue
+- 较大改动建议先开 Issue 讨论
+- 请尽量保持提交清晰，并补充必要测试/文档
+
+第三方来源、贡献许可及受保护逻辑要求见[贡献说明](CONTRIBUTING.md)。
+
 ## 反馈与许可
 
 问题反馈请提交至 [Issues](https://github.com/BeifengFlying/CourseWatch/issues)，注明版本与构建号、操作系统、教学平台及复现步骤。涉及页面差异时请附脱敏截图。账号、Cookie、数据库及浏览器资料不得公开上传，日志应检查并脱敏后提交。
 
-**仅限非商业使用，禁止商用。** 项目采用 [Apache-2.0 正文](LICENSE)与[自定义补充协议](TERMS.md)的组合许可，具体限制、适用顺序及历史版本规则见补充协议。整体不是标准 Apache-2.0 或 OSI 定义的开源许可。当前测试版免费，不接受广告合作或捐赠。第三方来源见[第三方声明](THIRD_PARTY_NOTICES.md)，权利未决项见[许可核查](docs/legal/RELEASE_LICENSE_REVIEW.md)。
+**禁止商用，包括收费分发、收费服务及集成到收费产品。** 自 0.2.35 起，新版有权许可的原创内容采用 [CourseWatch 非商业许可证 1.0](LICENSE)，具体使用要求见[项目协议](TERMS.md)。这是自定义非商业许可，不属于 OSI 定义的开源许可；历史 Apache-2.0 授权不追溯撤回，下架旧包也不收回已授予权利。当前测试版免费，不接受广告合作或捐赠。第三方代码、平台名称和图标的来源见[第三方声明](THIRD_PARTY_NOTICES.md)，依赖许可的未决项见[许可核查记录](docs/legal/RELEASE_LICENSE_REVIEW.md)。

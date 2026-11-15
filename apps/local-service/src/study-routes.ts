@@ -8,7 +8,7 @@ import { Vault } from "../../../packages/adapters/src/vault.js";
 import { CourseCatalogManager } from "../../../packages/study/src/catalog-manager.js";
 import { Settings, type CourseRecord } from "../../../packages/contracts/src/index.js";
 import { StudyManager } from "../../../packages/study/src/manager.js";
-import { StudyConfig, StudyConfigInput, StudyStart, type CourseLearningProgress, type StudyPosition, type StudyProgress, studyNoticeVersion, studyPlatformNames, type StudyPlatform } from "../../../packages/contracts/src/study.js";
+import { StudyConfig, StudyConfigInput, StudyStart, STUDY_ACCEPTANCE_TEXT, type CourseLearningProgress, type StudyPosition, type StudyProgress, studyNoticeVersion, studyPlatformNames, type StudyPlatform } from "../../../packages/contracts/src/study.js";
 import type { DiagnosticLog } from '../../../packages/core/src/diagnostics.js';
 import { inspectModelService } from '../../../packages/study/src/model-service.js';
 import { ModelEndpoint } from '../../../packages/contracts/src/study.js';
@@ -56,7 +56,12 @@ export function registerStudyRoutes(app: FastifyInstance, store: Store, dir: str
   });
   app.post(`${path}/accept`, async req => {
     z.object({ noticeVersion: z.literal(version), accepted: z.literal(true) }).strict().parse(req.body);
-    store.set(configKey, { ...config(), enabled: true, noticeVersion: version });
+    store.db.transaction(() => {
+      store.set(`studyAcceptance:${platform}:${version}`, {
+        platform, noticeVersion: version, acceptedAt: Date.now(), acknowledgement: STUDY_ACCEPTANCE_TEXT,
+      });
+      store.set(configKey, { ...config(), enabled: true, noticeVersion: version });
+    })();
     return view();
   });
   app.patch(`${path}/settings`, async (req, reply) => {

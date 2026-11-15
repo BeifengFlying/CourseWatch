@@ -23,8 +23,14 @@ const headers = {
 };
 let server;
 const manager = new AdapterManager(dir);
+// Exercise update metadata only; package verification must not contact GitHub.
+const updateRequest = async () => new Response(JSON.stringify([{
+  tag_name: "v9.9.99", draft: false, prerelease: true,
+  html_url: "https://github.com/BeifengFlying/CourseWatch/releases/tag/v9.9.99",
+  body: "安装包模拟更新检查",
+}]));
 try {
-  server = await createServer({ dir, test: true });
+  server = await createServer({ dir, test: true, updateRequest });
   const api = async (url, payload) => {
     const response = await server.app.inject({
       method: payload ? "POST" : "GET",
@@ -78,12 +84,12 @@ try {
   assert.equal(unsafeSource.statusCode, 400);
   await server.app.close();
   delete process.env.COURSEWATCH_NATIVE_TOKEN;
-  server = await createServer({ dir, test: true });
+  server = await createServer({ dir, test: true, updateRequest });
   assert.equal((await server.app.inject({ url: "/api/schedules", headers })).statusCode, 401);
   assert.equal((await server.app.inject({ url: "/api/schedules", headers: pairedHeaders })).statusCode, 200);
   process.env.COURSEWATCH_NATIVE_TOKEN = headers.authorization.slice(7);
   await server.app.close();
-  server = await createServer({ dir, test: true });
+  server = await createServer({ dir, test: true, updateRequest });
   assert.match(
     (await server.app.inject({ url: "/", headers })).body,
     /CourseWatch/,
@@ -96,6 +102,13 @@ try {
   assert.equal(server.engine.tasks().length, 0);
   await api("/api/notifications/test", {});
   assert.equal((await api("/api/native/pending")).items.length, 1);
+  assert.equal((await api("/api/updates")).currentVersion, version);
+  const update = await api("/api/updates/check", {});
+  assert.equal(update.state, "available");
+  assert.equal(update.latest.version, "9.9.99");
+  assert.equal(server.store.all("SELECT * FROM outbox WHERE kind=?", "update").length, 1);
+  assert.equal(server.store.all("SELECT * FROM notification_deliveries").length, 0);
+  console.log(`更新检查：${arch} 包内模块、模拟新版本、应用提醒入队及手机渠道隔离 OK`);
   const result = await manager.scan({
     id: "renwei",
     accountId: "bundle-test",

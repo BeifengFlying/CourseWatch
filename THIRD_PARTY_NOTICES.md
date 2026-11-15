@@ -1,6 +1,6 @@
 # 第三方软件与素材
 
-从构建 33（0.2.33）起，CourseWatch 有权按该条件许可的新版原创内容采用 [Apache-2.0 正文](LICENSE)与[项目补充协议](TERMS.md)的组合许可。禁止商用要求自构建 32 起实施；该版本及其他历史版本继续按各自随附许可处理。本协议的冲突规则不覆盖第三方独立许可、有效历史授权或法定权利，源码历史重建不撤回这些权利。具体组件版本以 `package-lock.json`、随包 `DEPENDENCIES.txt`、`UI-LICENSES/INDEX.txt` 为准；本表不是全部传递依赖的许可证全文。
+CourseWatch 自 0.2.35 起，新版有权许可的原创内容采用 [CourseWatch 非商业许可证](LICENSE)及[项目协议](TERMS.md)。此前已授予的 Apache-2.0 权利继续有效；本项目无权改变下列第三方组件、素材及平台内容的许可。具体版本以 `package-lock.json`、随包 `DEPENDENCIES.txt` 和 `UI-LICENSES/INDEX.txt` 为准；本表不是全部传递依赖的许可证全文。
 
 ## macOS 包内的软件
 
@@ -11,7 +11,7 @@
 | Playwright、playwright-core | Apache-2.0；保留各包许可与 NOTICE。Playwright 的许可不覆盖它下载的全部浏览器内容。 |
 | Nodemailer、qrcode | MIT；邮件发送和手机配对二维码生成，各包许可随 `node_modules` 保留。 |
 | web-push | MPL-2.0；网页推送及消息加密，各包原始许可与未修改的源码随 `node_modules/web-push/` 保留。传递依赖许可分别适用。 |
-| 浏览器 | 从构建 26 起均不分发浏览器，调用用户独立安装的 Chrome／Edge。历史带浏览器包曾包含 Google Chrome for Testing；其条款与本项目许可分别适用，参见下文历史说明。 |
+| 浏览器 | 从构建 26 起，所有新安装包不附带浏览器，调用用户自行安装的 Chrome／Edge。历史附带浏览器的安装包仍须按实际分发版本核对其可执行程序条款、组件许可及编解码器条款，参见下文。 |
 | Vue、Naive UI | MIT；及其依赖的 MIT、BSD、Apache 等许可。打包脚本收集已安装依赖树的根目录许可／NOTICE 至 `Contents/Resources/UI-LICENSES/`，版本、原始路径及缺件见 `INDEX.txt`。清单保守包含可能被构建工具剔除的模块，不是全部代码均进入产物的证明。 |
 | Lucide 图标 | ISC，另含源自 Feather 部分的 MIT 声明；完整文件保留在 `UI-LICENSES`。 |
 
@@ -25,7 +25,7 @@ Microsoft Edge WebView2 Runtime 使用微软相应条款，不能由本项目重
 
 ## 历史带浏览器包的额外核查
 
-以下核查仅适用于曾分发的历史带浏览器包。从构建 26 起全部新包均不包含浏览器二进制，仍保留 Playwright 及其他包内组件的许可说明；用户独立安装的浏览器适用其原有条款。
+本节仅适用于历史附带浏览器的安装包。从构建 26 起，所有新安装包不包含浏览器二进制；用户安装的浏览器仍适用其原有条款，应用仍须保留 Playwright 及其他包内组件的许可说明。
 
 不能把浏览器简单标成“Chromium，BSD 许可”或将其视为 Playwright 的 Apache-2.0 内容。当前下载产物带有 Google Chrome for Testing 品牌，内部 `chrome://terms` 提供 Google 服务条款及 Chrome 附加条款，`chrome://credits` 提供开源组件的归属与许可。原有下载目录中的许可文件会随整个目录保留，但**这不足以证明全部通知、源码义务或再分发条件已经满足**。
 
@@ -37,7 +37,7 @@ Microsoft Edge WebView2 Runtime 使用微软相应条款，不能由本项目重
 
 平台名称、图标及平台页面内容属于各自权利人；图标来源见 [平台图标来源](apps/extension/public/platforms/README.md)，打包时另存为 `PLATFORM_ASSET_SOURCES.md`。这些标识用于识别对应网站，不表示平台授权、合作或推荐本软件。来源记录和权利归属声明不等于获得再分发许可。
 
-目前尚未确认平台图标的完整再分发依据，以及部分界面传递依赖缺少的原始许可文本。当前待办和证据范围见[分发许可核查](docs/legal/RELEASE_LICENSE_REVIEW.md)。第三方内容不能由本项目单方面改为非商业许可或 Apache-2.0，也不能以“侵权联系删除”替代事前授权核查。
+目前尚未确认平台图标的完整再分发依据，以及部分界面传递依赖缺少的原始许可文本。当前待办和证据范围见[分发许可核查](docs/legal/RELEASE_LICENSE_REVIEW.md)。第三方内容不能由本项目单方面改为 CourseWatch 非商业许可或其他许可，也不能以“侵权联系删除”替代事前授权核查。
 
 ## 教学平台采集参考
 

@@ -1,7 +1,7 @@
 {
   "name": "coursewatch",
-  "version": "0.2.34",
-  "desktopBuild": 34,
+  "version": "0.2.35",
+  "desktopBuild": 35,
   "windowsRevision": 0,
   "private": true,
   "type": "module",
@@ -63,5 +63,5 @@
     "vue-tsc": "^3.3.14",
     "wxt": "^0.21.5"
   },
-  "license": "SEE LICENSE IN TERMS.md"
+  "license": "SEE LICENSE IN LICENSE"
 }

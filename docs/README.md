@@ -18,6 +18,8 @@
 
 ## 验证记录
 
+- [应用更新检查](verification/APP-UPDATES-2026-11-15.md)：公开版本比较、通知去重、手动下载入口和桌面／网页宽窄窗口验证。
+- [实验功能用途与告知](verification/AUTOMATION-NOTICE-2026-11-15.md)：用途限制、数据发送、重新确认及本机记录。
 - [0.2.34：首次打开协议与免费声明](verification/RELEASE-0.2.34.md)：原生弹窗、版本命名、打包及旧包下架。
 
 - [构建 33 许可、文档与打包验证](verification/RELEASE-0.2.33.md)：Apache 原文与 TERMS 的组合形式、历史许可边界及实际验证范围。
@@ -47,6 +49,7 @@
 
 ## 许可与素材
 
+- [实验功能用途与自动化边界](legal/AUTOMATION_BOUNDARIES.md)：仅用于技术实现验证与参考、视频弹题真实提交、U校园保活、数据发送及确认记录。
 - [分发许可核查](legal/RELEASE_LICENSE_REVIEW.md)、[第三方许可](../THIRD_PARTY_NOTICES.md)、[项目协议](../TERMS.md)（[English](../TERMS.en.md)）。
 - 界面截图位于 `screenshots/`，文档插图位于 `images/`；源码仓库的图标设计与候选稿位于 `design/icon/`。
 

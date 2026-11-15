@@ -143,7 +143,7 @@ export class Engine {
         "INSERT OR IGNORE INTO outbox(dedupe,at,title,body,task_id,kind) VALUES(?,?,?,?,?,?)",
         key, now, title, body, taskId, kind,
       );
-      if (!inserted.changes || kind === 'test') return;
+      if (!inserted.changes || kind === 'test' || kind === 'update') return;
       const config = this.store.get<MobileNotificationConfig>('mobileNotifications', defaultMobileNotifications);
       const add = (channel: string, target: string) => this.store.run(
         'INSERT OR IGNORE INTO notification_deliveries(outbox_id,channel,target) VALUES(?,?,?)',

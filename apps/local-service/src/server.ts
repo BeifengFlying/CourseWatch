@@ -43,17 +43,23 @@ import type { SecretStorage } from '../../../packages/notifications/src/mobile.j
 import { DiagnosticLog, diagnosticReason } from '../../../packages/core/src/diagnostics.js';
 import { courseScanSlot, nextCourseScanAt } from '../../../packages/core/src/course-scan-clock.js';
 import { release, freemem, totalmem, uptime } from 'node:os';
+import { AppUpdates } from '../../../packages/core/src/updates.js';
 const sha = (s: string) => createHash("sha256").update(s).digest("hex");
 export async function createServer(options: {
   dir: string;
   port?: number;
   test?: boolean;
   notificationSecrets?: SecretStorage;
+  updateRequest?: typeof fetch;
 }) {
   const port = options.port ?? 17321;
   const origin = `http://127.0.0.1:${port}`;
   const store = new Store(join(options.dir, "coursewatch.db"));
   const engine = new Engine(store);
+  const updates = new AppUpdates(store, release => {
+    engine.enqueue(`app-update:${release.version}`, `CourseWatch ${release.version} 可用${release.prerelease ? '（测试版）' : ''}`,
+      `当前版本 ${APP_VERSION}。打开 CourseWatch 查看更新并下载，安装由使用者执行。\n${release.url}`, null, 'update');
+  }, options.updateRequest);
   const adapters = new AdapterManager(options.dir, () => engine.settings().browser);
   const diagnostics = new DiagnosticLog(options.dir);
   diagnostics.record('service', 'started', { facts: { platform: process.platform, arch: process.arch, node: process.versions.node } });
@@ -211,6 +217,9 @@ export async function createServer(options: {
   const study = registerStudyRoutes(app, store, options.dir, () => !!adapters.activeLogin, () => engine.courses().filter(c => state().some(p => p.id === c.platform && p.accountId === c.accountId)), diagnostics, (platform, status) => {
     engine.enqueue(`study:${platform}:${randomUUID()}`, `${platform === "unipus" ? "U校园" : "学习通"} · ${status.phase === "failed" ? "学习运行失败" : "学习已暂停"}`, [status.courseName, status.message, "打开 CourseWatch 查看运行窗口，处理后继续。"].filter(Boolean).join("\n"), null, "study");
   });
+  app.get('/api/updates', () => updates.status());
+  app.post('/api/updates/check', { config: { rateLimit: { max: 3, timeWindow: '1 minute' } } }, () => updates.check());
+  app.patch('/api/updates/settings', req => updates.setAutomatic(z.object({ automatic: z.boolean() }).strict().parse(req.body).automatic));
   app.setErrorHandler((err, req, reply) => {
     const e = err as any;
     diagnostics.record('api', 'request-error', { stage: req.routeOptions.url ?? 'unknown', reason: diagnosticReason(err), facts: { method: req.method, status: e instanceof z.ZodError ? 400 : e.statusCode ?? 500 } });
@@ -268,6 +277,7 @@ export async function createServer(options: {
         ? store.get("nativeRenderer", null)
         : undefined,
     version: APP_VERSION,
+    updates: updates.status(),
     status: currentPlatforms.some(
       (p) =>
         p.enabled &&
@@ -860,6 +870,7 @@ export async function createServer(options: {
     );
   app.addHook("onClose", async () => {
     stopping = true;
+    await updates.close();
     if (timer) clearTimeout(timer);
     if (reminderTimer) clearInterval(reminderTimer);
     if (courseTimer) clearTimeout(courseTimer);
@@ -870,6 +881,7 @@ export async function createServer(options: {
     store.close();
   });
   if (!options.test) timer = setTimeout(tick, 1500);
+  if (!options.test) updates.start();
   if (!options.test) courseTimer = setTimeout(courseClockTick, Math.min(3000, nextCourseScanAt() - Date.now()));
   return { app, store, engine, pairingCode: code, scan, scanScheduledCourses, mobileNotifications };
 }

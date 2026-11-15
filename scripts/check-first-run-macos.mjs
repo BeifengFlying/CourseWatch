@@ -1,6 +1,6 @@
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
-mkdirSync('.cache/first-run34', { recursive: true });
+mkdirSync('.cache/first-run35', { recursive: true });
 const source = readFileSync('apps/macos/main.swift', 'utf8');
 const consent = source.slice(source.indexOf('final class FirstRunConsent:'), source.indexOf('final class Bridge:'));
 const fixture = String.raw`
@@ -13,6 +13,8 @@ try terms.write(to: directory.appendingPathComponent("TERMS.md"), atomically: tr
 let suite = "top.mcsog.coursewatch.first-run-check." + UUID().uuidString
 let defaults = UserDefaults(suiteName: suite)!
 defer { defaults.removePersistentDomain(forName: suite); try? FileManager.default.removeItem(at: directory) }
+defaults.set(true, forKey: "CourseWatch.UserAgreement.2026-11-15")
+precondition(!defaults.bool(forKey: FirstRunConsent.acceptanceKey))
 var presentations = 0
 func response(_ choice: NSApplication.ModalResponse) -> (NSAlert) -> NSApplication.ModalResponse {
     return { alert in
@@ -64,13 +66,13 @@ for (theme, name) in [("light", NSAppearance.Name.aqua), ("dark", NSAppearance.N
         document.scrollToBeginningOfDocument(nil)
         let bitmap = root.bitmapImageRepForCachingDisplay(in: root.bounds)!
         root.cacheDisplay(in: root.bounds, to: bitmap)
-        try bitmap.representation(using: .png, properties: [:])!.write(to: URL(fileURLWithPath: ".cache/first-run34/\(size)-\(theme).png"))
+        try bitmap.representation(using: .png, properties: [:])!.write(to: URL(fileURLWithPath: ".cache/first-run35/\(size)-\(theme).png"))
         print("consent \(size) \(theme) size=\(root.bounds.size), complete terms and actions visible")
         alert.window.orderOut(nil)
     }
 }
 print("First launch, rejection, window dismissal, accepted restart and missing terms checks passed; isolated defaults only.")
 `;
-writeFileSync('.cache/first-run34/fixture.swift', 'import AppKit\n' + consent + '\n' + fixture);
-execFileSync('xcrun', ['swiftc', '-swift-version', '5', '.cache/first-run34/fixture.swift', '-o', '.cache/first-run34/check'], { stdio: 'inherit' });
-execFileSync('.cache/first-run34/check', [], { stdio: 'inherit' });
+writeFileSync('.cache/first-run35/fixture.swift', 'import AppKit\n' + consent + '\n' + fixture);
+execFileSync('xcrun', ['swiftc', '-swift-version', '5', '.cache/first-run35/fixture.swift', '-o', '.cache/first-run35/check'], { stdio: 'inherit' });
+execFileSync('.cache/first-run35/check', [], { stdio: 'inherit' });

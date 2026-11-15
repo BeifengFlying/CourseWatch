@@ -41,6 +41,9 @@
 - `node --import tsx scripts/check-browser-settings.mjs`：检查桌面与普通网页浏览器选择、保存、1060／320px 浅深主题；仅使用本地虚构数据，不启动平台窗口。
 - 从构建 26 起所有分发包均不带浏览器，不接受 `--bundle-browser`。0.2.33 及之前的安装包文件名带构建号；0.2.34 起只使用版本号，旧包在本地归档保留。
 
+- `node --import tsx scripts/check-automation-notice.mjs`：检查两平台新版用途说明、未勾选禁用、旧确认失效、模型保留、本机确认记录及 1060／390／320px 浅深主题；仅使用临时数据库，不连接教学平台、不调用模型、不启动任务。截图位于 `docs/screenshots/automation-notice-2026-11-15/`。
+- `node --import tsx scripts/check-app-updates.mjs`：使用模拟 Release 元数据检查桌面与普通网页的自动检查开关、保存失败恢复、手动检查、下载地址、更新说明纯文本及 1060／390／320px 浅深主题；不下载、安装或连接外部服务。
+
 ### 桌面版本号
 
 0.2.34 起，`version` 使用主版本、次版本和补丁版本，界面、发布名及安装包不附加构建号。例如 `CourseWatch-0.2.34-mac-arm64.dmg`、`CourseWatch-0.2.34-win-x64-setup.exe`。`desktopBuild` 仅用于系统内部包元数据，与补丁版本不再强制相等。更新时同步 macOS Info.plist、Windows 项目与 manifest、package-lock.json。`tests/desktop-version.test.ts` 检查元数据、当前文件名和历史文件名。已有同名安装包或校验文件仍会阻止打包，修订须递增补丁版本，不覆盖旧包。

@@ -36,6 +36,7 @@ import CourseManager from "./CourseManager.vue";
 import PlatformLoginPrompt from "./PlatformLoginPrompt.vue";
 import ExperimentalStudy from "./ExperimentalStudy.vue";
 import CourseProgress from "./CourseProgress.vue";
+import AppUpdates from './AppUpdates.vue';
 import {
   platforms,
   discoversCourses,
@@ -376,6 +377,7 @@ onUnmounted(() => {
             </div>
           </header>
           <main>
+            <AppUpdates v-if="connected" mode="banner" :status="health.updates" @changed="value => health.updates = value" />
             <div v-if="error" class="error" role="alert">
               {{ error
               }}<button @click="error = ''" aria-label="关闭错误">
@@ -1038,6 +1040,7 @@ onUnmounted(() => {
                     </button>
                   </div>
                 </section>
+                <section class="panel settings-panel"><AppUpdates :status="health.updates" @changed="value => health.updates = value" /></section>
                 <section class="panel settings-panel"><NotificationChannels /></section>
                 <section class="panel settings-panel"><ExperimentalStudy /><ExperimentalStudy platform="unipus" /></section>
                 <section class="panel settings-panel">

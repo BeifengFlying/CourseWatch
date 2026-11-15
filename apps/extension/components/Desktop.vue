@@ -36,6 +36,7 @@ import ExperimentalStudy from "./ExperimentalStudy.vue";
 import CourseProgress from "./CourseProgress.vue";
 import WindowsLifecycle from "./WindowsLifecycle.vue";
 import TextLinks from "./TextLinks.vue";
+import AppUpdates from './AppUpdates.vue';
 import {
   agendaEntries,
   sortAgenda,
@@ -1125,6 +1126,7 @@ onUnmounted(() => {
       </div>
       <Transition name="page" mode="out-in"
         ><div class="desktop-content" :key="selected">
+          <AppUpdates v-if="connected" mode="banner" :status="health.updates" @changed="value => health.updates = value" />
           <div
             v-if="error && panel === 'none'"
             class="desktop-error"
@@ -1863,6 +1865,9 @@ onUnmounted(() => {
                   </select>
                 </div>
               </template>
+              </section>
+              <section v-show="settingsSection === 'general'" class="settings-group">
+                <AppUpdates :status="health.updates" @changed="value => health.updates = value" />
               </section>
               <section v-show="settingsSection === 'reminders'" class="settings-group" aria-label="提醒设置">
               <h3>系统通知与提醒</h3>

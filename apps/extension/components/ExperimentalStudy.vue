@@ -6,7 +6,7 @@ import { api } from "../lib/api";
 import StudyChapterList from "./StudyChapterList.vue";
 import { studyDrafts } from "../lib/study-drafts";
 import { exportSystemLogs } from '../lib/diagnostics';
-import { StudyConfig, studyNoticeVersion, studyPlatformNames, initialStudyStatus, type StudyStatus, type StudyPlatform, type StudyPosition, type CourseLearningProgress } from "../../../packages/contracts/src/study";
+import { StudyConfig, STUDY_ACCEPTANCE_TEXT, studyNoticeVersion, studyPlatformNames, initialStudyStatus, type StudyStatus, type StudyPlatform, type StudyPosition, type CourseLearningProgress } from "../../../packages/contracts/src/study";
 const props = withDefaults(defineProps<{ mode?: "settings" | "platform"; platform?: StudyPlatform; courses?: CourseRecord[] }>(), { mode: "settings", platform: "chaoxing" });
 const name = studyPlatformNames[props.platform];
 const version = studyNoticeVersion(props.platform);
@@ -194,8 +194,9 @@ onUnmounted(() => {
 <template>
   <section class="study-experiment" :class="{ 'study-platform': props.mode === 'platform' }" :aria-label="`${name}自动学习`">
     <div v-if="props.mode === 'platform'" class="study-heading"><div><h3>学习任务</h3><p>{{ name }}<span v-if="savedModel && config.hasKey"> · {{ savedModel }}</span><span v-else> · {{ props.platform === 'unipus' && operation === 'keep-open' ? '保活无需模型' : '未配置模型' }}</span></p></div><button type="button" @click="openModel"><Settings2 :size="16" />模型与设置</button></div>
+    <p v-if="props.mode === 'platform'" class="study-note">实验功能仅用于技术实现验证与参考，不得用于其他目的。用于其他目的的后果由使用者依法承担，不代表平台已授权。</p>
     <div v-if="props.mode === 'settings'" class="study-switch-row">
-      <div><strong>{{ name }}自动学习</strong><p>仅供技术验证使用。开启前请阅读用途、风险及免责声明。</p></div>
+      <div><strong>{{ name }}自动学习</strong><p>仅用于技术实现验证与参考，不得用于其他目的。开启前请阅读用途、风险及免责声明。</p></div>
       <button type="button" class="study-toggle" role="switch" :aria-label="`${name}自动学习`" :aria-checked="config.enabled" :disabled="busy" @click="toggle"><span aria-hidden="true" /></button>
     </div>
     <p v-if="error && !editingModel" class="study-error" role="alert">{{ error }}</p>
@@ -320,21 +321,25 @@ onUnmounted(() => {
       <h3 :id="controlId('notice-title')">开启{{ name }}自动学习前</h3>
       <div class="study-notice-content">
         <h4>用途与授权</h4>
-        <p>本功能默认关闭，仅供在已获允许的课程中进行技术验证。请仅使用本人或明确获授权的账号，同时确认学校、教师和平台允许相关自动操作。持有账号、同意本说明或使用开源软件均不等于获得平台授权。不得违反适用法律法规、学校规定或平台条款，不得用于作弊、未经授权的访问或规避验证码、人脸识别及访问控制。</p>
+        <p><strong>本实验功能仅用于技术实现验证与参考，不得用于其他目的。</strong>不得用于实际课程任务代办、获取成绩或学时、出勤证明、代学代刷、作弊或收费服务。使用者自行将功能用于上述用途或其他超出范围的用途，应依法承担相应后果。</p>
+        <p>“技术验证”不是学校或平台的授权，也不是法律豁免。使用本人或明确获授权的账号，仍须遵守法律、学校规定、课程要求及平台条款；未能确认相关自动操作被允许时，不得在真实课程中运行，应使用本地模拟页面或自行控制的测试环境。不得未经授权访问他人账号、规避验证码、人脸识别或访问控制。</p>
         <h4>程序会执行的操作</h4>
-        <p v-if="props.platform === 'chaoxing'">开启后仍需单独选择操作并启动。播放课程按正常速度静音播放可识别的视频并翻阅文档；视频弹出的单选、判断及多选题直接穷举选项并提交，不调用模型，明确判错后换下一组，最多 256 种组合；播放视频期间不调用模型；视频结束并进入章节检测栏目后，配置了模型才生成答案，未配置时跳过检测；自动填入和提交练习需在设置中单独开启。课程作业只生成答案，由使用者手动填入和提交；不处理考试。请在启动前确认当前课程和章节，特别是会计入成绩或限制提交次数的测验。</p>
+        <p v-if="props.platform === 'chaoxing'">开启后仍需单独选择操作并启动。播放课程按正常速度静音播放可识别的视频并翻阅文档；视频弹出的单选、判断及多选题直接穷举选项并提交，不调用模型，明确判错后换下一组，最多 256 种组合。视频弹题会真实提交，不受“自动填入并提交章节练习”或“播放时处理章节测试”开关控制。播放视频期间不调用模型；视频结束并进入章节检测栏目后，配置了模型才生成答案，未配置时跳过检测；章节练习自动填入和提交需在设置中单独开启。课程作业只生成答案，由使用者手动填入和提交；不处理考试。启动前须核对课程、章节及计分、提交次数和独立完成要求。</p>
         <p v-if="props.platform === 'unipus'">开启后选择教程、操作及关闭时间，再单独启动。程序可按 1 倍速静音播放可识别的音视频，调用模型生成练习答案；只有另外勾选自动提交时才填入并提交练习。课程作业仅生成答案，考试和测评不处理。计时只记录实际媒体推进及前台阅读停留，不能证明本人持续学习，也不代表平台认可时长。不伪造完成记录或时长上报，不绕过验证及访问限制。暂未完成真实教程兼容验证，未知页面和提交结果会暂停。</p>
         <h4>学习记录、成绩与账号风险</h4>
         <p>模型可能答错、漏答或误解题意；网页变化、识别错误和网络中断可能造成操作失败、错误提交、任务中断或无法确认结果。提交可能不可撤销，也可能消耗提交次数、改变成绩或学习记录。平台可能要求额外验证、限制账号或作出其他处理。使用者应自行核对官方页面、教师通知和提交结果；不要把本地播放位置、翻页结束、运行结束或进度查询当作平台认可完成或整门课程完成的证明。</p>
         <h4>发送给模型的数据与费用</h4>
         <p>识别到的题干、选项及开启截图后的题目图片会发送到使用者配置的模型接口。截图可能包含题目附近的姓名、班级等信息；不愿向该服务商提供的内容不要开启或处理。Key 加密保存在本机且不回显，模型请求不携带平台 Cookie；本机数据库、浏览器资料和服务商保存的数据仍各有隐私风险。请自行核对接口地址、隐私政策、数据保留规则和计费方式。请求上限不是金额上限，失败请求也可能收费，调用费用由使用者承担。</p>
-        <h4>暂停、停止与运行限制</h4><p>学习通保持页面模式只保留页面。U校园播放和保留页面模式每 5 分钟模拟鼠标活动，普通超时提示自动点击继续；暂停时停止保活，验证码和身份验证需本人处理。不构造学时上报请求，定时到达后关闭。后台模式仍使用浏览器引擎，不能保证平台在后台继续计时。定时关闭使用本机时钟；软件重启不会恢复任务。</p>
+        <h4>联网搜索与本地保留</h4>
+        <p>同一题连续两次返回空答案后，程序自动将题干及选项发送到必应（cn.bing.com）检索，再连同网页标题、链接和摘要交给模型第三次作答。搜索不发送模型 Key、平台会话、截图或本地 Skill，但搜索服务会接收查询和网络元数据。每题最多三次模型作答，失败请求和重做均可能收费。不得发送无权提供的题目、资料或个人信息；不同意该搜索行为时，不要启动模型作答。</p>
+        <p>第三次仍为空时，题目、模型名称、原始回复、原因、搜索摘要及用量写入本机 study-model-logs 文件夹，不自动上传，不混入脱敏系统日志，也不会在退出后自动删除。开启本地 Skill 会向模型发送已有方法摘要。关闭功能不清除这些文件；先停止任务，再按 PRIVACY.md 清理。开启时另在本机数据库记录每个平台、每个说明版本的最近确认时间和确认文字；该记录不能证明平台授权或本人持续学习。</p>
+        <h4>暂停、停止与运行限制</h4><p>学习通保持页面模式只保留页面。U校园播放和保留页面模式在进入学习页时及之后每 5 分钟模拟鼠标活动，普通超时提示出现时自动点击继续；暂停时停止保活，验证码和身份验证需本人处理。不构造学时上报请求，但官网仍可能因播放、活动及点击产生学时或完成记录。这些记录不能证明本人实际学习，也不能据此申领成绩、学时或出勤。正常速度、原生控件和不伪造上报均不代表平台允许自动化。后台模式仍使用浏览器引擎，定时关闭受休眠及系统调度影响；软件重启不会恢复任务。</p>
         <p>运行期间保留独立浏览器并增加资源占用。遇到验证、登录失效或无法确认的任务时暂停，需本人在官方页面处理。暂停保留窗口；停止、关闭实验开关或退出软件时关闭运行浏览器。关闭学习设置或主窗口不会停止任务。休眠、断网或进程退出可能中断运行；已向平台提交的操作或已发送到模型的数据不能通过停止操作撤回。后台重启不会自动恢复学习任务。</p>
         <h4>测试范围与责任</h4>
         <p>本功能尚未完成所有学校、页面、题型、模型服务及长时间运行的验证。软件按现状提供，不保证正确性、兼容性、适用性、持续可用性或学习效果。请备份重要数据并保留其他核对方式，发现异常立即停止。在适用法律允许的范围内，使用者承担使用风险及依法应承担的后果，软件提供方不承担因此产生的学习记录、成绩、账号限制、数据丢失、接口费用及其他损失责任。</p>
-        <p>上述约定不排除或限制法律规定不得免除的责任，包括依法不得免责的人身损害责任、因故意或重大过失造成财产损失的责任及其他法定权利。本说明不是学校或平台的授权文件，也不是对操作合规或答案正确的保证。完整条款见随软件提供的 DISCLAIMER.md、TERMS.md 和 PRIVACY.md；本次确认版本：{{ version }}。</p>
+        <p>使用者自行超出技术实现验证与参考范围使用的，应依法承担相应后果，包括平台或学校处理、学习记录及成绩变化、账号限制、接口费用和数据损失；不得据此要求免除其依法应承担的责任。上述约定不排除或限制开发者依法应承担或法律规定不得免除的责任，包括依法不得免责的人身损害责任、因故意或重大过失造成财产损失的责任及其他法定权利。本说明不是学校或平台的授权文件，也不保证操作合规或答案正确。完整条款见随软件提供的 DISCLAIMER.md、TERMS.md 和 PRIVACY.md；本次确认版本：{{ version }}。确认时间按本机时钟保存，无真实身份核验或外部存证。</p>
       </div>
-      <label v-if="!config.enabled" class="study-checkbox"><input v-model="accepted" type="checkbox" />我已阅读并理解上述说明，将在法律、学校及平台允许的范围内使用</label>
+      <label v-if="!config.enabled" class="study-checkbox"><input v-model="accepted" type="checkbox" />{{ STUDY_ACCEPTANCE_TEXT }}</label>
       <p v-if="error" class="study-error" role="alert">{{ error }}</p>
       <div class="study-actions"><button type="button" :disabled="busy" @click="notice?.close()">取消</button><button v-if="!config.enabled" type="button" class="glass-primary" :disabled="busy || !accepted" @click="enable">确认并开启</button></div>
     </dialog>

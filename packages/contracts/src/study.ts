@@ -1,6 +1,7 @@
 import { z } from "zod";
-export const STUDY_NOTICE_VERSION = "2026-11-13.3";
-export const UNIPUS_STUDY_NOTICE_VERSION = "2026-11-13.u2";
+export const STUDY_NOTICE_VERSION = "2026-11-15.1";
+export const UNIPUS_STUDY_NOTICE_VERSION = "2026-11-15.u1";
+export const STUDY_ACCEPTANCE_TEXT = "已阅读并理解用途、自动操作、数据发送及保留说明；仅用于技术实现验证与参考，不用于其他目的。超出该范围使用的后果由使用者依法承担，法律规定不能免除的责任不受影响。";
 export type StudyPlatform = "chaoxing" | "unipus";
 export const studyPlatformNames = { chaoxing: "学习通", unipus: "U校园" } as const;
 export const studyNoticeVersion = (platform: StudyPlatform) => platform === "unipus" ? UNIPUS_STUDY_NOTICE_VERSION : STUDY_NOTICE_VERSION;

@@ -2,7 +2,7 @@ import { beforeEach, afterEach, it, expect, vi } from "vitest";
 import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { STUDY_NOTICE_VERSION, UNIPUS_STUDY_NOTICE_VERSION } from "../packages/contracts/src/study.js";
+import { STUDY_NOTICE_VERSION, UNIPUS_STUDY_NOTICE_VERSION, STUDY_ACCEPTANCE_TEXT } from "../packages/contracts/src/study.js";
 const secrets = vi.hoisted(() => new Map<string, unknown>());
 vi.mock("../packages/adapters/src/vault.js", () => ({ Vault: class { async save(id: string, value: unknown) { secrets.set(id, value); } async read(id: string) { return secrets.get(id); } } }));
 import { createServer } from "../apps/local-service/src/server.js";
@@ -42,6 +42,46 @@ it("默认关闭，未确认免责声明不能启用或启动", async () => {
   expect((await server.app.inject({ method: "PATCH", url: "/api/study/settings", headers, payload: { enabled: true } })).statusCode).toBe(409);
   expect((await server.app.inject({ method: "POST", url: "/api/study/start", headers })).statusCode).toBe(409);
   expect((await server.app.inject({ method: "POST", url: "/api/study/accept", headers, payload: { accepted: true, noticeVersion: "old" } })).statusCode).toBe(400);
+});
+it.each([
+  ['chaoxing', '/api/study', STUDY_NOTICE_VERSION],
+  ['unipus', '/api/study/unipus', UNIPUS_STUDY_NOTICE_VERSION],
+] as const)('%s 仅在有效确认后记录本机时间与文字，关闭后保留且不加入任务导出', async (platform, path, version) => {
+  const recordKey = `studyAcceptance:${platform}:${version}`;
+  const before = Date.now();
+  for (const payload of [{ accepted: false, noticeVersion: version }, { accepted: true, noticeVersion: 'old' }]) {
+    expect((await server.app.inject({ method: 'POST', url: `${path}/accept`, headers, payload })).statusCode).toBe(400);
+    expect(server.store.get(recordKey, null)).toBeNull();
+    expect((await server.app.inject({ url: `${path}/settings`, headers })).json().enabled).toBe(false);
+  }
+  const response = await server.app.inject({ method: 'POST', url: `${path}/accept`, headers, payload: { accepted: true, noticeVersion: version } });
+  expect(response.statusCode).toBe(200);
+  expect(response.json()).toMatchObject({ enabled: true, noticeVersion: version, model: '' });
+  const record = server.store.get<any>(recordKey, null);
+  expect(record).toEqual({ platform, noticeVersion: version, acceptedAt: expect.any(Number), acknowledgement: STUDY_ACCEPTANCE_TEXT });
+  expect(record.acceptedAt).toBeGreaterThanOrEqual(before);
+  expect(record.acceptedAt).toBeLessThanOrEqual(Date.now());
+  const other = platform === 'chaoxing' ? 'unipus' : 'chaoxing';
+  const otherVersion = platform === 'chaoxing' ? UNIPUS_STUDY_NOTICE_VERSION : STUDY_NOTICE_VERSION;
+  expect(server.store.get(`studyAcceptance:${other}:${otherVersion}`, null)).toBeNull();
+  await server.app.inject({ method: 'POST', url: `${path}/disable`, headers });
+  expect(server.store.get(recordKey, null)).toEqual(record);
+  const exported = await server.app.inject({ url: '/api/export', headers });
+  expect(exported.statusCode).toBe(200);
+  expect(exported.body).not.toContain('acknowledgement');
+  expect(exported.body).not.toContain(STUDY_ACCEPTANCE_TEXT);
+});
+it('确认保存失败时回滚确认记录与开启状态', async () => {
+  const set = server.store.set.bind(server.store);
+  const write = vi.spyOn(server.store, 'set').mockImplementation((key, value) => {
+    if (key === 'studyConfig') throw new Error('fixture write failure');
+    set(key, value);
+  });
+  try {
+    expect((await server.app.inject({ method: 'POST', url: '/api/study/accept', headers, payload: { accepted: true, noticeVersion: STUDY_NOTICE_VERSION } })).statusCode).toBe(500);
+    expect(server.store.get(`studyAcceptance:chaoxing:${STUDY_NOTICE_VERSION}`, null)).toBeNull();
+    expect((await server.app.inject({ url: '/api/study/settings', headers })).json().enabled).toBe(false);
+  } finally { write.mockRestore(); }
 });
 it("确认、凭据保存和地址绑定；GET 不回显 Key，关闭保持可停止", async () => {
   const enabled = await server.app.inject({ method: "POST", url: "/api/study/accept", headers, payload: { accepted: true, noticeVersion: STUDY_NOTICE_VERSION } });

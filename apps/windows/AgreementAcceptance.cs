@@ -4,7 +4,7 @@ namespace CourseWatch;
 
 internal sealed class AgreementAcceptance(string directory)
 {
-    internal const string Revision = "2026-11-15";
+    internal const string Revision = "2026-11-15.1";
     private string PathName => Path.Combine(directory, "user-agreement.json");
     private sealed record Receipt(string Revision, DateTimeOffset AcceptedAt);
 
