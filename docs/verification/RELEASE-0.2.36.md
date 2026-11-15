@@ -38,7 +38,7 @@ U校园源码修复已通过本机两本教程查询，分别读取 96、79 个�
 
 ## 发布记录
 
-2026-11-15，已发布 [v0.2.36 测试版](https://github.com/BeifengFlying/CourseWatch/releases/tag/v0.2.36)。标签指向安装包构建源码提交 `309e9deac2ec9ad825ef4f8e9fd6c24565a026c6`。两个 DMG 及其同名 `.sha256` 共四个附件已上传；GitHub 返回的 DMG 大小与 SHA-256 与上表一致，四个公开下载地址的 HTTP 检查均返回 200。中英文 README 已同步 macOS 下载链接，Windows 下载栏留空。历史 Release 附件保留。
+2026-11-15，已发布 [v0.2.36 测试版](https://github.com/BeifengFlying/CourseWatch/releases/tag/v0.2.36)。标签指向安装包构建源码提交 `309e9deac2ec9ad825ef4f8e9fd6c24565a026c6`。两个 DMG 及其同名 `.sha256` 共四个附件已上传；GitHub 返回的 DMG 大小与 SHA-256 与上表一致，四个公开下载地址的 HTTP 检查均返回 200。中英文 README 已同步 macOS 下载链接，macOS 首次发布时 Windows 下载栏留空。Windows 四个附件随后追加到同一 Release，下载栏已补齐，摘要及公开下载核验见 [Windows 0.2.36](WINDOWS-0.2.36.md)。历史 Release 附件保留。
 
 ## 验证边界
 

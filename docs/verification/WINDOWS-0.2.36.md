@@ -33,10 +33,19 @@
 | `CourseWatch-0.2.36-win-x64-setup.exe` | 82662979 | `ab2e802634351fd080b14fc8ad50d32dac442c3527d577f89c0ce6e78244c8e2` |
 | `CourseWatch-0.2.36-win-x64.zip` | 114842627 | `ed750f47b627bf5a980c7aa7e99cb2559e10e6fb3f559a41f99eca6e6632e683` |
 
-两份同名 `.sha256` 已核对；远端发布及公开下载结果完成后补录。
+两份同名 `.sha256` 已核对。
 
 ## 验证边界
 
 本轮未使用真实教学平台账号验证登录及课程同步，未执行安装程序或替换已安装应用。Windows 10、完整安装／升级／卸载、实际开机启动、系统通知投递、长期休眠及跨屏 DPI 切换未实测。既有界面依赖许可文本缺件见[许可核查](../legal/RELEASE_LICENSE_REVIEW.md)。
 
 Windows 附件与 macOS 附件使用同一个 `v0.2.36` Release；macOS 构建输入及检查范围见[0.2.36 验证](RELEASE-0.2.36.md)，其安装包不含本轮追加的学习通登录修复。
+
+## 发布检查
+
+Windows 四个附件已追加到 [v0.2.36 发布页](https://github.com/BeifengFlying/CourseWatch/releases/tag/v0.2.36)。Release ID 保持 `445956899`，合计 8 个附件；原四个 macOS 附件的 ID、字节数与 SHA256 保持不变。标签仍指向 macOS 构建提交 `309e9deac2ec9ad825ef4f8e9fd6c24565a026c6`，未移动标签或创建替代 Release。
+
+- Windows 安装程序、便携 ZIP 及两份校验文件的 GitHub 字节数、SHA256 与本地一致。
+- 使用 Node.js、不携带登录凭据，从公开下载链接取回四个附件；大文件使用 HTTP 范围请求按顺序计算完整 SHA256，全部匹配。Python 首次请求因本机证书链无法验证而失败，未作为下载通过记录，未关闭 TLS 校验。
+- 源码已合并到 `main`，中英文 README 和 Windows 下载说明指向同一个版本；Release 说明补充 Windows 安装方式、追加修复和验证边界。
+- 发布账号为 `BeifengFlying`。原 Release 元数据保存在本机 `build/release-archives/v0.2.36-before-windows/release.json`，产物与公开下载证据保存在 `.cache/release36/`。
