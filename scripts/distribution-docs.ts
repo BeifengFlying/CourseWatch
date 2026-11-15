@@ -31,6 +31,7 @@ export async function copyDistributionDocs(root: string, destination: string) {
     "docs/verification/README-DESKTOP-2026-11-15.md",
     "docs/verification/WINDOWS-0.2.31-MERGE.md",
     "docs/verification/WINDOWS-0.2.34.md",
+    "docs/verification/WINDOWS-0.2.35.md",
     "docs/verification/WINDOWS-0.2.30-R2.md",
     "docs/verification/STUDY-WEB-SEARCH-2026-11-15.md",
     "docs/verification/MACOS-PERFORMANCE-2026-11-14.md",
