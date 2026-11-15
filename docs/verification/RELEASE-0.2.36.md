@@ -33,10 +33,13 @@ U校园源码修复已通过本机两本教程查询，分别读取 96、79 个�
 
 | 文件 | 字节数 | SHA-256 |
 | --- | ---: | --- |
-
 | `CourseWatch-0.2.36-mac-arm64.dmg` | 65284986 | `bf636389986dcb3db4b49da46d0384646eeab03501af952190839e10bf83f32a` |
 | `CourseWatch-0.2.36-mac-x64.dmg` | 67444074 | `513817952490eb7e20a4d72342c8fb4c011212e1b08e69161758d63de9465bbc` |
 
+## 发布记录
+
+2026-11-15，已发布 [v0.2.36 测试版](https://github.com/BeifengFlying/CourseWatch/releases/tag/v0.2.36)。标签指向安装包构建源码提交 `309e9deac2ec9ad825ef4f8e9fd6c24565a026c6`。两个 DMG 及其同名 `.sha256` 共四个附件已上传；GitHub 返回的 DMG 大小与 SHA-256 与上表一致，四个公开下载地址的 HTTP 检查均返回 200。中英文 README 已同步 macOS 下载链接，Windows 下载栏留空。历史 Release 附件保留。
+
 ## 验证边界
 
-本次仅生成本地安装包，未发布、未替换已安装的应用。macOS 使用临时签名，未通过 Apple 公证。Intel Mac 实机界面、系统通知实际投递及长时间休眠后行为未进行本轮验证。包内四项既有界面依赖的许可文本缺件沿用[许可核查记录](../legal/RELEASE_LICENSE_REVIEW.md)，打包通过不等于分发权利审计完成。
+本次已发布上述 macOS 安装包，未替换本机已安装的应用。macOS 使用临时签名，未通过 Apple 公证。Intel Mac 实机界面、系统通知实际投递及长时间休眠后行为未进行本轮验证。包内四项既有界面依赖的许可文本缺件沿用[许可核查记录](../legal/RELEASE_LICENSE_REVIEW.md)，打包通过不等于分发权利审计完成。
