@@ -23,10 +23,26 @@
 
 ## 产物与验证边界
 
-文件名为 `CourseWatch-0.2.35-win-x64-setup.exe`、`CourseWatch-0.2.35-win-x64.zip`，各附同名 `.sha256`；最终文件摘要及发布结果在构建完成后补录。
+最终构建输入为 `a09e84419dfcea8f7c9e9cd902b241c134e37983`，生产源码沿用 `v0.2.35`，另包含本页、下载说明与测试项目配置修复。最终 `npm run build:win` 及包内检查通过。
+
+| 文件 | 字节数 | SHA256 |
+| --- | ---: | --- |
+| `CourseWatch-0.2.35-win-x64-setup.exe` | 82,695,958 | `a11c4af0b79ca6c6a487384bd1b1cfbae213d6978d1ece83aa03f8694877df51` |
+| `CourseWatch-0.2.35-win-x64.zip` | 114,823,255 | `fb3f1354e3f3e250d6e45f11bbb0941dd4e810feeeea6e380121c08554158a91` |
+
+两份同名 `.sha256` 与最终产物匹配；ZIP 完整性检查通过，共 3449 项。包内版本、修订字段、协议与许可证原文均核对一致。
 
 包内包含 Node、.NET 运行时和协议许可文本，不附带浏览器、文档展示图、本地项目说明或真实用户数据。安装程序包含缺失 WebView2 时使用的微软在线引导程序。第三方上游原文件及其自身文档保留。
 
 未执行最终安装程序，未替换已安装应用。Windows 10、完整安装／升级／卸载、实际开机启动、系统通知投递、长期休眠及跨屏 DPI 切换仍待实测。当前四项界面依赖许可文本缺件继续记录于包内 `UI-LICENSES/INDEX.txt`，未将其记为已解决。
 
 Windows 附件追加到现有 `v0.2.35` Release，保留原 macOS 附件与版本标签；macOS 包不在本轮重新构建。
+
+## 发布检查
+
+[0.2.35 发布页](https://github.com/BeifengFlying/CourseWatch/releases/tag/v0.2.35) 已追加四个 Windows 附件，Release ID 保持 `445877503`，合计 8 个附件。原四个 macOS 附件的 ID、字节数与 SHA256 均保持不变；未创建替代 Release 或移动版本标签。
+
+- Windows 安装程序、便携 ZIP 及两份校验文件的远端字节数、SHA256 与本地一致。
+- 未携带登录凭据公开下载 Windows 附件并复算摘要，全部匹配。大文件首次下载遇到网络超时；便携 ZIP 随后使用 HTTP 范围请求取回全部字节，按顺序复算完整 SHA256 后通过，未将超时请求记为通过。
+- Release 说明已补充 Windows 安装方式和实际验证范围，移除不含 Windows 0.2.35 附件的过时描述。中英文 README 的 Windows 下载指向同一版本发布页。
+- GitHub 操作使用 `BeifengFlying` 账号。原 Release 元数据留存在本地 `build/release-archives/v0.2.35-before-windows/release.json`，公开下载记录位于 `.cache/release35/`。
