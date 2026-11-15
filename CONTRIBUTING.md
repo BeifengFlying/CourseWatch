@@ -5,7 +5,7 @@
 ## 来源与许可
 
 - 仅提交原创内容或已取得相应授权的内容。引入第三方代码、素材、字体或数据时，注明来源、版本和许可，并保留原始版权及许可声明。公开可下载或标注来源不代表已取得授权。
-- 对拟按项目当前非商业许可证提供的新增原创贡献，请在 PR 中确认有权按 [LICENSE](LICENSE) 提供相应授权。提交 PR 不转让著作权，也不表示授予维护者任意重新许可第三方内容或外部贡献的权利；其他许可安排应在合并前说明并取得相关权利人同意。
+- 对拟按项目 Apache-2.0 及 TERMS 项目约定提供的新增原创贡献，请在 PR 中确认有权按 [LICENSE](LICENSE) 提供相应授权。提交 PR 不转让著作权，也不表示授予维护者任意重新许可第三方内容或外部贡献的权利；其他许可安排应在合并前说明并取得相关权利人同意。
 - 保留历史 Apache-2.0 授权与第三方组件各自的许可范围，不将整个仓库或安装包笼统标成单一许可。
 - 不提交真实账号、Cookie、会话、数据库、API Key、原始模型日志、受限题目或他人个人信息。问题复现使用模拟数据，截图及日志先脱敏。
 
@@ -21,7 +21,7 @@
 
 PRs may report issues, improve documentation, fix bugs or add features. Search existing issues first and discuss larger changes in an issue. Describe the change, actual validation and untested scope, with necessary tests and documentation. Do not describe mock-page checks or a successful build as validation against a real platform.
 
-Only submit original material or material you are authorized to contribute. Identify third-party sources, versions and licenses, and retain their original notices. For new original contributions intended to use the project's current noncommercial license, confirm in the PR that you have authority to grant the rights in [LICENSE](LICENSE). A PR does not transfer copyright or grant unrestricted relicensing rights. Resolve alternative licensing arrangements before merging. Preserve historical Apache-2.0 grants and independent third-party licenses.
+Only submit original material or material you are authorized to contribute. Identify third-party sources, versions and licenses, and retain their original notices. For new original contributions intended to use the project's Apache-2.0 license and additional Project Terms, confirm in the PR that you have authority to grant the rights in [LICENSE](LICENSE). A PR does not transfer copyright or grant unrestricted relicensing rights. Resolve alternative licensing arrangements before merging. Preserve historical Apache-2.0 grants and independent third-party licenses.
 
 Do not submit credentials, sessions, databases, API keys, raw model logs, restricted questions or others' personal information. Use mock data and redact screenshots and logs. Experimental automation is solely for technical implementation verification and reference, and must not be used for other purposes. This does not establish platform authorization or a legal exemption.
 

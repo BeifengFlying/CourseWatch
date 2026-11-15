@@ -4,8 +4,8 @@
 <p align="center">课程任务管理、个人日程与截止提醒。macOS 14+ / Windows 10+ x64。</p>
 <p align="center">
   <a href="https://github.com/BeifengFlying/CourseWatch/actions/workflows/ci.yml"><img src="https://img.shields.io/badge/CI-GitHub%20Actions-2088FF?logo=githubactions&amp;logoColor=white" alt="CI：GitHub Actions"></a>
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-0.2.35%20beta-orange" alt="版本：0.2.35 测试版"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Noncommercial-red" alt="许可：CourseWatch 非商业许可证，禁止商用"></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-0.2.36%20beta-orange" alt="版本：0.2.36 测试版"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0%20%2B%20Terms-blue" alt="许可：Apache-2.0 与项目补充约定"></a>
   <a href="package.json"><img src="https://img.shields.io/badge/Node.js-24-339933" alt="Node.js 24"></a>
   <a href="#安装"><img src="https://img.shields.io/badge/platform-macOS%2014%2B-blue" alt="平台：macOS 14 及以上"></a>
   <a href="docs/guides/WINDOWS.md"><img src="https://img.shields.io/badge/platform-Windows%2010%2B%20x64-blue" alt="平台：Windows 10+ x64，待实机验收"></a>
@@ -22,7 +22,7 @@ macOS 关闭主窗口后继续在菜单栏运行；Windows 可选择隐藏到系
 
 ## 安装
 
-当前版本：**0.2.35（测试版）**。从 [GitHub Releases](https://github.com/BeifengFlying/CourseWatch/releases/tag/v0.2.35) 下载对应安装包。安装包不附带浏览器或文档展示图：
+当前源码与本次打包版本：**0.2.36（测试版）**。已发布的 **0.2.35** 安装包可从 [GitHub Releases](https://github.com/BeifengFlying/CourseWatch/releases/tag/v0.2.35) 下载对应安装包。安装包不附带浏览器或文档展示图：
 
 | 系统 | 下载 |
 | --- | --- |
@@ -32,7 +32,7 @@ macOS 关闭主窗口后继续在菜单栏运行；Windows 可选择隐藏到系
 
 Windows 最低版本为 Windows 10 2004（内部版本 19041），建议使用 22H2 或更新版本。安装程序包含缺少 WebView2 时使用的微软在线引导程序；便携 ZIP 解压后运行 `CourseWatch.exe`。0.2.35 已检查 Windows 界面的更新提醒、实验用途确认、浅深主题及窄尺寸布局，协议弹窗在 100%／150% 缩放下检查通过。Windows 10、完整安装／升级／卸载及真实通知仍待实测，范围见 [Windows 0.2.35 验证](docs/verification/WINDOWS-0.2.35.md)。
 
-首次打开且尚无当前修订确认记录时，应用显示《用户协议》全文、完全免费声明、项目源码地址及付费渠道退款举报提示；点击“同意并继续”后才启动后台。选择“退出软件”不保存确认记录，同一修订已确认后重启不重复弹出。0.2.35 更新协议修订，旧版确认需重新完成。
+首次打开且尚无当前修订确认记录时，应用显示《用户协议》全文、完全免费声明、项目源码地址及付费渠道退款举报提示；点击“同意并继续”后才启动后台。选择“退出软件”不保存确认记录，同一修订已确认后重启不重复弹出。0.2.36 更新协议修订，旧版确认需重新完成。
 
 macOS 安装：打开 DMG，将 CourseWatch 拖入 Applications。升级前应从菜单栏退出应用，再替换旧版本；升级沿用原数据目录，建议提前备份重要数据。安装仍由使用者执行，历史安装包及校验文件按各自记录保留。
 
@@ -263,4 +263,4 @@ npm run build:win
 
 问题反馈请提交至 [Issues](https://github.com/BeifengFlying/CourseWatch/issues)，注明版本与构建号、操作系统、教学平台及复现步骤。涉及页面差异时请附脱敏截图。账号、Cookie、数据库及浏览器资料不得公开上传，日志应检查并脱敏后提交。
 
-**禁止商用，包括收费分发、收费服务及集成到收费产品。** 自 0.2.35 起，新版有权许可的原创内容采用 [CourseWatch 非商业许可证 1.0](LICENSE)，具体使用要求见[项目协议](TERMS.md)。这是自定义非商业许可，不属于 OSI 定义的开源许可；历史 Apache-2.0 授权不追溯撤回，下架旧包也不收回已授予权利。当前测试版免费，不接受广告合作或捐赠。第三方代码、平台名称和图标的来源见[第三方声明](THIRD_PARTY_NOTICES.md)，依赖许可的未决项见[许可核查记录](docs/legal/RELEASE_LICENSE_REVIEW.md)。
+本项目基于 [Apache-2.0](LICENSE) 及[项目协议](TERMS.md)发行。`LICENSE` 保留标准原文，新增项目约定统一写入 TERMS；禁止商用、免费分发及实验用途约定见项目协议第六、八部分。项目补充约定不是 Apache-2.0 自带条款，不能单方面撤回既有有效授权。当前测试版免费，不接受广告合作或捐赠。第三方代码、平台名称和图标来源见[第三方声明](THIRD_PARTY_NOTICES.md)，依赖许可未决项见[许可核查记录](docs/legal/RELEASE_LICENSE_REVIEW.md)。

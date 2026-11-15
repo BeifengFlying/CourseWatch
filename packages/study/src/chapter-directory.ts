@@ -11,7 +11,9 @@ export async function directoryFrames(page: Page, platform: StudyPlatform): Prom
 }
 export async function frameChapters(frame: Frame, platform: StudyPlatform): Promise<StudyChapter[]> {
   return frame.locator(chapterSelector(platform)).evaluateAll((nodes, platform) => {
-    const clean = (s?: string | null) => (s || '').replace(/\s+/g, ' ').trim();
+    // Object methods remain self-contained when tsx preserves function names;
+    // inferred arrow names can otherwise reference its unavailable __name helper.
+    const {clean} = {clean(s?: string | null) { return (s || '').replace(/\s+/g, ' ').trim(); }};
     let loadedId = '';
     // AJAX navigation leaves the outer URL unchanged. The loaded cards document
     // identifies the actual chapter; a highlighted row alone is not load proof.
@@ -50,7 +52,7 @@ export async function frameChapters(frame: Frame, platform: StudyPlatform): Prom
       }
       const locked = !!row.closest('[disabled],[aria-disabled=true],.disabled,.locked,.chapter_locked,[data-locked=true]') || !!row.querySelector('.lock,.icon-lock,.icon_lock,.icon-locked,.chapter-lock,[data-locked=true]');
       const state = clean(row.querySelector('.catalog_points,.task-status,.catalog_task')?.textContent);
-      const indicator = (selector: string) => [...row.querySelectorAll(selector)].some(node => {
+      const {indicator} = {indicator(selector: string) { return [...row.querySelectorAll(selector)].some(node => {
         // A folded directory is still readable; hidden status templates inside
         // a row are not evidence of completion.
         for (let n: Element | null = node; n && n !== row; n = n.parentElement) {
@@ -58,7 +60,7 @@ export async function frameChapters(frame: Frame, platform: StudyPlatform): Prom
           if (n.hasAttribute('hidden') || style.display === 'none' || style.visibility === 'hidden') return false;
         }
         return true;
-      });
+      }); }};
       const finished = row.getAttribute('data-completed') === 'true' || indicator('.icon_Completed,.icon-complete,.icon_yiwanc,.icon_yiwancheng') || /^(已完成|任务点已完成)$/.test(state);
       const pending = clean(row.querySelector('.bntHoverTips')?.textContent).match(/(\d+)\s*个待完成任务点/);
       const unfinished = row.getAttribute('data-completed') === 'false' || indicator('.icon_Uncompleted') || /^(未完成|任务点未完成)$/.test(state) || !!pending && Number(pending[1]) > 0;

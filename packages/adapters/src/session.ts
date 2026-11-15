@@ -3,6 +3,7 @@ import { ZodError } from "zod";
 import type { BrowserContext } from "playwright";
 import { safePlatformUrl, type PlatformId } from "../../contracts/src/index.js";
 import { getPlatformPage } from "./http.js";
+import { DiagnosticError, type DiagnosticFacts } from '../../core/src/diagnostics.js';
 
 // Login evidence is independent of course discovery and task parsing.
 export function inspectSession(html: string, platform?: PlatformId) {
@@ -79,7 +80,8 @@ export async function confirmLogin(context: BrowserContext, id: PlatformId, onCo
     // Verify a protected read-only endpoint with this browser's own session.
     // Cookie presence or a public landing page does not prove authentication.
     const { courseReader, CollectionError } = await import("./course-http.js");
-    const read = courseReader(context.request, id);
+    let facts: DiagnosticFacts = {};
+    const read = courseReader(context.request, id, observed => { facts = observed; });
     try {
       if (id === "yuketang") {
         const origin = "https://www.yuketang.cn";
@@ -97,14 +99,16 @@ export async function confirmLogin(context: BrowserContext, id: PlatformId, onCo
       return;
     } catch (error) {
       if (error instanceof CollectionError && error.outcome === "verification_required")
-        throw new Error("请先在官方窗口完成验证，再点击完成登录");
+        throw new DiagnosticError("请先在官方窗口完成验证，再点击完成登录", 'login-confirm', {...facts,outcome:error.outcome}, {cause:error});
+      const detail = {...facts,...(error instanceof CollectionError ? {outcome:error.outcome} : {})};
+      let message = "尚未确认登录成功，请完成官方登录并进入课程页后重试";
       if (id === "chaoxing" && !(error instanceof CollectionError && error.outcome === "auth_required")) {
-        if (error instanceof CollectionError) throw new Error(`学习通登录校验未完成：${error.message}`);
-        if (error instanceof ZodError) throw new Error("学习通登录校验未完成：课程响应结构无法识别，请稍后重试；登录窗口已保留");
-        if (error instanceof Error && /timeout|超时/i.test(error.message)) throw new Error("学习通登录校验请求超时，请检查网络后重试；登录窗口已保留");
-        throw new Error("学习通登录校验请求失败，请检查网络后重试；登录窗口已保留");
+        if (error instanceof CollectionError) message = `学习通登录校验未完成：${error.message}`;
+        else if (error instanceof ZodError) message = "学习通登录校验未完成：课程响应结构无法识别，请稍后重试；登录窗口已保留";
+        else if (error instanceof Error && /timeout|超时/i.test(error.message)) message = "学习通登录校验请求超时，请检查网络后重试；登录窗口已保留";
+        else message = "学习通登录校验请求失败，请检查网络后重试；登录窗口已保留";
       }
-      throw new Error("尚未确认登录成功，请完成官方登录并进入课程页后重试");
+      throw new DiagnosticError(message, 'login-confirm', detail, {cause:error});
     }
   }
   // SSO can leave an old login tab open. Inspect all official frames, rather

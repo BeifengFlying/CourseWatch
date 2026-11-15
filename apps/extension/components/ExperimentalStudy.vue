@@ -38,9 +38,13 @@ watch(selectedCourse, courseId => {
 });
 async function readChapters() {
   await act(async () => {
+    if (config.value.active) {
+      status.value = await api(`${prefix}/progress`, 'POST');
+      if (!runningChapters.value.length) throw new Error('当前官网页面未读取到章节目录，请打开运行窗口检查教程是否加载');
+      return;
+    }
     const result = await api(`${prefix}/catalog`, 'POST', {courseId:selectedCourse.value}, 100000);
     await readPosition();
-    if (config.value.active) status.value = await api(`${prefix}/status`);
     if (result.issues?.length) throw new Error(typeof result.issues[0] === 'string' ? result.issues[0] : result.issues[0].message || '章节读取未完成，请查看课程查询结果');
   });
 }

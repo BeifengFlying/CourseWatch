@@ -52,7 +52,7 @@ it('登录校验失败记录平台及错误类别，不写入课程或凭据', a
     const response = await server.app.inject({ method: 'POST', url: '/api/platforms/chaoxing/login/finish', headers, payload: {} });
     expect(response.statusCode).toBe(409);
     const exported = await server.app.inject({ url: '/api/diagnostics/export', headers });
-    expect(exported.json().journal.entries).toContainEqual(expect.objectContaining({ source: 'chaoxing', event: 'login-confirmation-failed', reason: 'response-format' }));
+    expect(exported.json().journal.entries).toContainEqual(expect.objectContaining({ source: 'chaoxing', event: 'login-confirm-failed', reason: 'response-format' }));
     expect(server.store.get<any>('platform:chaoxing', {}).loginStatus).not.toBe('logged_in');
     expect(server.engine.courses()).toHaveLength(0);
   } finally { await server.app.close(); }

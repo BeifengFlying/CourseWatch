@@ -322,6 +322,7 @@ it("HTTP 429 停止请求并释放响应，登录 HTML 不作为空数据", asyn
   const dispose = vi.fn(async () => {});
   const get = vi.fn(async () => ({
     status: () => 429,
+    url: () => `${origin}/api/v3/user/basic-info`,
     ok: () => false,
     headers: () => ({}),
     dispose,
@@ -349,6 +350,7 @@ it.each(["yuketang", "chaoxing"] as const)(
       storageState: async () => ({ cookies: [], origins: [] }),
       dispose,
       get: async (url: string) => ({
+        url: () => url,
         status: () => 200,
         ok: () => true,
         headers: () => ({}),

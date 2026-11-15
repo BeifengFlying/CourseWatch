@@ -1,6 +1,7 @@
 import type { Page } from 'playwright';
 import { StudyError } from './errors.js';
 import { unipusPageKind, unipusStudyFrame } from '../../contracts/src/study.js';
+import { DiagnosticError } from '../../core/src/diagnostics.js';
 
 export async function openUnipusCourses(page: Page, timeout = 20000): Promise<void> {
   let step = '等待首页导航';
@@ -29,10 +30,11 @@ export async function openUnipusCourses(page: Page, timeout = 20000): Promise<vo
     step = '等待校内课程列表';
     await page.getByText('校内课程', { exact: true }).filter({ visible: true }).waitFor({ timeout });
   } catch (error) {
-    if (error instanceof StudyError) throw error;
+    const cause = new DiagnosticError('U校园课程导航未完成', 'unipus-courses', {step}, {cause:error});
+    if (error instanceof StudyError) throw new StudyError(error.message, {cause});
     if (await page.locator('input[type=password]').filter({ visible: true }).count().catch(() => 0))
-      throw new StudyError('U校园登录已失效，请在平台设置中重新登录');
-    throw new StudyError(`U校园${step}未完成，请打开运行窗口检查提示或网络后重试`, { cause: error });
+      throw new StudyError('U校园登录已失效，请在平台设置中重新登录', {cause});
+    throw new StudyError(`U校园${step}未完成，请打开运行窗口检查提示或网络后重试`, {cause});
   }
 }
 

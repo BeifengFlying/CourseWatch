@@ -4,8 +4,8 @@
 <p align="center">Course task management, personal schedules and deadline reminders. macOS 14+ / Windows 10+ x64.</p>
 <p align="center">
   <a href="https://github.com/BeifengFlying/CourseWatch/actions/workflows/ci.yml"><img src="https://img.shields.io/badge/CI-GitHub%20Actions-2088FF?logo=githubactions&amp;logoColor=white" alt="CI: GitHub Actions"></a>
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-0.2.35%20beta-orange" alt="Version: 0.2.35 beta"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Noncommercial-red" alt="License: CourseWatch Noncommercial License; commercial use prohibited"></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-0.2.36%20beta-orange" alt="Version: 0.2.36 beta"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0%20%2B%20Terms-blue" alt="License: Apache-2.0 and additional Project Terms"></a>
   <a href="package.json"><img src="https://img.shields.io/badge/Node.js-24-339933" alt="Node.js 24"></a>
   <a href="#installation"><img src="https://img.shields.io/badge/platform-macOS%2014%2B-blue" alt="Platform: macOS 14+"></a>
   <a href="docs/guides/WINDOWS.md"><img src="https://img.shields.io/badge/platform-Windows%2010%2B%20x64-blue" alt="Platform: Windows 10+ x64, device testing pending"></a>
@@ -22,7 +22,7 @@ On macOS, closing the main window keeps the app in the menu bar. Windows offers 
 
 ## Installation
 
-Current release: **0.2.35 (beta)**. Download the package for your system from [GitHub Releases](https://github.com/BeifengFlying/CourseWatch/releases/tag/v0.2.35). Packages omit browser binaries and documentation images:
+Current source and package version: **0.2.36 (beta)**. Published **0.2.35** installers are available from [GitHub Releases](https://github.com/BeifengFlying/CourseWatch/releases/tag/v0.2.35). Packages omit browser binaries and documentation images:
 
 | System | Download |
 | --- | --- |
@@ -32,7 +32,7 @@ Current release: **0.2.35 (beta)**. Download the package for your system from [G
 
 The minimum Windows version is Windows 10 version 2004 (build 19041); version 22H2 or later is recommended. The installer includes Microsoft's online bootstrapper for a missing WebView2 Runtime. To use the portable ZIP, extract it and run `CourseWatch.exe`. Version 0.2.35 passed Windows interface checks for update notices, experimental-use confirmation, light and dark themes, and compact layouts, plus consent dialog checks at 100% / 150% scaling. Windows 10, full installation / upgrade / removal, and real notifications still need testing. See the [Windows 0.2.35 checks](docs/verification/WINDOWS-0.2.35.md).
 
-Before acceptance of the current agreement revision is recorded, the first launch displays the complete user agreement, a free-software notice, the source repository and a warning to request a refund and report sellers charging for the app. The background service starts only after acceptance. Quitting saves no acceptance; accepted users are not prompted on normal restarts of the same revision. Version 0.2.35 requires renewed acceptance.
+Before acceptance of the current agreement revision is recorded, the first launch displays the complete user agreement, a free-software notice, the source repository and a warning to request a refund and report sellers charging for the app. The background service starts only after acceptance. Quitting saves no acceptance; accepted users are not prompted on normal restarts of the same revision. Version 0.2.36 requires renewed acceptance.
 
 On Mac, open the DMG and drag CourseWatch into Applications. To upgrade, quit the old version from the menu bar before replacing it. Upgrades retain the existing data directory. Back up important data before replacing the application. Updates are installed manually. Historical packages and checksums are retained as described in their release records.
 
@@ -267,4 +267,4 @@ See the [contribution guidelines](CONTRIBUTING.md#english) for third-party sourc
 
 Report problems in [Issues](https://github.com/BeifengFlying/CourseWatch/issues), including the version and build number, system, learning platform and reproduction steps. Include redacted screenshots for page-specific issues. Do not publish accounts, cookies, databases or browser profiles. Review and redact logs before uploading.
 
-**Commercial use is prohibited, including paid distribution, paid services and integration into paid products.** Starting with 0.2.35, original material in new releases that the project has authority to license uses the [CourseWatch Noncommercial License 1.0](LICENSE); see the [Project Terms](TERMS.en.md) for use requirements. This is a custom noncommercial license, not an open-source license as defined by the OSI. Earlier Apache-2.0 grants are not retroactively revoked, including when old installers are removed. The beta is free. Advertising partnerships and donations are not accepted. Sources for third-party code, platform names and icons are listed in [third-party notices](THIRD_PARTY_NOTICES.md). Outstanding dependency license items are recorded in the [license review](docs/legal/RELEASE_LICENSE_REVIEW.md).
+The project is distributed based on [Apache-2.0](LICENSE) and the [Project Terms](TERMS.en.md). LICENSE retains the standard text, while additional project conditions are collected in TERMS. See Sections 6 and 8 for noncommercial distribution, free availability and experimental-use conditions. Additional project conditions are not standard Apache-2.0 provisions and cannot unilaterally revoke valid grants. The beta is free. Advertising partnerships and donations are not accepted. Third-party sources are listed in [third-party notices](THIRD_PARTY_NOTICES.md); outstanding dependency license items are recorded in the [license review](docs/legal/RELEASE_LICENSE_REVIEW.md).

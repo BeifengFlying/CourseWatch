@@ -4,6 +4,8 @@
 
 - [English README](../README.en.md) · [逐次构建更新](guides/BUILD_HISTORY.md) · [构建 30 验证](verification/RELEASE-0.2.30.md)
 
+- [0.2.36 打包验证](verification/RELEASE-0.2.36.md) · [U校园目录与诊断](verification/UNIPUS-CHAPTERS-AND-DIAGNOSTICS-2026-11-15.md)
+
 ## 使用与开发
 
 - [手机通知与 iCloud 日历](guides/MOBILE_NOTIFICATIONS.md)：双邮箱 SMTP、HTTPS 手机订阅页和 macOS 日历授权。

@@ -2,7 +2,7 @@ import { it, expect, vi } from 'vitest';
 import { Adapters } from '../packages/adapters/src/index.js';
 
 it.each(['redirect interrupted','navigation timeout'])('导航失败 %s 不关闭仍可使用的登录窗口', async (message) => {
-  const page = { goto: vi.fn().mockRejectedValue(new Error(message)), isClosed: () => false };
+  const page = { on:vi.fn(), frames:()=>[], goto: vi.fn().mockRejectedValue(new Error(message)), isClosed: () => false };
   const context = { pages: () => [page], on: vi.fn(), close: vi.fn() };
   const adapters = new Adapters('/tmp/unused-login-window');
   vi.spyOn(adapters as any, 'launch').mockResolvedValue(context);
@@ -15,7 +15,7 @@ it.each(['redirect interrupted','navigation timeout'])('导航失败 %s 不关�
 });
 
 it('用户已关闭的窗口不能被当作登录成功', async () => {
-  const page = { goto: vi.fn().mockRejectedValue(new Error('closed')), isClosed: () => true };
+  const page = { on:vi.fn(), frames:()=>[], goto: vi.fn().mockRejectedValue(new Error('closed')), isClosed: () => true };
   const context = { pages: () => [page], on: vi.fn(), close: vi.fn() };
   const adapters = new Adapters('/tmp/unused-login-window');
   vi.spyOn(adapters as any, 'launch').mockResolvedValue(context);

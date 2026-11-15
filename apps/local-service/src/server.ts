@@ -40,7 +40,7 @@ import { runExperiment } from "./experiment.js";
 import { registerStudyRoutes } from "./study-routes.js";
 import { registerNotificationRoutes } from './notification-routes.js';
 import type { SecretStorage } from '../../../packages/notifications/src/mobile.js';
-import { DiagnosticLog, diagnosticReason } from '../../../packages/core/src/diagnostics.js';
+import { DiagnosticLog, diagnosticReason, diagnosticErrorFacts } from '../../../packages/core/src/diagnostics.js';
 import { courseScanSlot, nextCourseScanAt } from '../../../packages/core/src/course-scan-clock.js';
 import { release, freemem, totalmem, uptime } from 'node:os';
 import { AppUpdates } from '../../../packages/core/src/updates.js';
@@ -481,6 +481,7 @@ export async function createServer(options: {
         browserProbeAt = Date.now();
         return result ?? { ok: true };
       } catch (e) {
+        diagnostics.record(id, 'login-open-failed', {stage:'login-open',reason:diagnosticReason(e),facts:diagnosticErrorFacts(e)});
         return reply.code(409).send({ error: (e as Error).message });
       }
     },
@@ -516,7 +517,7 @@ export async function createServer(options: {
           message: `登录已保存，已读取 ${result.courses.length} 门课程；请选择需要同步的课程`,
         } : {}) };
       } catch (e) {
-        diagnostics.record(id, 'login-confirmation-failed', { reason: diagnosticReason(e) });
+        diagnostics.record(id, 'login-confirm-failed', {stage:'login-confirm',reason:diagnosticReason(e),facts:diagnosticErrorFacts(e)});
         return reply.code(409).send({ error: (e as Error).message });
       }
     },
@@ -574,7 +575,7 @@ export async function createServer(options: {
       loginStatus: p.loginStatus, lastOutcome: p.lastOutcome, lastScanAt: p.lastScanAt, nextScanAt: p.nextScanAt, failures: p.failures })),
     scans: store.all<{platform: string; outcome: string; at: number}>('SELECT platform,outcome,at FROM scans ORDER BY id DESC LIMIT 100'),
     journal: diagnostics.read(),
-    content: '系统版本、运行状态、错误阶段、请求状态和页面控件数量；不含账号、课程内容、登录凭据、模型 Key 或原始页面。',
+    content: '系统版本、运行状态、登录与目录读取阶段、接口路径模板、HTTP 状态、平台错误码、网络错误、耗时和页面控件数量；不含账号、课程内容、登录凭据、模型 Key 或原始页面。',
   }));
   app.get("/api/export", () => ({
     version: APP_VERSION,
