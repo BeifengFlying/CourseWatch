@@ -26,7 +26,7 @@ Current release: **0.2.34 (beta)**. Download the package for your system from [G
 | --- | --- |
 | macOS 14+ · Apple Silicon | [CourseWatch-0.2.34-mac-arm64.dmg](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.34/CourseWatch-0.2.34-mac-arm64.dmg) |
 | macOS 14+ · Intel | [CourseWatch-0.2.34-mac-x64.dmg](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.34/CourseWatch-0.2.34-mac-x64.dmg) |
-| Windows 10+ · x64 | [Installer](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.34/CourseWatch-0.2.34-win-x64-setup.exe) · [Portable ZIP](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.34/CourseWatch-0.2.34-win-x64.zip) |
+| Windows 10+ · x64 | [Build from source](docs/guides/WINDOWS.md) |
 
 The minimum Windows version is Windows 10 version 2004 (build 19041); version 22H2 or later is recommended. The current source produces `CourseWatch-0.2.34-win-x64-setup.exe`, a ZIP with the same prefix, and `.sha256` files. Check [Windows Actions](https://github.com/BeifengFlying/CourseWatch/actions/workflows/windows.yml) for a successful run containing these changes; downloads depend on that run's actual artifacts. Native window checks for 0.2.30 r2 ran on Windows 11 at 150% scaling. Windows 10, full installation / upgrade / removal, and real notifications still need testing. See the [0.2.31 merge checks](docs/verification/WINDOWS-0.2.31-MERGE.md) for the merged source.
 
