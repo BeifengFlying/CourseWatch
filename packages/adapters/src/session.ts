@@ -1,4 +1,5 @@
 import { load } from "cheerio";
+import { ZodError } from "zod";
 import type { BrowserContext } from "playwright";
 import { safePlatformUrl, type PlatformId } from "../../contracts/src/index.js";
 import { getPlatformPage } from "./http.js";
@@ -89,14 +90,20 @@ export async function confirmLogin(context: BrowserContext, id: PlatformId, onCo
         const { parseUnipusCourses, unipusUrls, unipusHeaders } = await import("./unipus.js");
         parseUnipusCourses(await read(unipusUrls.courses, unipusHeaders(await context.storageState())));
       } else {
-        const { parseChaoxingCourses, chaoxingCoursesUrl } = await import("./chaoxing.js");
-        const courses = parseChaoxingCourses(await read(chaoxingCoursesUrl));
+        const { readChaoxingCourses } = await import("./chaoxing.js");
+        const courses = await readChaoxingCourses(read);
         onCourses?.(courses.map(c => ({ key: `course:${c.courseId}:class:${c.classId}`, name: c.name })));
       }
       return;
     } catch (error) {
       if (error instanceof CollectionError && error.outcome === "verification_required")
         throw new Error("请先在官方窗口完成验证，再点击完成登录");
+      if (id === "chaoxing" && !(error instanceof CollectionError && error.outcome === "auth_required")) {
+        if (error instanceof CollectionError) throw new Error(`学习通登录校验未完成：${error.message}`);
+        if (error instanceof ZodError) throw new Error("学习通登录校验未完成：课程响应结构无法识别，请稍后重试；登录窗口已保留");
+        if (error instanceof Error && /timeout|超时/i.test(error.message)) throw new Error("学习通登录校验请求超时，请检查网络后重试；登录窗口已保留");
+        throw new Error("学习通登录校验请求失败，请检查网络后重试；登录窗口已保留");
+      }
       throw new Error("尚未确认登录成功，请完成官方登录并进入课程页后重试");
     }
   }

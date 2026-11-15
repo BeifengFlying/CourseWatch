@@ -516,6 +516,7 @@ export async function createServer(options: {
           message: `登录已保存，已读取 ${result.courses.length} 门课程；请选择需要同步的课程`,
         } : {}) };
       } catch (e) {
+        diagnostics.record(id, 'login-confirmation-failed', { reason: diagnosticReason(e) });
         return reply.code(409).send({ error: (e as Error).message });
       }
     },

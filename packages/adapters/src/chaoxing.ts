@@ -19,6 +19,7 @@ import { inspectSession } from "./session.js";
 
 export const chaoxingCoursesUrl =
   "https://mooc1-api.chaoxing.com/mycourse/backclazzdata?view=json&getTchClazzType=1&mcode=";
+export const chaoxingWebCoursesUrl = "https://mooc2-ans.chaoxing.com/visit/interaction";
 const Id = z
   .union([
     z
@@ -93,6 +94,55 @@ export function parseChaoxingCourses(body: string): ChaoxingCourse[] {
   return [
     ...new Map(courses.map((c) => [`${c.courseId}:${c.classId}`, c])).values(),
   ];
+}
+// Read the protected web list when the mobile API cannot use a web session.
+// Require native student cards with matching course/class IDs; a public shell,
+// logout label, cookie or unloaded empty container is not login evidence.
+export function parseChaoxingWebCourses(html: string): ChaoxingCourse[] {
+  checkPage(html);
+  const $ = load(html);
+  $("script,style,noscript,[hidden],[aria-hidden=true]").remove();
+  $("[style]").each((_, el) => {
+    if (/display\s*:\s*none|visibility\s*:\s*hidden/i.test($(el).attr("style") ?? "")) $(el).remove();
+  });
+  const cards = $("#courseList").length === 1 && $("#courselistArea").length === 1
+    ? $("#courselistArea .course.learnCourse") : $([]);
+  const courses: ChaoxingCourse[] = [];
+  for (const el of cards.toArray()) {
+    const card = $(el), links = card.find("h3 a[href]");
+    const name = links.text().trim();
+    if (links.length !== 1 || !name || name.length > 300)
+      throw new CollectionError("学习通网页课程结构无法识别，旧任务已保留");
+    let url: URL;
+    try { url = new URL(links.attr("href")!, chaoxingWebCoursesUrl); }
+    catch { throw new CollectionError("学习通网页课程入口无法识别，旧任务已保留"); }
+    const entries = [...url.searchParams].map(([k, v]) => [k.toLowerCase(), v] as const);
+    const params = new Map(entries);
+    const courseId = params.get("courseid") ?? "", classId = params.get("clazzid") ?? "";
+    if (!safePlatformReadUrl("chaoxing", url.href) || url.pathname !== "/visit/stucoursemiddle" || params.size !== entries.length ||
+        !/^\d+$/.test(courseId) || !/^\d+$/.test(classId) || courseId.length > 120 || classId.length > 120 ||
+        card.attr("id") !== `c_${courseId}` || !card.hasClass(`stu_${classId}`))
+      throw new CollectionError("学习通网页课程入口无法识别，旧任务已保留");
+    courses.push({ courseId, classId, name });
+  }
+  if (!courses.length || courses.length > 2000)
+    throw new CollectionError("学习通网页课程列表尚未加载或结构无法识别，旧任务已保留");
+  return [...new Map(courses.map(c => [`${c.courseId}:${c.classId}`, c])).values()];
+}
+export async function readChaoxingCourses(read: ReadPage): Promise<ChaoxingCourse[]> {
+  try {
+    return parseChaoxingCourses(await read(chaoxingCoursesUrl));
+  } catch (error) {
+    if (error instanceof CollectionError && (error.outcome === "verification_required" || (error.stop && error.outcome !== "auth_required"))) throw error;
+    try {
+      return parseChaoxingWebCourses(await read(chaoxingWebCoursesUrl));
+    } catch (webError) {
+      if (webError instanceof CollectionError && (webError.stop || webError.outcome !== "failed")) throw webError;
+      // A web parsing/network failure cannot establish that web login expired.
+      if (error instanceof CollectionError && error.outcome === "auth_required") throw webError;
+      throw error;
+    }
+  }
 }
 export function chaoxingListUrl(c: ChaoxingCourse, type: "homework" | "exam") {
   return `https://mooc1-api.chaoxing.com/phone/moocAnalysis/${type === "homework" ? "workList" : "examList"}?courseId=${encodeURIComponent(c.courseId)}&classId=${encodeURIComponent(c.classId)}`;
@@ -215,7 +265,7 @@ export function parseChaoxingTimes(html: string) {
 export async function collectChaoxing(read: ReadPage, accountId: string, selectedCourseKeys?: string[]) {
   const scan = new CourseScan("chaoxing", accountId);
   try {
-    const courses = parseChaoxingCourses(await read(chaoxingCoursesUrl));
+    const courses = await readChaoxingCourses(read);
     scan.result.courses = courses.map(c => ({ key: `course:${c.courseId}:class:${c.classId}`, name: c.name }));
     if (!courses.length)
       await scan.partition("courses", async () => ({

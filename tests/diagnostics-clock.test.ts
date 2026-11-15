@@ -42,6 +42,21 @@ it('系统日志导出要求认证和来源授权，不包含设置、会话、�
     expect((await server.app.inject({ url: '/api/diagnostics/export', headers: { ...headers, origin: 'https://evil.test' } })).statusCode).toBe(403);
   } finally { await server.app.close(); }
 });
+it('登录校验失败记录平台及错误类别，不写入课程或凭据', async () => {
+  const server = await createServer({ dir, test: true });
+  vi.spyOn(AdapterManager.prototype, 'finish').mockRejectedValue(new Error('学习通登录校验未完成：课程响应结构无法识别，请稍后重试；登录窗口已保留'));
+  try {
+    const host = { host: '127.0.0.1:17321' };
+    const pair = await server.app.inject({ method: 'POST', url: '/api/pair', headers: host, payload: { code: server.pairingCode } });
+    const headers = { ...host, authorization: `Bearer ${pair.json().token}` };
+    const response = await server.app.inject({ method: 'POST', url: '/api/platforms/chaoxing/login/finish', headers, payload: {} });
+    expect(response.statusCode).toBe(409);
+    const exported = await server.app.inject({ url: '/api/diagnostics/export', headers });
+    expect(exported.json().journal.entries).toContainEqual(expect.objectContaining({ source: 'chaoxing', event: 'login-confirmation-failed', reason: 'response-format' }));
+    expect(server.store.get<any>('platform:chaoxing', {}).loginStatus).not.toBe('logged_in');
+    expect(server.engine.courses()).toHaveLength(0);
+  } finally { await server.app.close(); }
+});
 it('课程时钟绕过普通间隔但保持监控、登录保护，忙碌延后，新课程默认待选择', async () => {
   let now = Date.parse('2026-11-13T21:00:00+08:00');
   vi.spyOn(Date, 'now').mockImplementation(() => now);

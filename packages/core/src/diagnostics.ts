@@ -9,6 +9,9 @@ export function diagnosticReason(error: unknown): string {
   if (/ERR_NAME_NOT_RESOLVED/.test(text)) return 'dns';
   if (/ERR_CONNECTION|fetch failed/.test(text)) return 'network';
   if (/Target.*closed|has been closed|已退出/.test(text)) return 'closed';
+  if (/^学习通登录校验请求失败/.test(text)) return 'network';
+  if (/^学习通登录校验未完成：.*限流/.test(text)) return 'rate-limit';
+  if (/^学习通登录校验未完成：.*(?:结构|格式)/.test(text)) return 'response-format';
   if (/题目|弹题|测验|练习/.test(text)) return 'question';
   if (/验证|captcha/i.test(text)) return 'verification';
   if (/登录|session/i.test(text)) return 'session';
