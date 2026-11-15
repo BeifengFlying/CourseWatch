@@ -1,7 +1,7 @@
 {
   "name": "coursewatch",
-  "version": "0.2.33",
-  "desktopBuild": 33,
+  "version": "0.2.34",
+  "desktopBuild": 34,
   "windowsRevision": 0,
   "private": true,
   "type": "module",

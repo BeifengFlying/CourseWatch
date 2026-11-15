@@ -14,7 +14,7 @@ import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { macRuntime, type MacArch } from "./macos-runtime.js";
 import { copyDistributionDocs, copyUiLicenses } from "./distribution-docs.js";
-import { validateDesktopVersion } from "./desktop-version.js";
+import { validateDesktopVersion, macArtifactBase } from "./desktop-version.js";
 
 if (process.platform !== "darwin")
   throw new Error("此构建脚本需要 macOS 与 Xcode Command Line Tools");
@@ -36,8 +36,8 @@ execFileSync(process.execPath, [join(root, "scripts/verify-study-protection.mjs"
 const pkg = JSON.parse(await readFile("package.json", "utf8"));
 validateDesktopVersion(pkg.version, pkg.desktopBuild);
 const variant = `${arch}${args.includes("--slim") ? "-slim" : ""}`;
-const dmg = join(root, "dist", `CourseWatch-${pkg.version}-build${pkg.desktopBuild}-mac-${variant}.dmg`);
-if (existsSync(dmg) || existsSync(dmg + '.sha256')) throw new Error('该构建的安装包或校验文件已存在，请递增版本号和构建号');
+const dmg = join(root, "dist", macArtifactBase(pkg.version, pkg.desktopBuild, variant) + ".dmg");
+if (existsSync(dmg) || existsSync(dmg + '.sha256')) throw new Error('该版本的安装包或校验文件已存在，请递增补丁版本号');
 const build = join(root, "build/macos", `${variant}-build${pkg.desktopBuild}`);
 const app = join(build, "CourseWatch.app");
 const resources = join(app, "Contents/Resources");

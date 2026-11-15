@@ -4,7 +4,7 @@
 <p align="center">课程任务管理、个人日程与截止提醒。macOS 14+ / Windows 10+ x64。</p>
 <p align="center">
   <a href="https://github.com/BeifengFlying/CourseWatch/actions/workflows/ci.yml"><img src="https://img.shields.io/badge/CI-GitHub%20Actions-2088FF?logo=githubactions&amp;logoColor=white" alt="CI：GitHub Actions"></a>
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-0.2.33%20beta-orange" alt="版本：0.2.33 测试版"></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-0.2.34%20beta-orange" alt="版本：0.2.34 测试版"></a>
   <a href="TERMS.md"><img src="https://img.shields.io/badge/license-Apache--2.0%20%2B%20Terms-green" alt="许可：Apache-2.0 正文与自定义条款，禁止商用"></a>
   <a href="package.json"><img src="https://img.shields.io/badge/Node.js-24-339933" alt="Node.js 24"></a>
   <a href="#安装"><img src="https://img.shields.io/badge/platform-macOS%2014%2B-blue" alt="平台：macOS 14 及以上"></a>
@@ -20,15 +20,17 @@ macOS 关闭主窗口后继续在菜单栏运行；Windows 可选择隐藏到系
 
 ## 安装
 
-当前版本：**0.2.33（构建 33，测试版）**。从 [GitHub Releases](https://github.com/BeifengFlying/CourseWatch/releases/tag/v0.2.33-repack) 下载对应安装包。当前附件已移除随包展示图，应用版本仍为 0.2.33：
+当前版本：**0.2.34（测试版）**。从 [GitHub Releases](https://github.com/BeifengFlying/CourseWatch/releases/tag/v0.2.34) 下载对应安装包。安装包不附带浏览器或文档展示图：
 
 | 系统 | 下载 |
 | --- | --- |
-| macOS 14+ · Apple Silicon（M 系列） | [CourseWatch-0.2.33-build33-mac-arm64.dmg](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.33-repack/CourseWatch-0.2.33-build33-mac-arm64.dmg) |
-| macOS 14+ · Intel | [CourseWatch-0.2.33-build33-mac-x64.dmg](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.33-repack/CourseWatch-0.2.33-build33-mac-x64.dmg) |
-| Windows 10+ · x64 | 在 Windows 上[从源码构建](docs/guides/WINDOWS.md) |
+| macOS 14+ · Apple Silicon（M 系列） | [CourseWatch-0.2.34-mac-arm64.dmg](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.34/CourseWatch-0.2.34-mac-arm64.dmg) |
+| macOS 14+ · Intel | [CourseWatch-0.2.34-mac-x64.dmg](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.34/CourseWatch-0.2.34-mac-x64.dmg) |
+| Windows 10+ · x64 | [安装程序](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.34/CourseWatch-0.2.34-win-x64-setup.exe) · [ZIP 便携包](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.34/CourseWatch-0.2.34-win-x64.zip) |
 
-Windows 最低版本为 Windows 10 2004（内部版本 19041），建议使用 22H2 或更新版本。当前源码生成 `CourseWatch-0.2.33-build33-win-x64-setup.exe`、同名前缀的 ZIP 便携包及对应 `.sha256`；Actions 下载以对应运行实际上传的文件为准。0.2.30 r2 已在 Windows 11、150% 缩放下完成原生窗口检查；Windows 10、完整安装／升级／卸载及真实通知仍待实测。合并后的验证范围见 [Windows 0.2.31 合并检查](docs/verification/WINDOWS-0.2.31-MERGE.md)。
+Windows 最低版本为 Windows 10 2004（内部版本 19041），建议使用 22H2 或更新版本。当前源码生成 `CourseWatch-0.2.34-win-x64-setup.exe`、同名前缀的 ZIP 便携包及对应 `.sha256`；Actions 下载以对应运行实际上传的文件为准。0.2.30 r2 已在 Windows 11、150% 缩放下完成原生窗口检查；Windows 10、完整安装／升级／卸载及真实通知仍待实测。合并后的验证范围见 [Windows 0.2.31 合并检查](docs/verification/WINDOWS-0.2.31-MERGE.md)。
+
+首次打开且尚无确认记录时，应用显示《用户协议》全文、完全免费声明、项目源码地址及付费渠道退款举报提示；点击“同意并继续”后才启动后台。选择“退出软件”不保存确认记录，已确认后重启不重复弹出。
 
 macOS 安装：打开 DMG，将 CourseWatch 拖入 Applications。升级前应从菜单栏退出应用，再替换旧版本；升级沿用原数据目录，建议提前备份重要数据。目前采用手动更新。
 
@@ -37,7 +39,7 @@ macOS 安装：打开 DMG，将 CourseWatch 拖入 Applications。升级前应�
 每个安装包附有同名 `.sha256` 文件，可执行以下命令核对：
 
 ```sh
-shasum -a 256 CourseWatch-0.2.33-build33-mac-arm64.dmg
+shasum -a 256 CourseWatch-0.2.34-mac-arm64.dmg
 ```
 
 macOS 包使用临时签名，尚未通过 Apple 公证。Intel 包已完成架构与 Rosetta 运行检查，Intel Mac 实机界面尚待验证。测试版的平台覆盖和提醒仍可能有遗漏，作业与考试请同时核对学校、教师和平台通知。详细说明见[测试版限制](DISCLAIMER.md)。

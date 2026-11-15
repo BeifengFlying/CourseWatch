@@ -58,8 +58,8 @@ dotnet publish apps/windows/CourseWatch.csproj -c Release -r win-x64 --self-cont
 
 在 GitHub Actions 的 **Windows desktop package → coursewatch-win-x64** 中下载产物：
 
-- `CourseWatch-0.2.33-build33-win-x64-setup.exe`：安装程序。
-- `CourseWatch-0.2.33-build33-win-x64.zip`：便携包，解压后运行其中的 `CourseWatch.exe`。
+- `CourseWatch-0.2.34-win-x64-setup.exe`：安装程序。
+- `CourseWatch-0.2.34-win-x64.zip`：便携包，解压后运行其中的 `CourseWatch.exe`。
 - 对应的 `.sha256`：文件一致性校验值。同渠道校验文件不能独立证明发布者身份。
 
 请选择包含本轮修改的成功运行；产物以该运行实际上传的文件为准，旧运行的文件名和功能可能不同。

@@ -1,6 +1,9 @@
 ﻿#ifndef AppVersion
   #error AppVersion is required
 #endif
+#ifndef ArtifactBase
+  #error ArtifactBase is required
+#endif
 [Setup]
 AppId={{160DBD38-9042-4A08-8A21-051D1F864DF4}
 AppName=CourseWatch
@@ -13,11 +16,7 @@ ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
 MinVersion=10.0.19041
 OutputDir={#OutputDir}
-#ifdef ArtifactBase
 OutputBaseFilename={#ArtifactBase}-setup
-#else
-OutputBaseFilename=CourseWatch-{#AppVersion}-build{#AppBuild}-win-x64-setup
-#endif
 SetupIconFile={#SourceDir}\CourseWatch.ico
 UninstallDisplayIcon={app}\CourseWatch.exe
 Compression=lzma2

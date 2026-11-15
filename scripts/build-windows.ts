@@ -19,7 +19,7 @@ validateDesktopVersion(pkg.version, pkg.desktopBuild);
 const artifactBase = windowsArtifactBase(pkg.version, pkg.desktopBuild, pkg.windowsRevision ?? 0);
 for (const suffix of ['.zip', '-setup.exe']) {
   const output = join(root, 'dist', artifactBase + suffix);
-  if (existsSync(output) || existsSync(output + '.sha256')) throw new Error('该构建的安装包或校验文件已存在，请递增版本号和构建号');
+  if (existsSync(output) || existsSync(output + '.sha256')) throw new Error('该版本的安装包或校验文件已存在，请递增补丁版本号');
 }
 if (!Number.isInteger(pkg.desktopBuild) || pkg.desktopBuild < 1) throw new Error("缺少有效的 desktopBuild");
 const build = join(root, "build/windows/x64");

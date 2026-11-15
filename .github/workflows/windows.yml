@@ -39,6 +39,8 @@ jobs:
       - run: npm run typecheck
       - name: Check desktop preferences without changing startup registration
         run: dotnet run --project tests/windows/PreferencesChecks.csproj -c Release
+      - name: Check agreement acceptance without user data
+        run: dotnet run --project tests/windows/AgreementChecks.csproj -c Release
       - run: npm run browser:install
       - run: npm test
       - name: Locate Inno Setup

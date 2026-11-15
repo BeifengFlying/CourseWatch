@@ -18,6 +18,8 @@
 
 ## 验证记录
 
+- [0.2.34：首次打开协议与免费声明](verification/RELEASE-0.2.34.md)：原生弹窗、版本命名、打包及旧包下架。
+
 - [构建 33 许可、文档与打包验证](verification/RELEASE-0.2.33.md)：Apache 原文与 TERMS 的组合形式、历史许可边界及实际验证范围。
 
 - [README 原生桌面截图](verification/README-DESKTOP-2026-11-15.md)：模拟数据、壁纸来源、拍摄范围与复现入口。
@@ -36,6 +38,8 @@
 - 历史记录：[0.2.0 初版](verification/VALIDATION-0.2.0.md)、[0.1.1](verification/VALIDATION-0.1.1.md)、[初始验证](verification/VALIDATION.md)、[0.1.1 实验](verification/EXPERIMENT-0.1.1.md)。
 
 ## 方案与研究
+
+- [0.2.34 计划](planning/RELEASE-0.2.34.md)：首次打开的用户协议、免费声明、项目地址及付费渠道退款举报提示；已实现，发布及检查范围见[0.2.34 验证](verification/RELEASE-0.2.34.md)。
 
 - [原始需求](planning/PRD.md)、[整合方案](planning/INTEGRATION_PLAN.md)、[跨系统研究](planning/CROSS_PLATFORM.md)。
 - [可行性](planning/FEASIBILITY.md)、[开源选型](planning/OPEN_SOURCE.md)、[待验收资源预算](planning/RESOURCE_BUDGET.md)。

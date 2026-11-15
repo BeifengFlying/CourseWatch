@@ -39,15 +39,17 @@
 - `npx tsx scripts/check-study-tasks-model-ui.mjs`：检查视频与检测状态、直接检测、实时输出以及思考强度控件已移除。
 
 - `node --import tsx scripts/check-browser-settings.mjs`：检查桌面与普通网页浏览器选择、保存、1060／320px 浅深主题；仅使用本地虚构数据，不启动平台窗口。
-- 从构建 26 起所有分发包均不带浏览器，不接受 `--bundle-browser`。macOS 输出目录与安装包文件名带构建号，保留旧包。
+- 从构建 26 起所有分发包均不带浏览器，不接受 `--bundle-browser`。0.2.33 及之前的安装包文件名带构建号；0.2.34 起只使用版本号，旧包在本地归档保留。
 
 ### 桌面版本号
 
-从构建 28 起，`package.json` 的 `version` 末位与 `desktopBuild` 相同，例如 `0.2.28`／28。递增时同步 macOS Info.plist、Windows 项目与 manifest、package-lock.json；`tests/desktop-version.test.ts` 检查一致性。界面、后台和扩展读取共享版本模块。打包前校验版本，并在已有同名安装包或校验文件时停止，不覆盖历史文件。
+0.2.34 起，`version` 使用主版本、次版本和补丁版本，界面、发布名及安装包不附加构建号。例如 `CourseWatch-0.2.34-mac-arm64.dmg`、`CourseWatch-0.2.34-win-x64-setup.exe`。`desktopBuild` 仅用于系统内部包元数据，与补丁版本不再强制相等。更新时同步 macOS Info.plist、Windows 项目与 manifest、package-lock.json。`tests/desktop-version.test.ts` 检查元数据、当前文件名和历史文件名。已有同名安装包或校验文件仍会阻止打包，修订须递增补丁版本，不覆盖旧包。
+
+`node scripts/check-first-run-macos.mjs` 使用生产协议弹窗代码和独立偏好域，检查确认、拒绝、关闭、重启及缺失协议，并输出桌面／紧凑、浅色／深色原生截图。`dotnet run --project tests/windows/AgreementChecks.csproj -c Release` 使用临时目录检查 Windows 协议确认记录；不写真实用户数据。
 
 Windows 启动与关闭设置另有 `dotnet run --project tests/windows/PreferencesChecks.csproj -c Release`，使用临时目录和启动项替身，不修改当前用户的开机启动项。
 
-Windows 修订不改变应用版本或构建号，`windowsRevision` 为正整数时，在分发文件名追加 `-rN`，并写入 build-info.json。原安装包仍受同名文件检查保护。
+历史 Windows 修订支持 `windowsRevision` 和 `-rN`；0.2.34 起修订递增补丁版本，不再追加该后缀。
 
 `npm run build:web` 后运行 `node --import tsx scripts/check-windows-ui.mjs`，使用临时数据库、虚构课程与原生通信替身检查 Windows 主设置、课程管理、学习任务、模型面板和平台窗口，同时对照 macOS 共用页面。另检查 Windows 设置分类切换尺寸不变、主题选择后的网页模式及原生通信。截图输出到 `.cache/windows-ui30-r2/`；不会登录平台、启动学习或修改开机启动项。
 

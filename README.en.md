@@ -4,7 +4,7 @@
 <p align="center">Course task management, personal schedules and deadline reminders. macOS 14+ / Windows 10+ x64.</p>
 <p align="center">
   <a href="https://github.com/BeifengFlying/CourseWatch/actions/workflows/ci.yml"><img src="https://img.shields.io/badge/CI-GitHub%20Actions-2088FF?logo=githubactions&amp;logoColor=white" alt="CI: GitHub Actions"></a>
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-0.2.33%20beta-orange" alt="Version: 0.2.33 beta"></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-0.2.34%20beta-orange" alt="Version: 0.2.34 beta"></a>
   <a href="TERMS.en.md"><img src="https://img.shields.io/badge/license-Apache--2.0%20%2B%20Terms-green" alt="License: Apache-2.0 text plus custom terms; commercial use prohibited"></a>
   <a href="package.json"><img src="https://img.shields.io/badge/Node.js-24-339933" alt="Node.js 24"></a>
   <a href="#installation"><img src="https://img.shields.io/badge/platform-macOS%2014%2B-blue" alt="Platform: macOS 14+"></a>
@@ -20,15 +20,17 @@ On macOS, closing the main window keeps the app in the menu bar. Windows offers 
 
 ## Installation
 
-Current release: **0.2.33 (build 33, beta)**. Download the package for your system from [GitHub Releases](https://github.com/BeifengFlying/CourseWatch/releases/tag/v0.2.33-repack). These repackaged installers omit documentation images; the application version remains 0.2.33:
+Current release: **0.2.34 (beta)**. Download the package for your system from [GitHub Releases](https://github.com/BeifengFlying/CourseWatch/releases/tag/v0.2.34). Packages omit browser binaries and documentation images:
 
 | System | Download |
 | --- | --- |
-| macOS 14+ · Apple Silicon | [CourseWatch-0.2.33-build33-mac-arm64.dmg](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.33-repack/CourseWatch-0.2.33-build33-mac-arm64.dmg) |
-| macOS 14+ · Intel | [CourseWatch-0.2.33-build33-mac-x64.dmg](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.33-repack/CourseWatch-0.2.33-build33-mac-x64.dmg) |
-| Windows 10+ · x64 | [Build from source on Windows](docs/guides/WINDOWS.md) |
+| macOS 14+ · Apple Silicon | [CourseWatch-0.2.34-mac-arm64.dmg](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.34/CourseWatch-0.2.34-mac-arm64.dmg) |
+| macOS 14+ · Intel | [CourseWatch-0.2.34-mac-x64.dmg](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.34/CourseWatch-0.2.34-mac-x64.dmg) |
+| Windows 10+ · x64 | [Installer](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.34/CourseWatch-0.2.34-win-x64-setup.exe) · [Portable ZIP](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.34/CourseWatch-0.2.34-win-x64.zip) |
 
-The minimum Windows version is Windows 10 version 2004 (build 19041); version 22H2 or later is recommended. The current source produces `CourseWatch-0.2.33-build33-win-x64-setup.exe`, a ZIP with the same prefix, and `.sha256` files. Check [Windows Actions](https://github.com/BeifengFlying/CourseWatch/actions/workflows/windows.yml) for a successful run containing these changes; downloads depend on that run's actual artifacts. Native window checks for 0.2.30 r2 ran on Windows 11 at 150% scaling. Windows 10, full installation / upgrade / removal, and real notifications still need testing. See the [0.2.31 merge checks](docs/verification/WINDOWS-0.2.31-MERGE.md) for the merged source.
+The minimum Windows version is Windows 10 version 2004 (build 19041); version 22H2 or later is recommended. The current source produces `CourseWatch-0.2.34-win-x64-setup.exe`, a ZIP with the same prefix, and `.sha256` files. Check [Windows Actions](https://github.com/BeifengFlying/CourseWatch/actions/workflows/windows.yml) for a successful run containing these changes; downloads depend on that run's actual artifacts. Native window checks for 0.2.30 r2 ran on Windows 11 at 150% scaling. Windows 10, full installation / upgrade / removal, and real notifications still need testing. See the [0.2.31 merge checks](docs/verification/WINDOWS-0.2.31-MERGE.md) for the merged source.
+
+Before acceptance is recorded, the first launch displays the complete user agreement, a free-software notice, the source repository and a warning to request a refund and report sellers charging for the app. The background service starts only after acceptance. Quitting saves no acceptance; accepted users are not prompted on normal restarts.
 
 On Mac, open the DMG and drag CourseWatch into Applications. To upgrade, quit the old version from the menu bar before replacing it. Upgrades retain the existing data directory. Back up important data before replacing the application. Updates are installed manually.
 
@@ -37,7 +39,7 @@ On Mac, open the DMG and drag CourseWatch into Applications. To upgrade, quit th
 Each package has a matching `.sha256` file. Compare it with the output of:
 
 ```sh
-shasum -a 256 CourseWatch-0.2.33-build33-mac-arm64.dmg
+shasum -a 256 CourseWatch-0.2.34-mac-arm64.dmg
 ```
 
 Mac packages are ad hoc signed and have not been notarized by Apple. The Intel package has passed architecture and Rosetta runtime checks; its interface has not been checked on a physical Intel Mac. Platform coverage and reminder delivery may be incomplete during the beta. School, instructor and platform notices remain the authoritative sources. See [beta limitations](DISCLAIMER.md) for details. The application interface and most documentation are currently in Chinese; this language switch applies to the README.

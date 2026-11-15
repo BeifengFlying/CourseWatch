@@ -55,6 +55,7 @@ internal static class Program
         }
         try
         {
+            if (!FirstRunConsent.RequestIfNeeded()) return;
             desktop = new DesktopContext(pendingEntry, args is ["--background"]);
             if (pendingEntry is { } entry) desktop.ShowMain(entry);
             Application.Run(desktop);

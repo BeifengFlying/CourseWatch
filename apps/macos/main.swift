@@ -166,6 +166,87 @@ final class StudyPreviewCard: NSView {
     @objc private func showRunningWindow() { if showRunning.isEnabled { action?("show") } }
 }
 
+// Acceptance precedes the local service, notifications and course operations.
+final class FirstRunConsent: NSObject {
+    static let revision = "2026-11-15"
+    static let acceptanceKey = "CourseWatch.UserAgreement." + revision
+    static let projectURL = URL(string: "https://github.com/BeifengFlying/CourseWatch")!
+
+    static func requestIfNeeded(defaults: UserDefaults = .standard,
+                                resources: URL? = Bundle.main.resourceURL,
+                                present: (NSAlert) -> NSApplication.ModalResponse = { $0.runModal() }) -> Bool {
+        if defaults.bool(forKey: acceptanceKey) { return true }
+        guard let resources = resources,
+              let terms = try? String(contentsOf: resources.appendingPathComponent("TERMS.md"), encoding: .utf8),
+              !terms.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            let error = NSAlert()
+            error.messageText = "无法读取用户协议"
+            error.informativeText = "请重新下载完整安装包后再打开 CourseWatch。"
+            error.addButton(withTitle: "退出软件")
+            _ = present(error)
+            return false
+        }
+        let owner = FirstRunConsent()
+        let alert = owner.makeAlert(terms: terms)
+        NSApp.activate(ignoringOtherApps: true)
+        guard present(alert) == .alertFirstButtonReturn else { return false }
+        defaults.set(true, forKey: acceptanceKey)
+        guard defaults.synchronize() else {
+            defaults.removeObject(forKey: acceptanceKey)
+            let error = NSAlert()
+            error.messageText = "无法保存协议确认"
+            error.informativeText = "请检查当前用户资料目录是否可写，再重新打开 CourseWatch。"
+            error.addButton(withTitle: "退出软件")
+            _ = present(error)
+            return false
+        }
+        return true
+    }
+
+    func makeAlert(terms: String, width: CGFloat = 460) -> NSAlert {
+        let alert = NSAlert()
+        alert.messageText = "用户协议与免费声明"
+        alert.informativeText = "本软件完全免费。\n\n如果你是在其他付费渠道获取此软件，请立即退款并举报该商家。\n\n使用前请阅读下方《用户协议》，确认同意后继续使用。"
+        alert.addButton(withTitle: "同意并继续")
+        alert.addButton(withTitle: "退出软件").keyEquivalent = "\u{1b}"
+        let container = NSView(frame: NSRect(x: 0, y: 0, width: width, height: 290))
+        let link = NSTextField(labelWithString: "")
+        let address = NSAttributedString(string: "项目源码地址：" + Self.projectURL.absoluteString,
+            attributes: [.link: Self.projectURL, .font: NSFont.systemFont(ofSize: 12)])
+        link.attributedStringValue = address
+        link.allowsEditingTextAttributes = true
+        link.isSelectable = true
+        link.maximumNumberOfLines = 2
+        link.lineBreakMode = .byCharWrapping
+        link.frame = NSRect(x: 0, y: 254, width: width, height: 36)
+        container.addSubview(link)
+        let heading = NSTextField(labelWithString: "用户协议全文")
+        heading.frame = NSRect(x: 0, y: 226, width: width, height: 22)
+        heading.font = .systemFont(ofSize: 13, weight: .semibold)
+        container.addSubview(heading)
+        let scroll = NSScrollView(frame: NSRect(x: 0, y: 0, width: width, height: 222))
+        scroll.hasVerticalScroller = true
+        scroll.borderType = .bezelBorder
+        let text = NSTextView(frame: scroll.contentView.bounds)
+        text.isEditable = false
+        text.isSelectable = true
+        text.font = .systemFont(ofSize: 13)
+        text.textColor = .textColor
+        text.backgroundColor = .textBackgroundColor
+        text.textContainerInset = NSSize(width: 10, height: 10)
+        text.isVerticallyResizable = true
+        text.isHorizontallyResizable = false
+        text.autoresizingMask = [.width]
+        text.textContainer?.widthTracksTextView = true
+        text.string = terms
+        text.setAccessibilityLabel("用户协议全文")
+        scroll.documentView = text
+        container.addSubview(scroll)
+        alert.accessoryView = container
+        return alert
+    }
+}
+
 final class Bridge: NSObject, WKScriptMessageHandler {
     weak var owner: AppDelegate?
     init(_ owner: AppDelegate) { self.owner = owner }
@@ -269,6 +350,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelegate, NSW
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSWindow.allowsAutomaticWindowTabbing = false
         NSApp.setActivationPolicy(.accessory)
+        guard FirstRunConsent.requestIfNeeded() else { NSApp.terminate(nil); return }
         installMenus()
         UNUserNotificationCenter.current().delegate = self
         startBackend()

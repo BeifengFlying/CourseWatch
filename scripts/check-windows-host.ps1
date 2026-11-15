@@ -52,6 +52,39 @@ function Measure-AppResources([string]$Phase) {
 $data = Join-Path $env:LOCALAPPDATA 'CourseWatch'
 if (Test-Path $data) { throw 'Expected an empty CI user data directory.' }
 $executable = Join-Path (Resolve-Path $App) 'CourseWatch.exe'
+# Check rejection in the same fresh runner before exercising the accepted app.
+$rejected = Start-Process -FilePath $executable -PassThru
+try {
+  $rejectedCondition = New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::ProcessIdProperty, $rejected.Id)
+  $quitName = New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::NameProperty, '退出软件')
+  $quitButton = $null
+  for ($attempt = 0; $attempt -lt 30; $attempt++) {
+    $rejectedWindow = [System.Windows.Automation.AutomationElement]::RootElement.FindFirst([System.Windows.Automation.TreeScope]::Children, $rejectedCondition)
+    if ($rejectedWindow) { $quitButton = $rejectedWindow.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $quitName) }
+    if ($quitButton) { break }
+    if ($rejected.HasExited) { throw 'Desktop exited before the agreement dialog.' }
+    Start-Sleep -Milliseconds 500
+  }
+  if (!$quitButton) { throw 'First launch did not offer rejecting the agreement.' }
+  foreach ($text in @('本软件完全免费。', '如果你是在其他付费渠道获取此软件，请立即退款并举报该商家。', '项目源码地址：https://github.com/BeifengFlying/CourseWatch', '用户协议全文')) {
+    $named = New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::NameProperty, $text)
+    $control = $rejectedWindow.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $named)
+    if (!$control -or $control.Current.IsOffscreen) { throw "Consent text unavailable: $text" }
+  }
+  if (Test-Path (Join-Path $data 'service.pid')) { throw 'Backend started before agreement acceptance.' }
+  Add-Type -AssemblyName System.Drawing
+  $rectangle = $rejectedWindow.Current.BoundingRectangle
+  $bitmap = New-Object System.Drawing.Bitmap ([int]$rectangle.Width), ([int]$rectangle.Height)
+  $graphics = [System.Drawing.Graphics]::FromImage($bitmap)
+  try {
+    $graphics.CopyFromScreen([int]$rectangle.Left, [int]$rectangle.Top, 0, 0, $bitmap.Size)
+    $bitmap.Save((Join-Path $diagnostics 'first-run-consent.png'), [System.Drawing.Imaging.ImageFormat]::Png)
+  } finally { $graphics.Dispose(); $bitmap.Dispose() }
+  $quitButton.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern).Invoke()
+  if (!$rejected.WaitForExit(5000)) { throw 'Rejecting the agreement did not exit the application.' }
+  if ((Test-Path (Join-Path $data 'user-agreement.json')) -or (Test-Path (Join-Path $data 'service.pid'))) { throw 'Rejection left acceptance or a running backend.' }
+  Write-Host 'First launch: free notice, refund warning, repository, full terms and rejection passed.'
+} finally { if (!$rejected.HasExited) { Stop-Process -Id $rejected.Id -Force -ErrorAction SilentlyContinue } }
 $process = Start-Process -FilePath $executable -PassThru
 $backendPid = $null
 try {
@@ -66,6 +99,14 @@ try {
     $null = $shell.AppActivate($process.Id)
     $window = [System.Windows.Automation.AutomationElement]::RootElement.FindFirst([System.Windows.Automation.TreeScope]::Children, $condition)
     if ($window) {
+      $consentName = New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::NameProperty, '同意并继续')
+      $consent = $window.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $consentName)
+      if ($consent) {
+        if (Test-Path (Join-Path $data 'service.pid')) { throw 'Backend started before agreement acceptance.' }
+        $consent.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern).Invoke()
+        Start-Sleep -Milliseconds 300
+        continue
+      }
       $setupName = New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::NameProperty, '保存设置')
       $setup = $window.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $setupName)
       if ($setup) { $setup.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern).Invoke(); Start-Sleep -Milliseconds 300 }
@@ -133,7 +174,26 @@ try {
   if (!$process.WaitForExit(5000)) { throw 'Desktop did not quit.' }
   if (Get-Process -Id $backendPid -ErrorAction SilentlyContinue) { throw 'Backend remained after desktop exit.' }
   if (Test-Path (Join-Path $data 'service.lock')) { throw 'Backend lock remained after graceful exit.' }
-  Write-Host 'Packaged Windows desktop: close-to-tray, single-instance quit and backend cleanup passed.'
+  if (!(Test-Path (Join-Path $data 'user-agreement.json'))) { throw 'Acceptance receipt was not persisted.' }
+  $process = Start-Process -FilePath $executable -PassThru
+  $resumed = $false
+  for ($attempt = 0; $attempt -lt 40; $attempt++) {
+    $condition = New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::ProcessIdProperty, $process.Id)
+    $window = [System.Windows.Automation.AutomationElement]::RootElement.FindFirst([System.Windows.Automation.TreeScope]::Children, $condition)
+    if ($window) {
+      $consentName = New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::NameProperty, '同意并继续')
+      if ($window.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $consentName)) { throw 'Accepted restart repeated the agreement.' }
+      if ($window.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $heading)) { $resumed = $true; break }
+    }
+    if ($process.HasExited) { throw 'Accepted restart exited before loading.' }
+    Start-Sleep -Milliseconds 500
+  }
+  if (!$resumed) { throw 'Accepted restart did not restore the task page.' }
+  $backendPid = [int](Get-Content (Join-Path $data 'service.pid'))
+  $quit = Start-Process -FilePath $executable -ArgumentList '--quit' -PassThru
+  if (!$quit.WaitForExit(20000) -or $quit.ExitCode -ne 0 -or !$process.WaitForExit(5000)) { throw 'Accepted restart did not quit cleanly.' }
+  if (Get-Process -Id $backendPid -ErrorAction SilentlyContinue) { throw 'Restarted backend remained after quit.' }
+  Write-Host 'Packaged Windows desktop: consent persistence, accepted restart, close-to-tray, single-instance quit and backend cleanup passed.'
 } finally {
   @{ environment = 'GitHub Actions Windows runner'; data = 'empty database, no accounts or platform collection'; samples = $samples.ToArray(); energyMeasured = $false } | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $diagnostics 'resources.json') -Encoding UTF8
   if (!$process.HasExited) { Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue; Start-Sleep -Milliseconds 1500 }
