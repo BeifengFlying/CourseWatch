@@ -6,7 +6,7 @@
 
 ## 界面与操作
 
-当前版本为 0.2.35。安装包名称不附加构建号；历史文件在本地归档保留。Windows 安装程序、便携 ZIP 与 macOS 包集中于 [0.2.35 Release](https://github.com/BeifengFlying/CourseWatch/releases/tag/v0.2.35)，每个文件附有同名 `.sha256`。当前检查见 [Windows 0.2.35 验证](../verification/WINDOWS-0.2.35.md)。
+当前版本为 0.2.36。安装包名称不附加构建号；历史文件在本地归档保留。Windows 安装程序、便携 ZIP 与 macOS 包集中于 [0.2.36 Release](https://github.com/BeifengFlying/CourseWatch/releases/tag/v0.2.36)，每个文件附有同名 `.sha256`。当前检查见 [Windows 0.2.36 验证](../verification/WINDOWS-0.2.36.md)。
 
 Windows 与 macOS 使用同一个 `Desktop.vue`、表单和样式文件。Windows 右上角的最小化与关闭按钮相邻排列；横线最小化到任务栏，叉号请求关闭。窗口可以拖动位置，不能拖动边缘调整大小，不提供最大化按钮。
 
@@ -60,8 +60,8 @@ dotnet publish apps/windows/CourseWatch.csproj -c Release -r win-x64 --self-cont
 
 在 GitHub Actions 的 **Windows desktop package → coursewatch-win-x64** 中下载产物：
 
-- `CourseWatch-0.2.35-win-x64-setup.exe`：安装程序。
-- `CourseWatch-0.2.35-win-x64.zip`：便携包，解压后运行其中的 `CourseWatch.exe`。
+- `CourseWatch-0.2.36-win-x64-setup.exe`：安装程序。
+- `CourseWatch-0.2.36-win-x64.zip`：便携包，解压后运行其中的 `CourseWatch.exe`。
 - 对应的 `.sha256`：文件一致性校验值。同渠道校验文件不能独立证明发布者身份。
 
 请选择包含本轮修改的成功运行；产物以该运行实际上传的文件为准，旧运行的文件名和功能可能不同。
@@ -86,4 +86,4 @@ npm run build:win
 
 ## 验证范围
 
-最新窗口与协议弹窗检查见 [Windows 0.2.35](../verification/WINDOWS-0.2.35.md)，历史记录见 [Windows 构建与验证记录](../verification/VERIFICATION-WINDOWS.md)。Windows 10 的原生界面仍待实测；首次安装、WebView2 缺失安装、真实通知展示与点击、托盘悬停、跨显示器 DPI 切换、休眠恢复、真实平台登录采集、升级及卸载仍需实测。没有执行的项目不能标为通过。
+最新窗口与协议弹窗检查见 [Windows 0.2.36](../verification/WINDOWS-0.2.36.md)，历史记录见 [Windows 构建与验证记录](../verification/VERIFICATION-WINDOWS.md)。Windows 10 的原生界面仍待实测；首次安装、WebView2 缺失安装、真实通知展示与点击、托盘悬停、跨显示器 DPI 切换、休眠恢复、真实平台登录采集、升级及卸载仍需实测。没有执行的项目不能标为通过。
