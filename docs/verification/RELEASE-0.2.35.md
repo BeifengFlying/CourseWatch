@@ -40,4 +40,14 @@
 
 ## 发布检查
 
-本地四个附件已完成 SHA256 核对。远端附件与匿名下载检查在发布后补录。
+[CourseWatch 0.2.35](https://github.com/BeifengFlying/CourseWatch/releases/tag/v0.2.35) 于北京时间 2026-11-15 15:16 公开发布为测试版，四个附件的远端大小及 SHA256 与本地一致。
+
+四个附件均未携带 GitHub Token、登录凭据或 Cookie 下载，并与本地逐字节核对一致。Apple Silicon 包及校验文件通过公开发布页附件地址下载；Intel 包在初次连接／HTTP2 失败后，通过公开附件 API 和 IPv4 下载，发布页原附件地址的 IPv4 重定向检查返回 HTTP 200。使用同渠道校验文件核对一致不构成独立的发布者身份认证。
+
+匿名公开版本 API 经应用实际解析函数识别为 0.2.35，正确判断高于 0.2.34，当前 0.2.35 不生成自身升级判断；该检查不创建用户通知。版本标签下的示例截图访问成功并与源码逐字节一致。
+
+0.2.34 桌面发布及其 8 个附件保持可用。本机历史安装包和校验文件保留；新四个附件另存于原项目 dist 目录，没有覆盖旧文件。
+
+## 线上检查
+
+[macOS CI 43689028386](https://github.com/BeifengFlying/CourseWatch/actions/runs/43689028386) 的 Apple Silicon 测试及打包通过。Intel 测试为 347 项通过、3 项默认 5 秒超时：`study-chapter-tests-runtime`、`study-empty-answer-runtime`、`unipus-window` 各一项；未进入线上 Intel 打包，不记为 CI 通过。相同测试在本机全量运行通过；发布用 Intel 包完成 Rosetta 和最终 DMG 内运行检查。未删除断言、放宽保护校验或修改自动化执行逻辑来消除此结果。
