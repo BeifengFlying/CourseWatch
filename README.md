@@ -20,12 +20,12 @@ macOS 关闭主窗口后继续在菜单栏运行；Windows 可选择隐藏到系
 
 ## 安装
 
-当前版本：**0.2.33（构建 33，测试版）**。从 [GitHub Releases](https://github.com/BeifengFlying/CourseWatch/releases/tag/v0.2.33) 下载对应安装包：
+当前版本：**0.2.33（构建 33，测试版）**。从 [GitHub Releases](https://github.com/BeifengFlying/CourseWatch/releases/tag/v0.2.33-repack) 下载对应安装包。当前附件已移除随包展示图，应用版本仍为 0.2.33：
 
 | 系统 | 下载 |
 | --- | --- |
-| macOS 14+ · Apple Silicon（M 系列） | [CourseWatch-0.2.33-build33-mac-arm64.dmg](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.33/CourseWatch-0.2.33-build33-mac-arm64.dmg) |
-| macOS 14+ · Intel | [CourseWatch-0.2.33-build33-mac-x64.dmg](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.33/CourseWatch-0.2.33-build33-mac-x64.dmg) |
+| macOS 14+ · Apple Silicon（M 系列） | [CourseWatch-0.2.33-build33-mac-arm64.dmg](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.33-repack/CourseWatch-0.2.33-build33-mac-arm64.dmg) |
+| macOS 14+ · Intel | [CourseWatch-0.2.33-build33-mac-x64.dmg](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.33-repack/CourseWatch-0.2.33-build33-mac-x64.dmg) |
 | Windows 10+ · x64 | 在 Windows 上[从源码构建](docs/guides/WINDOWS.md) |
 
 Windows 最低版本为 Windows 10 2004（内部版本 19041），建议使用 22H2 或更新版本。当前源码生成 `CourseWatch-0.2.33-build33-win-x64-setup.exe`、同名前缀的 ZIP 便携包及对应 `.sha256`；Actions 下载以对应运行实际上传的文件为准。0.2.30 r2 已在 Windows 11、150% 缩放下完成原生窗口检查；Windows 10、完整安装／升级／卸载及真实通知仍待实测。合并后的验证范围见 [Windows 0.2.31 合并检查](docs/verification/WINDOWS-0.2.31-MERGE.md)。

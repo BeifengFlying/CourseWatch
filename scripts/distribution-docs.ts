@@ -1,9 +1,11 @@
 import { cp, mkdir, readFile, readdir, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
-import { dirname, join, relative } from "node:path";
+import { dirname, join, posix, relative } from "node:path";
 
-// Keep the same relative links available in both the app bundle and DMG.
+// Keep documentation and licenses local; load demonstration images from the version tag.
 export async function copyDistributionDocs(root: string, destination: string) {
+  const pkg = JSON.parse(await readFile(join(root, "package.json"), "utf8"));
+  const imageBase = `https://raw.githubusercontent.com/BeifengFlying/CourseWatch/v${pkg.version}/`;
   const files = [
     "LICENSE",
     "licenses/Apache-2.0.txt",
@@ -17,21 +19,14 @@ export async function copyDistributionDocs(root: string, destination: string) {
     "docs/verification/RELEASE-0.2.30.md",
     "docs/verification/RELEASE-0.2.32.md",
     "docs/verification/RELEASE-0.2.33.md",
+    "docs/verification/REPACK-0.2.33.md",
     "docs/verification/README-DESKTOP-2026-11-15.md",
     "docs/verification/WINDOWS-0.2.31-MERGE.md",
     "docs/verification/WINDOWS-0.2.30-R2.md",
-    "docs/screenshots/windows30-r2-exterior-light.png",
-    "docs/screenshots/windows30-r2-exterior-dark.png",
     "docs/verification/STUDY-WEB-SEARCH-2026-11-15.md",
     "docs/verification/MACOS-PERFORMANCE-2026-11-14.md",
     "docs/verification/macos-performance-2026-11-14.json",
     "docs/verification/macos-power-2026-11-14.json",
-    "docs/screenshots/completed-tasks-light.png",
-    "docs/screenshots/completed-tasks-dark.png",
-    "docs/screenshots/study-task-model-run-1060-light.png",
-    "docs/screenshots/mobile-notifications-1060-light.png",
-    "docs/screenshots/mail-test-mobile.jpg",
-    "docs/screenshots/native-study-2-light.png",
     "CHANGELOG.md",
     "third_party/README.md",
     "third_party/UPSTREAM-MANIFEST.json",
@@ -43,42 +38,17 @@ export async function copyDistributionDocs(root: string, destination: string) {
     "docs/verification/UNIPUS-BACKGROUND-2026-11-14.md",
     "docs/verification/LEARNING-CONSOLE-2026-11-13.md",
     "docs/verification/PLATFORM-REMOVAL-2026-11-13.md",
-    "docs/screenshots/platform-removal-1060-light.png",
-    "docs/screenshots/platform-removal-320-dark.png",
     "docs/verification/UNIPUS-STUDY-2026-11-13.md",
     "docs/verification/STUDY-COURSE-UI-2026-11-13.md",
     "docs/research/UNIPUS-STUDY-2026-11-13.md",
-    "docs/screenshots/unipus-study-form-1060-light.png",
-    "docs/screenshots/unipus-study-notice-390-dark.png",
-    "docs/screenshots/unipus-study-progress-390-dark.png",
     "docs/verification/COURSE-PLATFORMS-2026-11-13.md",
     "docs/verification/COURSES-STUDY-LOCAL-2026-11-13.md",
-    "docs/screenshots/courses-1060-light.png",
-    "docs/screenshots/courses-320-light.png",
-    "docs/screenshots/study-apple-form-320-light.png",
-    "docs/screenshots/study-apple-form-390-dark.png",
     "docs/verification/STUDY-EXPERIMENT-2026-11-13.md",
     "docs/research/CHAOXING-ASSISTANTS-FEASIBILITY-2026-11-13.md",
-    "docs/screenshots/study-notice-320.png",
-    "docs/screenshots/study-form-320.png",
-    "docs/screenshots/study-form-dark-390.png",
     "docs/verification/LOCAL-UPDATE-2026-11-13.md",
-    "docs/screenshots/course-yuketang-1060.png",
-    "docs/screenshots/course-yuketang-320.png",
-    "docs/screenshots/course-chaoxing-1060.png",
-    "docs/screenshots/course-chaoxing-320.png",
-    "docs/images/coursewatch-icon.png",
     "DISCLAIMER.md",
     "PRIVACY.md",
     "THIRD_PARTY_NOTICES.md",
-    "docs/screenshots/coursewatch-0.2.0-preview.png",
-    "docs/screenshots/coursewatch-0.2.0-preview-dark.png",
-    "docs/screenshots/coursewatch-0.2.0-notifications.png",
-    "docs/screenshots/coursewatch-0.2.0-menubar.png",
-    "docs/screenshots/agenda-0.2-desktop.png",
-    "docs/screenshots/agenda-0.2-reminder.png",
-    "docs/screenshots/agenda-0.2-320.png",
-    "docs/screenshots/agenda-0.2-dark.png",
     "docs/legal/RELEASE_LICENSE_REVIEW.md",
     "docs/verification/VERIFICATION-BUILD6.md",
     "docs/verification/VERIFICATION-BUILD7.md",
@@ -112,9 +82,25 @@ export async function copyDistributionDocs(root: string, destination: string) {
   for (const file of files) {
     const target = join(destination, file);
     await mkdir(dirname(target), { recursive: true });
-    await cp(join(root, file), target);
+    if (file.endsWith(".md")) {
+      const text = await readFile(join(root, file), "utf8");
+      // Cover Markdown links/images and HTML src/href attributes. Resolve with
+      // POSIX paths so Windows produces the same repository URLs as macOS.
+      const onlineImages = text.replace(
+        /(\]\(\s*<?|(?:src|href)=["'])([^)\s"'<>]+)/g,
+        (match, prefix: string, url: string) => {
+          if (/^(?:[a-z][a-z0-9+.-]*:|[/#])/i.test(url)) return match;
+          const path = posix.normalize(posix.join(posix.dirname(file), url));
+          return /^docs\/(?:screenshots|images)\//.test(path)
+            ? prefix + imageBase + path
+            : match;
+        },
+      );
+      await writeFile(target, onlineImages);
+    } else {
+      await cp(join(root, file), target);
+    }
   }
-  await cp(join(root, "docs/screenshots/desktop-build31"), join(destination, "docs/screenshots/desktop-build31"), { recursive: true });
   await cp(
     join(root, "apps/extension/public/platforms/README.md"),
     join(destination, "PLATFORM_ASSET_SOURCES.md"),

@@ -21,6 +21,7 @@
 
 测试入口为 `npm run typecheck`、`npm test`。完整构建命令与系统要求见[项目 README](../README.md)和[Windows 说明](../docs/guides/WINDOWS.md)。脚本与配置路径保持稳定，历史文档移至 `docs/verification/` 和 `docs/planning/`。
 
+- `distribution-docs.ts`：两端安装包保留文档及许可文本，不复制 `docs/screenshots/` 和 `docs/images/`；仅在随包 Markdown 副本中将图片链接改为对应版本标签的在线地址，仓库原文保持相对链接。
 - `build-server.mjs`：清理生成目录后编译服务端，防止移除模块残留在安装包。
 - `check-platform-removal.mjs`：使用虚构数据检查平台移除后的普通任务及五个平台入口。
 
