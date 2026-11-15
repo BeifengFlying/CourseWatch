@@ -5,6 +5,9 @@ import type { CourseLearningProgress } from '../../contracts/src/study.js';
 import { courseDeadline } from '../../contracts/src/course-deadline.js';
 import { readStudyChapters } from './chapter-directory.js';
 import { openChaoxingDirectory } from './launch.js';
+import { openUnipusStudy } from './unipus-launch.js';
+import { StudyError } from './errors.js';
+import { DiagnosticError } from '../../core/src/diagnostics.js';
 // Read rendered official labels only. A local timer, played video or visited
 // chapter never becomes an official completion value.
 export async function readCourseCatalog(page: Page, course: Pick<CourseRecord,'id'|'name'|'platform'>): Promise<CourseLearningProgress> {
@@ -75,4 +78,36 @@ export async function waitForCourseCatalog(page: Page, course: Pick<CourseRecord
     }
     await page.waitForTimeout(300);
   } while (true);
+}
+
+// Card totals do not contain chapter entries. Follow the selected book's
+// official navigation and wait for its content directory, including popups.
+// The catalog worker blocks media playback before opening these pages.
+export async function readUnipusCourseCatalog(page: Page, course: Pick<CourseRecord,'id'|'name'|'platform'>, timeout = 12000): Promise<CourseLearningProgress> {
+  let step = 'read-card-progress';
+  try {
+    const progress = await waitForCourseCatalog(page, course, timeout);
+    step = 'open-book';
+    const book = page.getByText(course.name, {exact:true}).filter({visible:true});
+    if (await book.count() !== 1) throw new StudyError('官网教程入口未找到或存在同名项，请重新同步课程后重试');
+    await book.click({timeout:5000});
+    step = 'open-content';
+    const content = await openUnipusStudy(page, course.name, timeout);
+    step = 'read-chapter-directory';
+    const deadline = Date.now() + timeout;
+    do {
+      const chapters = await readStudyChapters(content, 'unipus');
+      if (chapters.length) {
+        progress.chapters = chapters.map(({id,name,complete,locked,path}) => ({id,name,complete,locked,...(path ? {path} : {})}));
+        progress.observedAt = Date.now();
+        return progress;
+      }
+      await content.waitForTimeout(300);
+    } while (Date.now() < deadline);
+    throw new StudyError('U校园教程已打开，但章节目录未加载，请打开官网教程检查后重试');
+  } catch (error) {
+    throw new StudyError(error instanceof StudyError ? error.message : 'U校园章节目录读取未完成，请检查登录和官网教程后重试', {
+      cause:new DiagnosticError('U校园目录查询未完成', 'unipus-catalog', {step}, {cause:error}),
+    });
+  }
 }

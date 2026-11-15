@@ -129,7 +129,7 @@ describe("登录识别与任务采集分离", () => {
 
 it.each(["yuketang", "chaoxing"] as const)("%s 通过受保护接口确认登录，可接受真实结构的空课程", async (id) => {
   const get = vi.fn(async () => ({
-    status: () => 200, ok: () => true, headers: () => ({}), dispose: async () => {},
+    status: () => 200, ok: () => true, url: () => id === 'yuketang' ? 'https://www.yuketang.cn/api/v3/user/basic-info' : 'https://mooc1-api.chaoxing.com/mycourse/backclazzdata', headers: () => ({}), dispose: async () => {},
     text: async () => id === "yuketang" ? '{"code":0,"data":{"id":42}}' : '{"result":1,"channelList":[]}',
   }));
   const ctx = { request: { get }, cookies: async () => [], pages: () => [] } as unknown as BrowserContext;
@@ -137,7 +137,7 @@ it.each(["yuketang", "chaoxing"] as const)("%s 通过受保护接口确认登录
   expect(get.mock.calls).toHaveLength(1);
 });
 it("学习通登录验证复用课程响应，不为课程发现重复发请求", async () => {
-  const get = vi.fn(async () => ({status:()=>200,ok:()=>true,headers:()=>({}),dispose:async()=>{},
+  const get = vi.fn(async () => ({status:()=>200,ok:()=>true,url:()=> 'https://mooc1-api.chaoxing.com/mycourse/backclazzdata',headers:()=>({}),dispose:async()=>{},
     text:async()=>JSON.stringify({result:1,channelList:[{content:{id:20,course:{data:[{id:10,name:"测试课程"}]}}}]})}));
   const onCourses = vi.fn();
   await confirmLogin({request:{get}} as unknown as BrowserContext,"chaoxing",onCourses);
@@ -146,7 +146,7 @@ it("学习通登录验证复用课程响应，不为课程发现重复发请求"
 });
 it.each(["yuketang", "chaoxing"] as const)("%s 只有退出文字或 Cookie，不足以保存登录", async (id) => {
   const ctx = {
-    request: { get: async () => ({ status: () => 200, ok: () => true, headers: () => ({}), dispose: async () => {}, text: async () => '<input type="password">账号登录' }) },
+    request: { get: async () => ({ status: () => 200, ok: () => true, url:()=> 'https://i.chaoxing.com/', headers: () => ({}), dispose: async () => {}, text: async () => '<input type="password">账号登录' }) },
     cookies: async () => [{ name: "sessionid", value: "fixture" }],
     pages: () => [{ frames: () => [{ url: () => id === "yuketang" ? 'https://www.yuketang.cn/web' : 'https://i.chaoxing.com/', content: async () => '<button>退出登录</button>' }] }],
   } as unknown as BrowserContext;

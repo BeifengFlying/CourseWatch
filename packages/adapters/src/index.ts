@@ -16,6 +16,8 @@ import { browserLaunchOptions, BrowserUnavailableError } from "./browser.js";
 import { confirmLogin } from "./session.js";
 import { getPlatformPage } from "./http.js";
 import { CollectionError } from "./course-http.js";
+import { DiagnosticLog, diagnosticErrorFacts, diagnosticReason, type DiagnosticFacts } from '../../core/src/diagnostics.js';
+import { watchBrowserDiagnostics, reportBrowserFailure } from './browser-diagnostics.js';
 export interface PlatformState {
   id: PlatformId;
   accountId: string;
@@ -35,11 +37,13 @@ export class Adapters {
   private active?: { platform: PlatformId; context: BrowserContext };
   private busy = false;
   private vault: Vault;
+  private diagnostics: DiagnosticLog;
   constructor(
     private dir: string,
     private loginClosed?: () => void,
   ) {
     this.vault = new Vault(dir);
+    this.diagnostics = new DiagnosticLog(dir);
   }
   get activeLogin() {
     return this.active?.platform ?? null;
@@ -67,6 +71,7 @@ export class Adapters {
     try {
       const context = await this.launch(id, false);
       this.active = { platform: id, context };
+      watchBrowserDiagnostics(context, (event,stage,reason,facts) => this.diagnostics.record(id,event,{stage,reason,facts}));
       context.on("close", () => {
         if (this.active?.context === context) {
           this.active = undefined;
@@ -79,7 +84,8 @@ export class Adapters {
         waitUntil: "domcontentloaded",
         timeout: 30000,
       });
-      } catch {
+      } catch (error) {
+        await reportBrowserFailure(error, 'login-navigation', page, (event,stage,reason,facts) => this.diagnostics.record(id,event,{stage,reason,facts}));
         if (this.active?.context !== context || page.isClosed()) throw new Error("登录窗口已关闭");
         // A redirect or slow network must not destroy an open official login window.
         return { ok: true, message: "登录窗口已打开；页面加载未完成，请在窗口中刷新后继续登录" };
@@ -87,6 +93,7 @@ export class Adapters {
       if (this.active?.context !== context) throw new Error("登录窗口已关闭");
       return { ok: true };
     } catch (error) {
+      this.diagnostics.record(id,'operation-failed',{stage:'login-open',reason:diagnosticReason(error),facts:diagnosticErrorFacts(error)});
       await this.cancel();
       if (error instanceof BrowserUnavailableError) throw error;
       throw new Error(
@@ -102,8 +109,16 @@ export class Adapters {
     if (this.active?.platform !== id) throw new Error("请先打开该平台登录窗口");
     const { context } = this.active;
     let courses: { key: string; name: string }[] | undefined;
-    await confirmLogin(context, id, items => { courses = items; });
-    await this.vault.save(id, await context.storageState({ indexedDB: true }));
+    const started = Date.now();
+    this.diagnostics.record(id,'login-confirm-start');
+    try {
+      await confirmLogin(context, id, items => { courses = items; });
+      await this.vault.save(id, await context.storageState({ indexedDB: true }));
+    } catch (error) {
+      await reportBrowserFailure(error, 'login-confirm', context.pages().at(-1), (event,stage,reason,facts) => this.diagnostics.record(id,event,{stage,reason,facts}));
+      throw error;
+    }
+    this.diagnostics.record(id,'login-confirmed',{facts:{durationMs:Date.now()-started}});
     await context.close();
     this.active = undefined;
     return { ok: true, ...(courses ? { courses } : {}) };
@@ -163,8 +178,13 @@ export class Adapters {
           extraHTTPHeaders: { "Accept-Language": "zh-CN,zh;q=0.9", ...(p.id === "chaoxing" ? { Referer: "https://i.chaoxing.com/" } : {}) },
         });
         let http = await createHTTP(state);
+        const observeRead = (facts: DiagnosticFacts) => {
+          const rejected = typeof facts.applicationCode === 'number' &&
+            (p.id === 'unipus' ? facts.applicationCode !== 1 : p.id === 'yuketang' ? facts.applicationCode !== 0 : false);
+          if (facts.requestFailed || rejected) this.diagnostics.record(p.id, 'platform-read-failed', {stage:'scan-read',facts});
+        };
         try {
-          const read = courseReader(http, p.id);
+          const read = courseReader(http, p.id, observeRead);
           const result = p.id === "yuketang"
             ? await (async () => {
                 const { collectRain, rainOrigin } = await import("./yuketang.js");
@@ -181,8 +201,10 @@ export class Adapters {
                       const refreshed = await restoreUnipusSession(state);
                       state = await saveUnipusSession(this.vault,state,refreshed);
                       await http.dispose(); http = await createHTTP(state);
-                      result = await collectUnipus(courseReader(http,p.id),p.accountId,unipusHeaders(state),p.selectedCourseKeys);
-                    } catch { /* Keep the explicit auth result if official restoration fails. */ }
+                      result = await collectUnipus(courseReader(http,p.id,observeRead),p.accountId,unipusHeaders(state),p.selectedCourseKeys);
+                    } catch (error) {
+                      this.diagnostics.record(p.id,'session-restore-failed',{stage:'session-restore',reason:diagnosticReason(error),facts:diagnosticErrorFacts(error)});
+                    }
                   }
                   return result;
                 })()
@@ -271,7 +293,8 @@ export class Adapters {
               items: parsed.items,
               issues: parsed.issues,
             });
-          } catch {
+          } catch (error) {
+            this.diagnostics.record(p.id,'operation-failed',{stage:'scan-page',reason:diagnosticReason(error),facts:diagnosticErrorFacts(error)});
             base.partitions.push({
               key: source.url,
               outcome: "failed",
@@ -304,6 +327,7 @@ export class Adapters {
         ].slice(0, 30),
       };
     } catch (error) {
+      this.diagnostics.record(p.id,'operation-failed',{stage:'scan',reason:diagnosticReason(error),facts:diagnosticErrorFacts(error)});
       return {
         ...base,
         partitions: [],

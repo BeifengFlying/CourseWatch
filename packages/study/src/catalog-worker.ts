@@ -6,7 +6,7 @@ import { inspectSession } from '../../adapters/src/session.js';
 import { chaoxingCoursesUrl, parseChaoxingCourses } from '../../adapters/src/chaoxing.js';
 import { courseReader } from '../../adapters/src/course-http.js';
 import { findChaoxingCourseURL } from './launch.js';
-import { waitForCourseCatalog } from './catalog.js';
+import { readUnipusCourseCatalog, waitForCourseCatalog } from './catalog.js';
 import { openUnipusCourses } from './unipus-launch.js';
 import { watchStudyBrowser, reportStudyFailure } from './diagnostics.js';
 import { readCatalogTaskStates } from './catalog-tasks.js';
@@ -37,10 +37,17 @@ process.once('message',async (message:any)=>{
     try { deadlines=new Map(parseChaoxingCourses(await courseReader(context.request,'chaoxing')(chaoxingCoursesUrl)).map(c=>[`course:${c.courseId}:class:${c.classId}`,c.deadline??null])); }
     catch { issues.push('截止日期未读取到，本轮仍查询课程进度'); }
   }
-  for(const course of message.courses.slice(0,20)) {
+  for(const [index,course] of message.courses.slice(0,20).entries()) {
    let opened: typeof page=null;
    try {
-    if(page) opened=page;
+    if(page) {
+      opened=page;
+      if(index > 0) {
+        for(const extra of context.pages().filter(p=>p!==page)) await extra.close();
+        await page.goto('https://uai.unipus.cn/home',{waitUntil:'commit',timeout:30000});
+        await openUnipusCourses(page);
+      }
+    }
     else {
       const ids=course.key.match(/^course:([^:]+):class:([^:]+)$/);
       if(!ids) throw new Error('课程标识无法识别，请重新同步课程');
@@ -50,7 +57,7 @@ process.once('message',async (message:any)=>{
     }
     const html=await opened.content();const session=inspectSession(html,message.platform);
     if(session.login||session.verification)throw new Error('登录失效或平台要求验证，请在官方窗口处理');
-    const progress=await waitForCourseCatalog(opened,course);
+    const progress=page ? await readUnipusCourseCatalog(opened,course) : await waitForCourseCatalog(opened,course);
     if(message.platform==='chaoxing') {
       progress.deadline=deadlines?.get(course.key)??null; progress.deadlineLabel='学习截止';
       try { await readCatalogTaskStates(opened,progress,message.courses.length===1?45000:10000); }
@@ -58,9 +65,9 @@ process.once('message',async (message:any)=>{
     }
     items.push(progress);
    }catch(error) {
-    await reportStudyFailure(error, 'catalog', opened ?? undefined);
+    await reportStudyFailure(error, 'catalog', context.pages().at(-1) ?? opened ?? undefined);
     const reason=(error as Error).message;
-    issues.push(`${course.name}：${/^(学习通登录|登录失效|课程标识|官网存在|官网课程列表|官网章节目录|尚未识别|登录已失效)/.test(reason) ? reason : '官网目录未加载完成，请稍后重试'}`);
+    issues.push(`${course.name}：${/^(U校园|教程|已点击官网|学习通登录|登录失效|课程标识|官网存在|官网课程列表|官网章节目录|尚未识别|登录已失效)/.test(reason) ? reason : '官网目录未加载完成，请稍后重试'}`);
    }
    finally {if(opened&&opened!==page)await opened.close();}
    process.send?.({partial:{items,issues}});

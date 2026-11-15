@@ -7,8 +7,9 @@ import type {
 import type { z } from "zod";
 import { getPlatformPage } from "./http.js";
 import { inspectSession } from "./session.js";
+import { DiagnosticError, diagnosticErrorFacts, diagnosticLocation, diagnosticReason, type DiagnosticFacts } from '../../core/src/diagnostics.js';
 
-export class CollectionError extends Error {
+export class CollectionError extends DiagnosticError {
   partial?: CollectedList;
   constructor(
     message: string,
@@ -16,7 +17,7 @@ export class CollectionError extends Error {
       "failed" | "auth_required" | "verification_required" = "failed",
     readonly stop = false,
   ) {
-    super(message);
+    super(message, 'platform-read');
   }
 }
 export type ReadPage = (
@@ -26,6 +27,7 @@ export type ReadPage = (
 export function courseReader(
   client: APIRequestContext,
   platform: PlatformId,
+  observe?: (facts: DiagnosticFacts) => void,
 ): ReadPage {
   const end = Date.now() + 90000;
   let requests = 0;
@@ -36,15 +38,19 @@ export function courseReader(
         "failed",
         true,
       );
-    const response = await getPlatformPage(
-      client,
-      platform,
-      url,
-      Math.min(15000, end - Date.now()),
-      headers,
-    );
+    const started = Date.now();
+    const facts: DiagnosticFacts = {...diagnosticLocation(url), method:'GET'};
+    let response: Awaited<ReturnType<typeof getPlatformPage>> | undefined;
     try {
+      response = await getPlatformPage(
+        client,
+        platform,
+        url,
+        Math.min(15000, end - Date.now()),
+        headers,
+      );
       const status = response.status();
+      Object.assign(facts, {status, ...diagnosticLocation(response.url())});
       if (status === 401)
         throw new CollectionError(
           "登录已失效，请重新登录",
@@ -66,6 +72,16 @@ export function courseReader(
       const body = await response.text();
       if (body.length > 4 * 1024 * 1024)
         throw new CollectionError("平台响应超过大小上限");
+      facts.responseType = /^\s*</.test(body) ? 'html' : /^\s*[\[{]/.test(body) ? 'json' : 'other';
+      if (facts.responseType === 'json') {
+        try {
+          const data = JSON.parse(body);
+          const code = data?.code;
+          if (typeof code === 'number' && Number.isFinite(code)) facts.applicationCode = code;
+          // A successful HTTP request may still reject the saved session.
+          // The parser runs later, so retain safe metadata with this reader.
+        } catch { /* The platform parser reports malformed JSON. */ }
+      }
       if (/^\s*</.test(body)) {
         const session = inspectSession(body, platform);
         if (session.verification)
@@ -81,9 +97,18 @@ export function courseReader(
             true,
           );
       }
+      observe?.({...facts, durationMs:Date.now()-started});
       return body;
+    } catch (error) {
+      facts.durationMs = Date.now()-started;
+      observe?.({...facts,...diagnosticErrorFacts(error),requestFailed:true,failureReason:diagnosticReason(error)});
+      if (error instanceof CollectionError) {
+        Object.assign(error.diagnosticFacts, facts, {outcome:error.outcome});
+        throw error;
+      }
+      throw new DiagnosticError('平台请求未完成', 'platform-read', facts, {cause:error});
     } finally {
-      await response.dispose();
+      await response?.dispose();
     }
   };
 }

@@ -50,7 +50,7 @@ it("U校园只从正确来源提取会话，并以受保护书架接口确认登
   const origins=[{origin:unipusOrigin,localStorage:[{name:"PORTAL_STATE_PERSISTENT",value:JSON.stringify({tokenInfo:{jwt:token},schId:123})}]}];
   expect(unipusHeaders({origins})).toMatchObject({Authorization:token,"u-school":"123","u-openid":"open-id"});
   expect(()=>unipusHeaders({origins:[{...origins[0],origin:"https://example.com"}]})).toThrow();
-  const get=vi.fn(async(_url:string)=>({status:()=>200,ok:()=>true,headers:()=>({}),text:async()=>shelf,dispose:async()=>{}}));
+  const get=vi.fn(async(url:string)=>({url:()=>url,status:()=>200,ok:()=>true,headers:()=>({}),text:async()=>shelf,dispose:async()=>{}}));
   const ctx={storageState:async()=>({cookies:[],origins}),request:{get}} as unknown as BrowserContext;
   await expect(confirmLogin(ctx,"unipus")).resolves.toBeUndefined();
   expect(get.mock.calls[0][0]).toBe(unipusUrls.courses);
@@ -110,7 +110,7 @@ it('U校园后台遇到令牌失效时只恢复一次官网会话，重新读取
  const original=makeState('expired-fixture'),refreshed=makeState('refreshed-fixture');let saved=original;
  const read=vi.spyOn(Vault.prototype,'read').mockImplementation(async()=>saved),save=vi.spyOn(Vault.prototype,'save').mockImplementation(async(_id,value)=>{saved=value as typeof saved;});
  const restore=vi.spyOn(sessions,'restoreUnipusSession').mockResolvedValue(refreshed);
- const response=(body:string)=>({status:()=>200,ok:()=>true,headers:()=>({}),text:async()=>body,dispose:async()=>{}});
+ const response=(body:string)=>({url:()=>unipusUrls.courses,status:()=>200,ok:()=>true,headers:()=>({}),text:async()=>body,dispose:async()=>{}});
  const first={get:vi.fn(async()=>response(JSON.stringify({code:3008}))),dispose:vi.fn(async()=>{}),storageState:async()=>original};
  const second={get:vi.fn(async(url:string,_options?:unknown)=>response(url===unipusUrls.courses?shelf:url===unipusUrls.homework?json({data:{homework:{total:0,items:[]}}}):json({data:{totalCount:0,items:[]}}))),dispose:vi.fn(async()=>{}),storageState:async()=>refreshed};
  const client=vi.spyOn(request,'newContext').mockResolvedValueOnce(first as any).mockResolvedValueOnce(second as any);

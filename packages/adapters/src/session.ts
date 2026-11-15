@@ -2,6 +2,7 @@ import { load } from "cheerio";
 import type { BrowserContext } from "playwright";
 import { safePlatformUrl, type PlatformId } from "../../contracts/src/index.js";
 import { getPlatformPage } from "./http.js";
+import { DiagnosticError, type DiagnosticFacts } from '../../core/src/diagnostics.js';
 
 // Login evidence is independent of course discovery and task parsing.
 export function inspectSession(html: string, platform?: PlatformId) {
@@ -78,7 +79,8 @@ export async function confirmLogin(context: BrowserContext, id: PlatformId, onCo
     // Verify a protected read-only endpoint with this browser's own session.
     // Cookie presence or a public landing page does not prove authentication.
     const { courseReader, CollectionError } = await import("./course-http.js");
-    const read = courseReader(context.request, id);
+    let facts: DiagnosticFacts = {};
+    const read = courseReader(context.request, id, observed => { facts = observed; });
     try {
       if (id === "yuketang") {
         const origin = "https://www.yuketang.cn";
@@ -96,8 +98,8 @@ export async function confirmLogin(context: BrowserContext, id: PlatformId, onCo
       return;
     } catch (error) {
       if (error instanceof CollectionError && error.outcome === "verification_required")
-        throw new Error("请先在官方窗口完成验证，再点击完成登录");
-      throw new Error("尚未确认登录成功，请完成官方登录并进入课程页后重试");
+        throw new DiagnosticError("请先在官方窗口完成验证，再点击完成登录", 'login-confirm', {...facts,outcome:error.outcome}, {cause:error});
+      throw new DiagnosticError("尚未确认登录成功，请完成官方登录并进入课程页后重试", 'login-confirm', {...facts,...(error instanceof CollectionError ? {outcome:error.outcome} : {})}, {cause:error});
     }
   }
   // SSO can leave an old login tab open. Inspect all official frames, rather
