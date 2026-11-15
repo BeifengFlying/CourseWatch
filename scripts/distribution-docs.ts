@@ -9,6 +9,8 @@ export async function copyDistributionDocs(root: string, destination: string) {
   const files = [
     "LICENSE",
     "docs/verification/RELEASE-0.2.36.md",
+    "docs/verification/WINDOWS-0.2.36.md",
+    "docs/verification/CHAOXING-LOGIN-2026-11-15.md",
     "docs/verification/UNIPUS-CHAPTERS-AND-DIAGNOSTICS-2026-11-15.md",
     "licenses/Apache-2.0.txt",
     "licenses/CourseWatch-Noncommercial-1.0.txt",
