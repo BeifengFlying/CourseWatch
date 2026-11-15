@@ -1,6 +1,6 @@
 # 第三方软件与素材
 
-CourseWatch 自 0.2.35 起，新版有权许可的原创内容采用 [CourseWatch 非商业许可证](LICENSE)及[项目协议](TERMS.md)。此前已授予的 Apache-2.0 权利继续有效；本项目无权改变下列第三方组件、素材及平台内容的许可。具体版本以 `package-lock.json`、随包 `DEPENDENCIES.txt` 和 `UI-LICENSES/INDEX.txt` 为准；本表不是全部传递依赖的许可证全文。
+CourseWatch 0.2.36 基于 [Apache-2.0](LICENSE) 及[项目补充约定](TERMS.md)发行，新增项目约定统一写入 TERMS，标准 LICENSE 原文保持不变。第三方组件、素材及平台内容继续适用各自许可，不因本项目条款变更而重新许可。具体版本以 `package-lock.json`、随包 `DEPENDENCIES.txt` 和 `UI-LICENSES/INDEX.txt` 为准；本表不是全部传递依赖的许可证全文。
 
 ## macOS 包内的软件
 
@@ -37,7 +37,7 @@ Microsoft Edge WebView2 Runtime 使用微软相应条款，不能由本项目重
 
 平台名称、图标及平台页面内容属于各自权利人；图标来源见 [平台图标来源](apps/extension/public/platforms/README.md)，打包时另存为 `PLATFORM_ASSET_SOURCES.md`。这些标识用于识别对应网站，不表示平台授权、合作或推荐本软件。来源记录和权利归属声明不等于获得再分发许可。
 
-目前尚未确认平台图标的完整再分发依据，以及部分界面传递依赖缺少的原始许可文本。当前待办和证据范围见[分发许可核查](docs/legal/RELEASE_LICENSE_REVIEW.md)。第三方内容不能由本项目单方面改为 CourseWatch 非商业许可或其他许可，也不能以“侵权联系删除”替代事前授权核查。
+目前尚未确认平台图标的完整再分发依据，以及部分界面传递依赖缺少的原始许可文本。当前待办和证据范围见[分发许可核查](docs/legal/RELEASE_LICENSE_REVIEW.md)。第三方内容不能由本项目单方面改为 本项目许可或补充约定，也不能以“侵权联系删除”替代事前授权核查。
 
 ## 教学平台采集参考
 

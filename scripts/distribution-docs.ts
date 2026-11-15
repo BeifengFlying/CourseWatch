@@ -8,6 +8,8 @@ export async function copyDistributionDocs(root: string, destination: string) {
   const imageBase = `https://raw.githubusercontent.com/BeifengFlying/CourseWatch/v${pkg.version}/`;
   const files = [
     "LICENSE",
+    "docs/verification/RELEASE-0.2.36.md",
+    "docs/verification/UNIPUS-CHAPTERS-AND-DIAGNOSTICS-2026-11-15.md",
     "licenses/Apache-2.0.txt",
     "licenses/CourseWatch-Noncommercial-1.0.txt",
     "docs/verification/RELEASE-0.2.35.md",

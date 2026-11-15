@@ -1,24 +1,19 @@
 CourseWatch
 Copyright 2026 CourseWatch contributors
 
-Noncommercial use only. Commercial use is prohibited for original material
-covered by the CourseWatch Noncommercial License 1.0 starting with 0.2.35.
-Read LICENSE, TERMS.md / TERMS.en.md and DISCLAIMER.md together.
+CourseWatch is distributed based on the Apache License, Version 2.0.
+LICENSE retains the unmodified standard text. Additional project use,
+noncommercial distribution and beta-risk conditions are collected in
+TERMS.md and TERMS.en.md. Read those documents with DISCLAIMER.md.
+The additional conditions are not standard Apache-2.0 provisions and do
+not unilaterally revoke valid license grants. Their applicability and
+enforceability depend on applicable law and the relevant agreements.
 
-Earlier irrevocable license grants remain intact. Material previously
-licensed under Apache-2.0 remains available under that grant where it
-applies; licenses/Apache-2.0.txt preserves the original license text.
-Removing old installers does not revoke those rights. This NOTICE records
-attribution and pointers; it does not itself relicense material.
+Historical versions retain their supplied documents. Third-party software,
+assets, platform names, logos and content retain their respective rights
+and licenses; they are not relicensed by CourseWatch. See
+THIRD_PARTY_NOTICES.md. This product is not affiliated with or endorsed by
+the teaching platforms identified in its interface.
 
-Third-party software, teaching-platform names, logos and platform content
-remain subject to their respective rights and terms. They are not
-relicensed by CourseWatch. See THIRD_PARTY_NOTICES.md and the original
-licenses retained with third-party components.
-
-This product is not affiliated with or endorsed by the teaching platforms
-identified in its interface. The custom noncommercial license is not the
-Apache-2.0 license or an OSI-approved open-source license.
-
-DISCLAIMER.md details beta risks and liability provisions. PRIVACY.md
-describes current local data handling.
+This NOTICE records attribution and pointers only. It does not modify the
+Apache-2.0 text. PRIVACY.md describes current local data handling.
