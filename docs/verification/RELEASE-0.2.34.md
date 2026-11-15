@@ -2,6 +2,8 @@
 
 日期：2026-11-15，Asia/Shanghai。
 
+本页记录最初的 macOS 发布。当前下载集中于 [0.2.34 桌面发布](https://github.com/BeifengFlying/CourseWatch/releases/tag/v0.2.34-desktop)，原 macOS 包摘要不变，新增 Windows 安装程序、便携 ZIP 及校验文件；Windows 检查、最终摘要与原 Release 归档／删除结果见 [Windows 0.2.34](WINDOWS-0.2.34.md)。下方原发布状态为历史记录。
+
 ## 变更范围
 
 - macOS 与 Windows 首次打开时先显示原生用户协议弹窗，直接标明完全免费、项目源码地址及付费渠道退款举报提示；协议全文可滚动阅读。
