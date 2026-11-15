@@ -3,7 +3,7 @@ import { ZodError } from "zod";
 import type { BrowserContext } from "playwright";
 import { safePlatformUrl, type PlatformId } from "../../contracts/src/index.js";
 import { getPlatformPage } from "./http.js";
-import { DiagnosticError, type DiagnosticFacts } from '../../core/src/diagnostics.js';
+import { DiagnosticError, diagnosticReason, type DiagnosticFacts } from '../../core/src/diagnostics.js';
 
 // Login evidence is independent of course discovery and task parsing.
 export function inspectSession(html: string, platform?: PlatformId) {
@@ -105,7 +105,7 @@ export async function confirmLogin(context: BrowserContext, id: PlatformId, onCo
       if (id === "chaoxing" && !(error instanceof CollectionError && error.outcome === "auth_required")) {
         if (error instanceof CollectionError) message = `学习通登录校验未完成：${error.message}`;
         else if (error instanceof ZodError) message = "学习通登录校验未完成：课程响应结构无法识别，请稍后重试；登录窗口已保留";
-        else if (error instanceof Error && /timeout|超时/i.test(error.message)) message = "学习通登录校验请求超时，请检查网络后重试；登录窗口已保留";
+        else if (diagnosticReason(error) === 'timeout') message = "学习通登录校验请求超时，请检查网络后重试；登录窗口已保留";
         else message = "学习通登录校验请求失败，请检查网络后重试；登录窗口已保留";
       }
       throw new DiagnosticError(message, 'login-confirm', detail, {cause:error});

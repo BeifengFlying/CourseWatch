@@ -3,6 +3,7 @@ import type { BrowserContext } from "playwright";
 import { confirmLogin } from "../packages/adapters/src/session.js";
 import { chaoxingCoursesUrl, chaoxingWebCoursesUrl, collectChaoxing, parseChaoxingWebCourses, readChaoxingCourses } from "../packages/adapters/src/chaoxing.js";
 import { CollectionError } from "../packages/adapters/src/course-http.js";
+import { diagnosticErrorFacts, diagnosticReason } from "../packages/core/src/diagnostics.js";
 
 const webCourses = `<div id="courseList"><ul id="courselistArea">
   <li class="course learnCourse stu_20" id="c_10"><h3><a href="/visit/stucoursemiddle?courseid=10&amp;clazzid=20&amp;cpi=30">测试课程</a></h3></li>
@@ -72,6 +73,17 @@ it("网络失败不会被提示为尚未登录", async () => {
   const ctx = { request: { get: vi.fn().mockRejectedValue(new Error("net::ERR_CONNECTION_RESET secret-token")) } } as unknown as BrowserContext;
   await expect(confirmLogin(ctx, "chaoxing")).rejects.toThrow("登录校验请求失败");
   await expect(confirmLogin(ctx, "chaoxing")).rejects.not.toThrow("secret-token");
+});
+
+it("请求被诊断包装后仍显示超时，并保留请求阶段和脱敏错误类别", async () => {
+  const ctx = { request: { get: vi.fn().mockRejectedValue(new Error("apiRequestContext.get: Timeout 15000ms exceeded token=private")) } } as unknown as BrowserContext;
+  const error = await confirmLogin(ctx, "chaoxing").catch(error => error);
+  expect(error.message).toContain("登录校验请求超时");
+  expect(error.message).not.toContain("private");
+  expect(diagnosticReason(error)).toBe("timeout");
+  const facts = diagnosticErrorFacts(error);
+  expect(facts).toMatchObject({ failureStage: "login-confirm", method: "GET", operation: "apiRequestContext.get", timeoutMs: 15000 });
+  expect(JSON.stringify(facts)).not.toContain("private");
 });
 
 it("两个入口都要求登录时仍拒绝保存会话", async () => {
