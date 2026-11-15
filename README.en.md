@@ -22,13 +22,13 @@ On macOS, closing the main window keeps the app in the menu bar. Windows offers 
 
 ## Installation
 
-Current source and package version: **0.2.36 (beta)**. Published **0.2.35** installers are available from [GitHub Releases](https://github.com/BeifengFlying/CourseWatch/releases/tag/v0.2.35). Packages omit browser binaries and documentation images:
+Current macOS version: **0.2.36 (beta)**, available from [GitHub Releases](https://github.com/BeifengFlying/CourseWatch/releases/tag/v0.2.36). Windows installers are pending upload. Packages omit browser binaries and documentation images:
 
 | System | Download |
 | --- | --- |
-| macOS 14+ · Apple Silicon | [CourseWatch-0.2.35-mac-arm64.dmg](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.35/CourseWatch-0.2.35-mac-arm64.dmg) |
-| macOS 14+ · Intel | [CourseWatch-0.2.35-mac-x64.dmg](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.35/CourseWatch-0.2.35-mac-x64.dmg) |
-| Windows 10+ · x64 | [Installer](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.35/CourseWatch-0.2.35-win-x64-setup.exe) · [Portable ZIP](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.35/CourseWatch-0.2.35-win-x64.zip) |
+| macOS 14+ · Apple Silicon | [CourseWatch-0.2.36-mac-arm64.dmg](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.36/CourseWatch-0.2.36-mac-arm64.dmg) |
+| macOS 14+ · Intel | [CourseWatch-0.2.36-mac-x64.dmg](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.36/CourseWatch-0.2.36-mac-x64.dmg) |
+| Windows 10+ · x64 | |
 
 The minimum Windows version is Windows 10 version 2004 (build 19041); version 22H2 or later is recommended. The installer includes Microsoft's online bootstrapper for a missing WebView2 Runtime. To use the portable ZIP, extract it and run `CourseWatch.exe`. Version 0.2.35 passed Windows interface checks for update notices, experimental-use confirmation, light and dark themes, and compact layouts, plus consent dialog checks at 100% / 150% scaling. Windows 10, full installation / upgrade / removal, and real notifications still need testing. See the [Windows 0.2.35 checks](docs/verification/WINDOWS-0.2.35.md).
 
@@ -43,7 +43,7 @@ Version 0.2.35 adds Settings → General → App Updates, with manual checks and
 Each package has a matching `.sha256` file. Compare it with the output of:
 
 ```sh
-shasum -a 256 CourseWatch-0.2.35-mac-arm64.dmg
+shasum -a 256 CourseWatch-0.2.36-mac-arm64.dmg
 ```
 
 Mac packages are ad hoc signed and have not been notarized by Apple. The Intel package has passed architecture and Rosetta runtime checks; its interface has not been checked on a physical Intel Mac. Platform coverage and reminder delivery may be incomplete during the beta. School, instructor and platform notices remain the authoritative sources. See [beta limitations](DISCLAIMER.md) for details. The application interface and most documentation are currently in Chinese; this language switch applies to the README.
