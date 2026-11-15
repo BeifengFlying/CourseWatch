@@ -12,7 +12,7 @@ const courses = [{ courseId: "10", classId: "20", name: "测试课程" }, { cour
 
 it("移动接口拒绝网页会话时，登录与后台同步复用受保护网页课程读取", async () => {
   const get = vi.fn(async (url: string) => ({
-    status: () => 200, ok: () => true, headers: () => ({}), dispose: vi.fn(async () => {}),
+    url: () => url, status: () => 200, ok: () => true, headers: () => ({}), dispose: vi.fn(async () => {}),
     text: async () => url === chaoxingCoursesUrl ? '{"result":0,"msg":"请重新登录"}' : webCourses,
   }));
   const onCourses = vi.fn();
@@ -52,7 +52,7 @@ it("移动接口数据格式变化时仍可读取网页课程", async () => {
 
 it("移动接口拒绝会话、网页结构未知时说明校验未完成，不认定网页登录失效", async () => {
   const get = vi.fn(async (url: string) => ({
-    status: () => 200, ok: () => true, headers: () => ({}), dispose: async () => {},
+    url: () => url, status: () => 200, ok: () => true, headers: () => ({}), dispose: async () => {},
     text: async () => url === chaoxingCoursesUrl ? '{"result":0,"msg":"请重新登录"}' : '<button>退出登录</button>',
   }));
   await expect(confirmLogin({ request: { get } } as unknown as BrowserContext, "chaoxing")).rejects.toThrow("网页课程列表尚未加载或结构无法识别");
@@ -76,7 +76,7 @@ it("网络失败不会被提示为尚未登录", async () => {
 
 it("两个入口都要求登录时仍拒绝保存会话", async () => {
   const get = vi.fn(async (url: string) => ({
-    status: () => 200, ok: () => true, headers: () => ({}), dispose: async () => {},
+    url: () => url, status: () => 200, ok: () => true, headers: () => ({}), dispose: async () => {},
     text: async () => url === chaoxingCoursesUrl ? '{"result":0,"msg":"请重新登录"}' : '<input type="password">账号登录',
   }));
   const onCourses = vi.fn();
