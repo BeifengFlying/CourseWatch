@@ -49,6 +49,8 @@
 
 Windows 启动与关闭设置另有 `dotnet run --project tests/windows/PreferencesChecks.csproj -c Release`，使用临时目录和启动项替身，不修改当前用户的开机启动项。
 
+`dotnet run --project tests/windows/ConsentLayoutChecks.csproj -c Release` 检查原生协议弹窗的普通／窄尺寸、浅深配色、文字边界、正文滚动与明确同意／退出操作。加 `-- --dpi96` 检查 100% 缩放，默认使用系统 DPI。截图和结果写入 `.cache/windows-consent34/`；确认记录位于临时目录，不启动后台。
+
 历史 Windows 修订支持 `windowsRevision` 和 `-rN`；0.2.34 起修订递增补丁版本，不再追加该后缀。
 
 `npm run build:web` 后运行 `node --import tsx scripts/check-windows-ui.mjs`，使用临时数据库、虚构课程与原生通信替身检查 Windows 主设置、课程管理、学习任务、模型面板和平台窗口，同时对照 macOS 共用页面。另检查 Windows 设置分类切换尺寸不变、主题选择后的网页模式及原生通信。截图输出到 `.cache/windows-ui30-r2/`；不会登录平台、启动学习或修改开机启动项。

@@ -20,15 +20,17 @@ On macOS, closing the main window keeps the app in the menu bar. Windows offers 
 
 ## Installation
 
-Current release: **0.2.34 (beta)**. Download the package for your system from [GitHub Releases](https://github.com/BeifengFlying/CourseWatch/releases/tag/v0.2.34). Packages omit browser binaries and documentation images:
+Current release: **0.2.34 (beta)**. Download the package for your system from [GitHub Releases](https://github.com/BeifengFlying/CourseWatch/releases/tag/v0.2.34-desktop). Packages omit browser binaries and documentation images:
 
 | System | Download |
 | --- | --- |
-| macOS 14+ · Apple Silicon | [CourseWatch-0.2.34-mac-arm64.dmg](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.34/CourseWatch-0.2.34-mac-arm64.dmg) |
-| macOS 14+ · Intel | [CourseWatch-0.2.34-mac-x64.dmg](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.34/CourseWatch-0.2.34-mac-x64.dmg) |
-| Windows 10+ · x64 | [Build from source](docs/guides/WINDOWS.md) |
+| macOS 14+ · Apple Silicon | [CourseWatch-0.2.34-mac-arm64.dmg](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.34-desktop/CourseWatch-0.2.34-mac-arm64.dmg) |
+| macOS 14+ · Intel | [CourseWatch-0.2.34-mac-x64.dmg](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.34-desktop/CourseWatch-0.2.34-mac-x64.dmg) |
+| Windows 10+ · x64 | [Installer](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.34-desktop/CourseWatch-0.2.34-win-x64-setup.exe) · [Portable ZIP](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.34-desktop/CourseWatch-0.2.34-win-x64.zip) |
 
-The minimum Windows version is Windows 10 version 2004 (build 19041); version 22H2 or later is recommended. The current source produces `CourseWatch-0.2.34-win-x64-setup.exe`, a ZIP with the same prefix, and `.sha256` files. Check [Windows Actions](https://github.com/BeifengFlying/CourseWatch/actions/workflows/windows.yml) for a successful run containing these changes; downloads depend on that run's actual artifacts. Native window checks for 0.2.30 r2 ran on Windows 11 at 150% scaling. Windows 10, full installation / upgrade / removal, and real notifications still need testing. See the [0.2.31 merge checks](docs/verification/WINDOWS-0.2.31-MERGE.md) for the merged source.
+The minimum Windows version is Windows 10 version 2004 (build 19041); version 22H2 or later is recommended. The installer includes Microsoft's online bootstrapper for a missing WebView2 Runtime. To use the portable ZIP, extract it and run `CourseWatch.exe`. Version 0.2.34 passed native window checks on Windows 11 at 150% scaling, plus consent dialog checks at 100% / 150% scaling in light, dark and compact layouts. Windows 10, full installation / upgrade / removal, and real notifications still need testing. See the [Windows 0.2.34 checks](docs/verification/WINDOWS-0.2.34.md).
+
+The release uses tag `v0.2.34-desktop` to provide macOS and Windows attachments together; application and file versions remain 0.2.34. The macOS packages are byte-identical to the original 0.2.34 attachments. The Windows packages include the current interface changes.
 
 Before acceptance is recorded, the first launch displays the complete user agreement, a free-software notice, the source repository and a warning to request a refund and report sellers charging for the app. The background service starts only after acceptance. Quitting saves no acceptance; accepted users are not prompted on normal restarts.
 

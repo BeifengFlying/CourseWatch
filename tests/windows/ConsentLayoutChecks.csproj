@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="ConsentLayoutChecks.cs" />
+    <Compile Include="../../apps/windows/FirstRunConsent.cs" Link="FirstRunConsent.cs" />
+    <Compile Include="../../apps/windows/AgreementAcceptance.cs" Link="AgreementAcceptance.cs" />
+  </ItemGroup>
+</Project>

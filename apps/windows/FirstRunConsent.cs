@@ -1,10 +1,40 @@
 using System.Diagnostics;
+using System.Runtime.InteropServices;
+using Microsoft.Win32;
 
 namespace CourseWatch;
 
 internal sealed class FirstRunConsent : Form
 {
     private const string ProjectAddress = "https://github.com/BeifengFlying/CourseWatch";
+    [DllImport("dwmapi.dll")]
+    private static extern int DwmSetWindowAttribute(nint window, int attribute, ref int value, int size);
+    private readonly bool darkAppearance;
+
+    private static bool SystemUsesDarkMode()
+    {
+        try { return Registry.GetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize", "AppsUseLightTheme", 1) is int value && value == 0; }
+        catch (Exception error) when (error is System.Security.SecurityException or UnauthorizedAccessException or IOException) { return false; }
+    }
+
+    protected override void OnHandleCreated(EventArgs e)
+    {
+        base.OnHandleCreated(e);
+        var dark = darkAppearance ? 1 : 0;
+        DwmSetWindowAttribute(Handle, 20, ref dark, sizeof(int));
+        var corners = 2;
+        DwmSetWindowAttribute(Handle, 33, ref corners, sizeof(int));
+    }
+
+    protected override void OnLoad(EventArgs e)
+    {
+        base.OnLoad(e);
+        var area = Screen.FromControl(this).WorkingArea;
+        var inset = (int)Math.Round(16 * DeviceDpi / 96f);
+        Size = new Size(Math.Min(Width, Math.Max(1, area.Width - inset * 2)),
+            Math.Min(Height, Math.Max(1, area.Height - inset * 2)));
+        Location = new Point(area.Left + (area.Width - Width) / 2, area.Top + (area.Height - Height) / 2);
+    }
 
     internal static bool RequestIfNeeded()
     {
@@ -25,17 +55,25 @@ internal sealed class FirstRunConsent : Form
         return dialog.ShowDialog() == DialogResult.OK;
     }
 
-    internal FirstRunConsent(string terms, AgreementAcceptance acceptance)
+    internal FirstRunConsent(string terms, AgreementAcceptance acceptance, bool? darkMode = null)
     {
+        darkAppearance = !SystemInformation.HighContrast && (darkMode ?? SystemUsesDarkMode());
+        var surface = SystemInformation.HighContrast ? SystemColors.Window : darkAppearance ? Color.FromArgb(32, 35, 40) : Color.FromArgb(245, 246, 248);
+        var card = SystemInformation.HighContrast ? SystemColors.Window : darkAppearance ? Color.FromArgb(39, 43, 49) : Color.White;
+        var ink = SystemInformation.HighContrast ? SystemColors.WindowText : darkAppearance ? Color.FromArgb(233, 236, 241) : Color.FromArgb(36, 41, 49);
+        var accent = SystemInformation.HighContrast ? SystemColors.Highlight : darkAppearance ? Color.FromArgb(215, 172, 130) : Color.FromArgb(186, 129, 80);
         Text = "用户协议与免费声明";
+        AutoScaleDimensions = new SizeF(96, 96);
         AutoScaleMode = AutoScaleMode.Dpi;
         Font = new Font(SystemFonts.MessageBoxFont?.FontFamily ?? FontFamily.GenericSansSerif, 11);
+        BackColor = surface;
+        ForeColor = ink;
         ClientSize = new Size(580, 580);
-        MinimumSize = new Size(360, 480);
+        FormBorderStyle = FormBorderStyle.FixedDialog;
         StartPosition = FormStartPosition.CenterScreen;
         MaximizeBox = false;
         MinimizeBox = false;
-        var layout = new TableLayoutPanel { Dock = DockStyle.Fill, Padding = new Padding(20), ColumnCount = 1, RowCount = 6 };
+        var layout = new TableLayoutPanel { Dock = DockStyle.Fill, Padding = new Padding(20), ColumnCount = 1, RowCount = 6, BackColor = surface, ForeColor = ink };
         layout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
         layout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         layout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
@@ -43,9 +81,11 @@ internal sealed class FirstRunConsent : Form
         layout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         layout.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
         layout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-        var free = new Label { Text = "本软件完全免费。", AutoSize = true, Dock = DockStyle.Fill, Font = new Font(Font.FontFamily, 14, FontStyle.Bold), Margin = new Padding(0, 0, 0, 12) };
+        var free = new Label { Text = "本软件完全免费。", AutoSize = true, Dock = DockStyle.Fill, Font = new Font(Font.FontFamily, 14, FontStyle.Bold), Margin = new Padding(0, 0, 0, 12), UseMnemonic = false };
         var notice = new Label { Text = "如果你是在其他付费渠道获取此软件，请立即退款并举报该商家。", AutoSize = true, Dock = DockStyle.Fill, Margin = new Padding(0, 0, 0, 12) };
-        var project = new LinkLabel { Text = "项目源码地址：" + ProjectAddress, AutoSize = true, Dock = DockStyle.Fill, Margin = new Padding(0, 0, 0, 12) };
+        var project = new LinkLabel { Text = "项目源码地址：" + ProjectAddress, AutoSize = true, Dock = DockStyle.Fill, Margin = new Padding(0, 0, 0, 12), LinkColor = SystemInformation.HighContrast ? SystemColors.HotTrack : darkAppearance ? Color.FromArgb(156, 195, 247) : Color.FromArgb(32, 92, 165), UseMnemonic = false };
+        project.ActiveLinkColor = project.LinkColor;
+        project.VisitedLinkColor = project.LinkColor;
         project.LinkArea = new LinkArea("项目源码地址：".Length, ProjectAddress.Length);
         project.LinkClicked += (_, _) =>
         {
@@ -53,10 +93,23 @@ internal sealed class FirstRunConsent : Form
             catch { MessageBox.Show("无法打开项目地址，请在浏览器中访问：" + ProjectAddress, "CourseWatch"); }
         };
         var heading = new Label { Text = "使用前请阅读下方《用户协议》，确认同意后继续使用。", AutoSize = true, Dock = DockStyle.Fill, Margin = new Padding(0, 0, 0, 8) };
-        var document = new RichTextBox { Text = terms, ReadOnly = true, Dock = DockStyle.Fill, DetectUrls = false, WordWrap = true, ScrollBars = RichTextBoxScrollBars.Vertical, BackColor = SystemColors.Window, ForeColor = SystemColors.WindowText, AccessibleName = "用户协议全文", Margin = new Padding(0, 0, 0, 12) };
-        var buttons = new FlowLayoutPanel { Dock = DockStyle.Fill, AutoSize = true, FlowDirection = FlowDirection.RightToLeft, WrapContents = true, Margin = Padding.Empty };
-        var agree = new Button { Text = "同意并继续", AutoSize = true, MinimumSize = new Size(112, 44) };
-        var quit = new Button { Text = "退出软件", AutoSize = true, MinimumSize = new Size(100, 44), DialogResult = DialogResult.Cancel };
+        var document = new RichTextBox { Text = terms, ReadOnly = true, Dock = DockStyle.Fill, DetectUrls = false, WordWrap = true, ScrollBars = RichTextBoxScrollBars.Vertical, BackColor = card, ForeColor = ink, BorderStyle = BorderStyle.FixedSingle, AccessibleName = "用户协议全文", Margin = new Padding(0, 0, 0, 12), TabIndex = 0 };
+        var buttons = new FlowLayoutPanel { Dock = DockStyle.Fill, AutoSize = true, FlowDirection = FlowDirection.RightToLeft, WrapContents = false, Margin = Padding.Empty, Padding = Padding.Empty };
+        var agree = new Button { Text = "同意并继续", AutoSize = true, MinimumSize = new Size(112, 44), Margin = new Padding(8, 0, 0, 0), TabIndex = 2 };
+        var quit = new Button { Text = "退出软件", AutoSize = true, MinimumSize = new Size(100, 44), Margin = Padding.Empty, DialogResult = DialogResult.Cancel, TabIndex = 1 };
+        foreach (var button in new[] { agree, quit })
+        {
+            button.FlatStyle = FlatStyle.Flat;
+            button.FlatAppearance.BorderSize = 1;
+            button.FlatAppearance.BorderColor = SystemInformation.HighContrast ? SystemColors.WindowText : darkAppearance ? Color.FromArgb(65, 71, 80) : Color.FromArgb(208, 214, 222);
+            button.UseVisualStyleBackColor = false;
+            button.BackColor = card;
+            button.ForeColor = ink;
+            button.Padding = new Padding(8, 0, 8, 0);
+        }
+        agree.BackColor = accent;
+        agree.ForeColor = SystemInformation.HighContrast ? SystemColors.HighlightText : darkAppearance ? Color.FromArgb(32, 35, 40) : Color.White;
+        agree.FlatAppearance.BorderColor = accent;
         agree.Click += (_, _) =>
         {
             try { acceptance.Accept(); DialogResult = DialogResult.OK; Close(); }
