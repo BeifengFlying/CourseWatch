@@ -59,3 +59,7 @@ GitHub Releases 更新提醒、实验功能用途限制、本机确认记录和�
 构建 9–29 主要为本机测试构建，并非每次都有 GitHub Release。历史记录中的“只更新本机、不上线”仅描述对应日期的发布状态。已有包和 SHA256 不覆盖。
 
 Windows 在上述期间还加入了 WinForms／WebView2 外壳、托盘、通知、独立平台窗口、安装程序与便携包，并修复退出和标题栏行为；这些改动没有独立递增对应的本机构建号，未归入单一构建记录。0.2.33 Windows 包在 Windows 环境独立构建，验证范围见 [Windows 记录](../verification/VERIFICATION-WINDOWS.md)。
+
+## 0.2.37 · 2026-11-16
+
+U校园目录保留单元、Section、必修属性和当前状态，修复题组、题干和自定义选项读取；macOS 侧栏避开窗口按钮。启动协议、实验功能及本地 Skill 确认须先滚动到底。安装包及验证范围见 [0.2.37](../verification/RELEASE-0.2.37.md)。

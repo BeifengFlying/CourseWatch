@@ -42,7 +42,7 @@ try {
     return response.json();
   };
   assert.equal((await api("/api/health")).version, version);
-  for (const file of ["worker.js", "unipus-worker.js", "unipus-page.js", "timing.js", "catalog-worker.js", "upstream-catalog.js", "launch.js", "keep-open.js"]) {
+  for (const file of ["worker.js", "unipus-worker.js", "unipus-page.js", "unipus-directory.js", "unipus-questions.js", "timing.js", "catalog-worker.js", "upstream-catalog.js", "launch.js", "keep-open.js"]) {
     assert.ok(existsSync(join(appRoot, "dist/server/packages/study/src", file)), `包内缺少学习运行文件 ${file}`);
   }
   for (const prefix of ["/api/study", "/api/study/unipus"]) {

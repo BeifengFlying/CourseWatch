@@ -63,3 +63,9 @@ Windows 后台生命周期检查使用临时数据目录及空闲端口，通过
 ## Mac 资源与功耗采样
 
 `python3 scripts/measure-macos.py`：先完成网页及服务构建，创建独立应用身份、端口 17401、临时数据库和 100 条模拟日程。用生产 AppKit 代码测前台、最小化及关闭窗口，每状态预热 15 秒后采样 120 秒。普通用户权限读取进程责任归属，纳入 WebKit／视频解码辅助进程。加 `--with-power` 时才通过系统授权运行有限次数的 `powermetrics`；不修改 sudoers、账户或应用权限。原始系统诊断留在 `.cache/macos-performance`，公开 JSON 只含汇总值。完成后诊断退出并清除 sudo 缓存；不会停止已运行的用户课程任务。重复测量前移走旧缓存目录，保留历史结果。`COURSEWATCH_MEASURE_SECONDS` 可设 30–600 秒。
+
+### 0.2.37 回归入口
+
+- `npx tsx scripts/check-unipus-reading-ui.mjs`：独立数据检查目录层级、必修属性、搜索与 macOS 图标间距。
+- `npx tsx scripts/check-agreement-reading.mjs`：独立数据检查实验说明及本地 Skill 的滚动限制、重新打开重置和主动勾选。
+- `node scripts/check-first-run-macos.mjs`：独立偏好设置检查原生启动协议的滚动限制与确认记录。

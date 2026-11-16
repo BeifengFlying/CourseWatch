@@ -27,7 +27,7 @@
 - 覆盖 1060／820／390／320px、浅色与深色主题。
 - 检查学习任务目录层级、三种必修标签、章节与属性搜索、当前章节路径，以及普通课程进度的章节路径和必修属性。
 - 检查主页面、章节列表及普通课程进度无横向溢出；macOS 桥接下应用图标顶部不低于 64px。
-- 截图保存在 [unipus-reading-2026-11-16](../screenshots/unipus-reading-2026-11-16/)。该检查验证网页布局和桥接分支，不替代安装包中的 AppKit 窗口验收。
+- 截图保存在 [unipus-reading-2026-11-16](https://github.com/BeifengFlying/CourseWatch/tree/v0.2.37/docs/screenshots/unipus-reading-2026-11-16)。该检查验证网页布局和桥接分支，不替代安装包中的 AppKit 窗口验收。
 
 ## 自动验证
 

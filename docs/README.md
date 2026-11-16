@@ -66,3 +66,6 @@
 - [学习设置、章节与 U校园修复](verification/STUDY-FIXES-2026-11-14.md)：构建 23 的设置保留、模型检查、章节跳过、滚动及会话恢复。
 
 - [构建 25：题目读取、完成状态与窗口布局](verification/STUDY-READING-2026-11-14.md)
+
+- [0.2.37 打包与发布验证](verification/RELEASE-0.2.37.md)
+- [U校园读取与 macOS 界面验证](verification/UNIPUS-READING-AND-MACOS-2026-11-16.md)

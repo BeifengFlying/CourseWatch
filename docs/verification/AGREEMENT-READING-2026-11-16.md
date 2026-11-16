@@ -17,7 +17,7 @@
 
 `npx tsx scripts/check-agreement-reading.mjs` 使用临时数据库和虚构课程，覆盖学习通／U校园、1060／820／390／320px、浅深主题，共 16 组。检查实验说明及本地 Skill：未读到底时勾选无效、到底但未勾选仍禁用、取消后重开复位、短正文可直接勾选、按钮可达与无横向溢出。执行 16 次键盘、30 次滚轮和 2 次 Chromium 模拟触控滚动；未启动学习任务、未调用模型或登录真实平台。
 
-截图位于 [agreement-reading-2026-11-16](../screenshots/agreement-reading-2026-11-16/)。模拟触控事件不代表真实触屏硬件验收。
+截图位于 [agreement-reading-2026-11-16](https://github.com/BeifengFlying/CourseWatch/tree/v0.2.37/docs/screenshots/agreement-reading-2026-11-16)。模拟触控事件不代表真实触屏硬件验收。
 
 ## Windows 源码
 

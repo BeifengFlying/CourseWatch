@@ -4,7 +4,7 @@
 <p align="center">Course task management, personal schedules and deadline reminders. macOS 14+ / Windows 10+ x64.</p>
 <p align="center">
   <a href="https://github.com/BeifengFlying/CourseWatch/actions/workflows/ci.yml"><img src="https://img.shields.io/badge/CI-GitHub%20Actions-2088FF?logo=githubactions&amp;logoColor=white" alt="CI: GitHub Actions"></a>
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-0.2.36%20beta-orange" alt="Version: 0.2.36 beta"></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-0.2.37%20beta-orange" alt="Version: 0.2.37 beta"></a>
   <a href="https://github.com/BeifengFlying/CourseWatch/releases" title="Total package downloads across public releases, excluding checksums; scheduled every 15 minutes, subject to scheduling and cache delays"><img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FBeifengFlying%2FCourseWatch%2Fcodex%2Fdownload-stats%2Fdownloads.json&amp;cacheSeconds=300" alt="Total package downloads"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0%20%2B%20Terms-green" alt="License: Apache-2.0 and additional Project Terms"></a>
   <a href="package.json"><img src="https://img.shields.io/badge/Node.js-24-339933" alt="Node.js 24"></a>
@@ -23,17 +23,17 @@ On macOS, closing the main window keeps the app in the menu bar. Windows offers 
 
 ## Installation
 
-Current release: **0.2.36 (beta)**. Download the package for your system from [GitHub Releases](https://github.com/BeifengFlying/CourseWatch/releases/tag/v0.2.36). Packages omit browser binaries and documentation images:
+Current release: **0.2.37 (beta)**. Download the package for your system from [GitHub Releases](https://github.com/BeifengFlying/CourseWatch/releases/tag/v0.2.37). Packages omit browser binaries and documentation images:
 
 | System | Download |
 | --- | --- |
-| macOS 14+ · Apple Silicon | [CourseWatch-0.2.36-mac-arm64.dmg](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.36/CourseWatch-0.2.36-mac-arm64.dmg) |
-| macOS 14+ · Intel | [CourseWatch-0.2.36-mac-x64.dmg](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.36/CourseWatch-0.2.36-mac-x64.dmg) |
-| Windows 10+ · x64 | [Installer](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.36/CourseWatch-0.2.36-win-x64-setup.exe) · [Portable ZIP](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.36/CourseWatch-0.2.36-win-x64.zip) |
+| macOS 14+ · Apple Silicon | [CourseWatch-0.2.37-mac-arm64.dmg](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.37/CourseWatch-0.2.37-mac-arm64.dmg) |
+| macOS 14+ · Intel | [CourseWatch-0.2.37-mac-x64.dmg](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.37/CourseWatch-0.2.37-mac-x64.dmg) |
+| Windows 10+ · x64 | |
 
 The minimum Windows version is Windows 10 version 2004 (build 19041); version 22H2 or later is recommended. The installer includes Microsoft's online bootstrapper for a missing WebView2 Runtime. To use the portable ZIP, extract it and run `CourseWatch.exe`. Version 0.2.36 passed 382 tests, type checking and consent dialog checks at 100% / 150% scaling. The Windows packages also include the Chaoxing web-course login verification fix. Windows 10, full installation / upgrade / removal, and real notifications still need testing. See the [Windows 0.2.36 checks](docs/verification/WINDOWS-0.2.36.md).
 
-Before acceptance of the current agreement revision is recorded, the first launch displays the complete user agreement, a free-software notice, the source repository and a warning to request a refund and report sellers charging for the app. The background service starts only after acceptance. Quitting saves no acceptance; accepted users are not prompted on normal restarts of the same revision. Version 0.2.36 requires renewed acceptance.
+Before acceptance of the current agreement revision is recorded, the first launch displays the complete user agreement, a free-software notice, the source repository and a warning to request a refund and report sellers charging for the app. The background service starts only after acceptance. Quitting saves no acceptance; accepted users are not prompted on normal restarts of the same revision. Version 0.2.37 requires renewed acceptance. Scroll to the end of the agreement before accepting.
 
 On Mac, open the DMG and drag CourseWatch into Applications. To upgrade, quit the old version from the menu bar before replacing it. Upgrades retain the existing data directory. Back up important data before replacing the application. Updates are installed manually. Historical packages and checksums are retained as described in their release records.
 
@@ -44,7 +44,7 @@ Version 0.2.35 adds Settings → General → App Updates, with manual checks and
 Each package has a matching `.sha256` file. Compare it with the output of:
 
 ```sh
-shasum -a 256 CourseWatch-0.2.36-mac-arm64.dmg
+shasum -a 256 CourseWatch-0.2.37-mac-arm64.dmg
 ```
 
 Mac packages are ad hoc signed and have not been notarized by Apple. The Intel package has passed architecture and Rosetta runtime checks; its interface has not been checked on a physical Intel Mac. Platform coverage and reminder delivery may be incomplete during the beta. School, instructor and platform notices remain the authoritative sources. See [beta limitations](DISCLAIMER.md) for details. The application interface and most documentation are currently in Chinese; this language switch applies to the README.
