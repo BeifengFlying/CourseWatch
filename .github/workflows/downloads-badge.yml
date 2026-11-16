@@ -37,7 +37,7 @@ jobs:
               .filter(asset => /^CourseWatch-.*\.(dmg|exe|zip)$/i.test(asset.name))
               .reduce((sum, asset) => sum + asset.download_count, 0);
             const payload = JSON.stringify({
-              schemaVersion: 1, label: 'downloads', message: String(total), color: 'blue',
+              schemaVersion: 1, label: 'downloads', message: String(total), color: 'red',
             }) + '\n';
             let existing;
             try {
