@@ -168,9 +168,23 @@ final class StudyPreviewCard: NSView {
 
 // Acceptance precedes the local service, notifications and course operations.
 final class FirstRunConsent: NSObject {
-    static let revision = "2026-11-15.2"
+    static let revision = "2026-11-16.1"
     static let acceptanceKey = "CourseWatch.UserAgreement." + revision
     static let projectURL = URL(string: "https://github.com/BeifengFlying/CourseWatch")!
+    private(set) var reachedEnd = false
+    private var observers: [NSObjectProtocol] = []
+    private weak var readingScroll: NSScrollView?
+    private weak var agreeButton: NSButton?
+    private weak var readingHint: NSTextField?
+
+    deinit { observers.forEach { NotificationCenter.default.removeObserver($0) } }
+
+    private func checkReadingPosition() {
+        guard let scroll = readingScroll, let document = scroll.documentView, scroll.contentView.bounds.height > 0 else { return }
+        if scroll.contentView.bounds.maxY >= document.bounds.height - 1 { reachedEnd = true }
+        agreeButton?.isEnabled = reachedEnd
+        readingHint?.stringValue = reachedEnd ? "已阅读至协议底部" : "请滚动至协议底部后再同意"
+    }
 
     static func requestIfNeeded(defaults: UserDefaults = .standard,
                                 resources: URL? = Bundle.main.resourceURL,
@@ -189,7 +203,7 @@ final class FirstRunConsent: NSObject {
         let owner = FirstRunConsent()
         let alert = owner.makeAlert(terms: terms)
         NSApp.activate(ignoringOtherApps: true)
-        guard present(alert) == .alertFirstButtonReturn else { return false }
+        guard present(alert) == .alertFirstButtonReturn, owner.reachedEnd, alert.buttons[0].isEnabled else { return false }
         defaults.set(true, forKey: acceptanceKey)
         guard defaults.synchronize() else {
             defaults.removeObject(forKey: acceptanceKey)
@@ -204,12 +218,17 @@ final class FirstRunConsent: NSObject {
     }
 
     func makeAlert(terms: String, width: CGFloat = 460) -> NSAlert {
+        observers.forEach { NotificationCenter.default.removeObserver($0) }
+        observers.removeAll()
+        reachedEnd = false
         let alert = NSAlert()
         alert.messageText = "用户协议与免费声明"
         alert.informativeText = "本软件完全免费。\n\n如果你是在其他付费渠道获取此软件，请立即退款并举报该商家。\n\n使用前请阅读下方《用户协议》，确认同意后继续使用。"
         alert.addButton(withTitle: "同意并继续")
+        alert.buttons[0].isEnabled = false
+        agreeButton = alert.buttons[0]
         alert.addButton(withTitle: "退出软件").keyEquivalent = "\u{1b}"
-        let container = NSView(frame: NSRect(x: 0, y: 0, width: width, height: 290))
+        let container = NSView(frame: NSRect(x: 0, y: 0, width: width, height: 318))
         let link = NSTextField(labelWithString: "")
         let address = NSAttributedString(string: "项目源码地址：" + Self.projectURL.absoluteString,
             attributes: [.link: Self.projectURL, .font: NSFont.systemFont(ofSize: 12)])
@@ -218,13 +237,19 @@ final class FirstRunConsent: NSObject {
         link.isSelectable = true
         link.maximumNumberOfLines = 2
         link.lineBreakMode = .byCharWrapping
-        link.frame = NSRect(x: 0, y: 254, width: width, height: 36)
+        link.frame = NSRect(x: 0, y: 282, width: width, height: 36)
         container.addSubview(link)
         let heading = NSTextField(labelWithString: "用户协议全文")
-        heading.frame = NSRect(x: 0, y: 226, width: width, height: 22)
+        heading.frame = NSRect(x: 0, y: 254, width: width, height: 22)
         heading.font = .systemFont(ofSize: 13, weight: .semibold)
         container.addSubview(heading)
-        let scroll = NSScrollView(frame: NSRect(x: 0, y: 0, width: width, height: 222))
+        let hint = NSTextField(labelWithString: "请滚动至协议底部后再同意")
+        hint.font = .systemFont(ofSize: 12)
+        hint.textColor = .secondaryLabelColor
+        hint.frame = NSRect(x: 0, y: 0, width: width, height: 24)
+        container.addSubview(hint)
+        readingHint = hint
+        let scroll = NSScrollView(frame: NSRect(x: 0, y: 28, width: width, height: 222))
         scroll.hasVerticalScroller = true
         scroll.borderType = .bezelBorder
         let text = NSTextView(frame: scroll.contentView.bounds)
@@ -243,6 +268,19 @@ final class FirstRunConsent: NSObject {
         scroll.documentView = text
         container.addSubview(scroll)
         alert.accessoryView = container
+        // Finish text layout before checking short agreements; an unlaid-out
+        // text view can temporarily report a viewport-sized document.
+        text.layoutManager?.ensureLayout(for: text.textContainer!)
+        let textHeight = (text.layoutManager?.usedRect(for: text.textContainer!).height ?? 0) + text.textContainerInset.height * 2
+        text.setFrameSize(NSSize(width: scroll.contentSize.width, height: max(scroll.contentSize.height, textHeight)))
+        text.scrollToBeginningOfDocument(nil)
+        readingScroll = scroll
+        scroll.contentView.postsBoundsChangedNotifications = true
+        text.postsFrameChangedNotifications = true
+        for (name, object) in [(NSView.boundsDidChangeNotification, scroll.contentView as NSView), (NSView.frameDidChangeNotification, text as NSView)] {
+            observers.append(NotificationCenter.default.addObserver(forName: name, object: object, queue: .main) { [weak self] _ in self?.checkReadingPosition() })
+        }
+        checkReadingPosition()
         return alert
     }
 }

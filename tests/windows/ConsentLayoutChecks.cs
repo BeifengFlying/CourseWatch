@@ -59,7 +59,7 @@ internal static class ConsentLayoutChecks
                         Check(label.Height >= measured.Height - 2, "Consent text is clipped: " + label.Text);
                     }
                 }
-                var buttons = rows.Last().Controls.OfType<Button>().ToArray();
+                var buttons = rows.Last().Controls.OfType<FlowLayoutPanel>().Single().Controls.OfType<Button>().ToArray();
                 Check(buttons.Length == 2, "Both explicit choices must be offered.");
                 foreach (var button in buttons)
                 {
@@ -77,6 +77,14 @@ internal static class ConsentLayoutChecks
                     dialog.DrawToBitmap(bitmap, new Rectangle(Point.Empty, bitmap.Size));
                     bitmap.Save(Path.Combine(output, $"{dpi}-{(dark ? "dark" : "light")}-{logical.Width}.png"));
                 }
+                var agree = buttons.Single(b => b.Text == "同意并继续");
+                Check(!agree.Enabled, "Agreement must require scrolling to the bottom.");
+                agree.PerformClick();
+                Check(!receipt.IsAccepted, "A disabled agreement cannot save a receipt.");
+                document.Select(document.TextLength / 2, 0); document.ScrollToCaret(); Application.DoEvents();
+                Check(!agree.Enabled, "Partial reading cannot accept terms.");
+                document.Select(document.TextLength, 0); document.ScrollToCaret(); Application.DoEvents(); Application.DoEvents();
+                Check(agree.Enabled, "Reading to the bottom must enable agreement.");
                 if (logical.Width == 580)
                 {
                     buttons.Single(b => b.Text == "同意并继续").PerformClick();

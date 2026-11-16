@@ -1,6 +1,6 @@
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
-mkdirSync('.cache/first-run36', { recursive: true });
+mkdirSync('.cache/first-run37', { recursive: true });
 const source = readFileSync('apps/macos/main.swift', 'utf8');
 const consent = source.slice(source.indexOf('final class FirstRunConsent:'), source.indexOf('final class Bridge:'));
 const fixture = String.raw`
@@ -13,7 +13,7 @@ try terms.write(to: directory.appendingPathComponent("TERMS.md"), atomically: tr
 let suite = "top.mcsog.coursewatch.first-run-check." + UUID().uuidString
 let defaults = UserDefaults(suiteName: suite)!
 defer { defaults.removePersistentDomain(forName: suite); try? FileManager.default.removeItem(at: directory) }
-defaults.set(true, forKey: "CourseWatch.UserAgreement.2026-11-15.1")
+defaults.set(true, forKey: "CourseWatch.UserAgreement.2026-11-15.2")
 precondition(!defaults.bool(forKey: FirstRunConsent.acceptanceKey))
 var presentations = 0
 func response(_ choice: NSApplication.ModalResponse) -> (NSAlert) -> NSApplication.ModalResponse {
@@ -25,9 +25,20 @@ func response(_ choice: NSApplication.ModalResponse) -> (NSAlert) -> NSApplicati
         precondition(alert.buttons.map(\.title) == ["同意并继续", "退出软件"])
         let scroll = alert.accessoryView!.subviews.compactMap { $0 as? NSScrollView }.first!
         precondition((scroll.documentView as! NSTextView).string == terms)
+        precondition(!alert.buttons[0].isEnabled && alert.buttons[1].isEnabled)
+        if choice == .alertFirstButtonReturn {
+            (scroll.documentView as! NSTextView).scrollToEndOfDocument(nil)
+            RunLoop.current.run(until: Date().addingTimeInterval(0.05))
+            precondition(alert.buttons[0].isEnabled)
+        }
         return choice
     }
 }
+precondition(!FirstRunConsent.requestIfNeeded(defaults: defaults, resources: directory, present: { alert in
+    precondition(!alert.buttons[0].isEnabled)
+    return .alertFirstButtonReturn // A presenter cannot bypass the reading guard.
+}))
+precondition(!defaults.bool(forKey: FirstRunConsent.acceptanceKey))
 precondition(!FirstRunConsent.requestIfNeeded(defaults: defaults, resources: directory, present: response(.alertSecondButtonReturn)))
 precondition(!defaults.bool(forKey: FirstRunConsent.acceptanceKey))
 precondition(!FirstRunConsent.requestIfNeeded(defaults: defaults, resources: directory, present: response(.abort)))
@@ -60,19 +71,30 @@ for (theme, name) in [("light", NSAppearance.Name.aqua), ("dark", NSAppearance.N
         let scroll = alert.accessoryView!.subviews.compactMap { $0 as? NSScrollView }.first!
         let document = scroll.documentView as! NSTextView
         precondition(document.string == terms && !document.isEditable && document.isSelectable)
+        precondition(!owner.reachedEnd && !alert.buttons[0].isEnabled && alert.buttons[1].isEnabled)
+        let halfway = max(1, (document.bounds.height - scroll.contentView.bounds.height) / 2)
+        scroll.contentView.scroll(to: NSPoint(x: 0, y: halfway)); scroll.reflectScrolledClipView(scroll.contentView)
+        RunLoop.current.run(until: Date().addingTimeInterval(0.05))
+        precondition(!owner.reachedEnd && !alert.buttons[0].isEnabled)
         document.scrollToEndOfDocument(nil)
         RunLoop.current.run(until: Date().addingTimeInterval(0.1))
         precondition(scroll.contentView.bounds.minY > 0, "Agreement cannot scroll")
+        precondition(owner.reachedEnd && alert.buttons[0].isEnabled)
         document.scrollToBeginningOfDocument(nil)
         let bitmap = root.bitmapImageRepForCachingDisplay(in: root.bounds)!
         root.cacheDisplay(in: root.bounds, to: bitmap)
-        try bitmap.representation(using: .png, properties: [:])!.write(to: URL(fileURLWithPath: ".cache/first-run36/\(size)-\(theme).png"))
+        try bitmap.representation(using: .png, properties: [:])!.write(to: URL(fileURLWithPath: ".cache/first-run37/\(size)-\(theme).png"))
         print("consent \(size) \(theme) size=\(root.bounds.size), complete terms and actions visible")
         alert.window.orderOut(nil)
+        let reopenedAlert = owner.makeAlert(terms: terms, width: width)
+        precondition(!owner.reachedEnd && !reopenedAlert.buttons[0].isEnabled && reopenedAlert.buttons[1].isEnabled)
+        let shortAlert = owner.makeAlert(terms: "Short agreement", width: width)
+        precondition(owner.reachedEnd && shortAlert.buttons[0].isEnabled)
+
     }
 }
-print("First launch, rejection, window dismissal, accepted restart and missing terms checks passed; isolated defaults only.")
+print("Read-to-end, partial scroll, reopen reset, short agreement, rejection, window dismissal, accepted restart and missing terms checks passed; isolated defaults only.")
 `;
-writeFileSync('.cache/first-run36/fixture.swift', 'import AppKit\n' + consent + '\n' + fixture);
-execFileSync('xcrun', ['swiftc', '-swift-version', '5', '.cache/first-run36/fixture.swift', '-o', '.cache/first-run36/check'], { stdio: 'inherit' });
-execFileSync('.cache/first-run36/check', [], { stdio: 'inherit' });
+writeFileSync('.cache/first-run37/fixture.swift', 'import AppKit\n' + consent + '\n' + fixture);
+execFileSync('xcrun', ['swiftc', '-swift-version', '5', '.cache/first-run37/fixture.swift', '-o', '.cache/first-run37/check'], { stdio: 'inherit' });
+execFileSync('.cache/first-run37/check', [], { stdio: 'inherit' });

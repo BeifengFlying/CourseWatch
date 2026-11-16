@@ -4,6 +4,7 @@ import type { CourseRecord } from "../../../packages/contracts/src/index";
 import { SkipBack, SkipForward, Pause, Play, ExternalLink, Download, Square, RefreshCw, Settings2, X } from "lucide-vue-next";
 import { api } from "../lib/api";
 import StudyChapterList from "./StudyChapterList.vue";
+import { useAgreementReading } from "../lib/useAgreementReading";
 import { studyDrafts } from "../lib/study-drafts";
 import { exportSystemLogs } from '../lib/diagnostics';
 import { StudyConfig, STUDY_ACCEPTANCE_TEXT, studyNoticeVersion, studyPlatformNames, initialStudyStatus, type StudyStatus, type StudyPlatform, type StudyPosition, type CourseLearningProgress } from "../../../packages/contracts/src/study";
@@ -107,13 +108,17 @@ watch(() => config.value.model, () => { modelFeedback.value = ""; });
 const busy = ref(false), error = ref(""), message = ref("");
 const notice = ref<HTMLDialogElement | null>(null), accepted = ref(false);
 const skillNotice = ref<HTMLDialogElement | null>(null), skillAccepted = ref(false);
+const noticeContent = ref<HTMLElement | null>(null), skillContent = ref<HTMLElement | null>(null);
+const { reachedEnd: noticeRead, open: showNotice, check: checkNotice } = useAgreementReading(notice, noticeContent);
+const { reachedEnd: skillRead, open: showSkillNotice, check: checkSkillNotice } = useAgreementReading(skillNotice, skillContent);
+function openNotice() { accepted.value = false; void showNotice(); }
 function toggleSkills(event: Event) {
   const input = event.target as HTMLInputElement;
   input.checked = config.value.localSkills;
   if (config.value.localSkills) config.value.localSkills = false;
-  else { skillAccepted.value = false; skillNotice.value?.showModal(); }
+  else { skillAccepted.value = false; void showSkillNotice(); }
 }
-function acceptSkills() { if (skillAccepted.value) { config.value.localSkills = true; skillNotice.value?.close(); } }
+function acceptSkills() { if (skillRead.value && skillAccepted.value) { config.value.localSkills = true; skillNotice.value?.close(); } }
 async function clearSkills() { await act(async () => { await api(`${prefix}/skills/delete`, 'POST', {}); message.value = '本地 Skill 已清除'; }); }
 let statusVersion = 0;
 let disposed = false, timer: ReturnType<typeof setTimeout> | undefined;
@@ -146,10 +151,10 @@ async function poll() {
 }
 function toggle() {
   if (config.value.enabled) void act(async () => { config.value = await api(`${prefix}/disable`, "POST", {}); status.value = await api(`${prefix}/status`); savedConfig.value = configSnapshot(); notifySettingsChanged(); message.value = "试验性功能已关闭，自动学习已停止"; });
-  else { accepted.value = false; notice.value?.showModal(); }
+  else openNotice();
 }
 async function enable() {
-  if (!accepted.value) return;
+  if (!noticeRead.value || !accepted.value) return;
   await act(async () => { config.value = await api(`${prefix}/accept`, "POST", { noticeVersion: version, accepted: true }); notice.value?.close(); savedConfig.value = configSnapshot(); notifySettingsChanged(); });
 }
 async function persistConfig() { const parsed = StudyConfig.safeParse(config.value); if (!parsed.success) throw new Error(parsed.error.issues[0]?.message || "请检查模型设置"); config.value = await api(`${prefix}/settings`, "PATCH", { ...parsed.data, ...(config.value.localSkills && skillAccepted.value ? { localSkillsAccepted: true } : {}), ...(apiKey.value ? { apiKey: apiKey.value } : {}) }); apiKey.value = ""; studyDrafts.delete(props.platform); savedModel.value = config.value.model; savedConfig.value = configSnapshot(); notifySettingsChanged(); message.value = config.value.active ? "模型设置已保存，停止并重新启动学习后生效" : "模型设置已保存";
@@ -212,7 +217,7 @@ onUnmounted(() => {
     <p v-if="error && !editingModel" class="study-error" role="alert">{{ error }}</p>
     <p v-if="message && !editingModel" role="status">{{ message }}</p>
     <p v-if="props.mode === 'settings' && config.enabled" class="study-note">已开启。请在主窗口选择{{ name }}，直接开始播放或保留页面；配置模型后，进入章节或单元练习才生成答案；学习通播放视频期间不调用模型，未配置时跳过检测。开启开关不会自动启动。</p>
-    <button v-if="props.mode === 'settings'" type="button" class="study-notice-link" @click="accepted = false; notice?.showModal()">查看用途、风险与免责声明</button>
+    <button v-if="props.mode === 'settings'" type="button" class="study-notice-link" @click="openNotice">查看用途、风险与免责声明</button>
     <template v-if="props.mode === 'platform'">
       <p v-if="!config.enabled" class="study-note">自动学习尚未开启。<button type="button" @click="emit('settings')">打开功能开关</button></p>
       <div v-if="config.enabled" ref="workspace" class="study-workspace">
@@ -319,18 +324,19 @@ onUnmounted(() => {
     </dialog>
     <dialog v-if="props.mode === 'platform'" ref="skillNotice" class="study-notice" :aria-labelledby="controlId('skill-title')" @cancel="skillAccepted = false">
       <h3 :id="controlId('skill-title')">开启{{ name }}本地 Skill</h3>
-      <div class="study-notice-content">
+      <div ref="skillContent" class="study-notice-content" tabindex="0" @scroll="checkSkillNotice">
         <p>读取本机 study-skills 文件夹中已有的同平台、同题型且关键词匹配的方法摘要，供模型参考。答题请求只返回答案，不生成或更新摘要。</p>
         <p>用途：复用解题步骤、适用条件与易错点，减少重复解释。不能保证提高正确率，摘要可能包含错误，也可能被后续任务继续引用；所有方法都未经成绩验证。</p>
         <p>费用：携带已有摘要会增加输入 token，不额外请求模型生成摘要。实际计费以服务商为准，请查看运行详情中的用量。</p>
         <p>数据：摘要保存在本机，使用时会发送到已配置的 API 服务商。摘要可能包含课程知识内容。关闭后不再读取，已有文件保留，可停止学习后清除。不会作为脚本执行，也不会代替人工验证或官网成绩。</p>
       </div>
+      <p class="study-read-hint" role="status">{{ skillRead ? '已阅读至协议底部，请勾选确认后继续' : '请滚动至协议底部后再同意' }}</p>
       <label class="study-checkbox"><input v-model="skillAccepted" type="checkbox" />我了解额外 token 费用、数据发送及摘要可能出错</label>
-      <div class="study-actions"><button type="button" @click="skillNotice?.close()">取消</button><button type="button" class="glass-primary" :disabled="!skillAccepted" @click="acceptSkills">开启并返回设置</button></div>
+      <div class="study-actions"><button type="button" @click="skillNotice?.close()">取消</button><button type="button" class="glass-primary" :disabled="!skillRead || !skillAccepted" @click="acceptSkills">开启并返回设置</button></div>
     </dialog>
     <dialog v-if="props.mode === 'settings'" ref="notice" class="study-notice" :aria-labelledby="controlId('notice-title')" @cancel="accepted = false">
       <h3 :id="controlId('notice-title')">开启{{ name }}自动学习前</h3>
-      <div class="study-notice-content">
+      <div ref="noticeContent" class="study-notice-content" tabindex="0" @scroll="checkNotice">
         <h4>用途与授权</h4>
         <p><strong>本实验功能仅用于技术实现验证与参考，不得用于其他目的。</strong>不得用于实际课程任务代办、获取成绩或学时、出勤证明、代学代刷、作弊或收费服务。使用者自行将功能用于上述用途或其他超出范围的用途，应依法承担相应后果。</p>
         <p>“技术验证”不是学校或平台的授权，也不是法律豁免。使用本人或明确获授权的账号，仍须遵守法律、学校规定、课程要求及平台条款；未能确认相关自动操作被允许时，不得在真实课程中运行，应使用本地模拟页面或自行控制的测试环境。不得未经授权访问他人账号、规避验证码、人脸识别或访问控制。</p>
@@ -350,9 +356,10 @@ onUnmounted(() => {
         <p>本功能尚未完成所有学校、页面、题型、模型服务及长时间运行的验证。软件按现状提供，不保证正确性、兼容性、适用性、持续可用性或学习效果。请备份重要数据并保留其他核对方式，发现异常立即停止。在适用法律允许的范围内，使用者承担使用风险及依法应承担的后果，软件提供方不承担因此产生的学习记录、成绩、账号限制、数据丢失、接口费用及其他损失责任。</p>
         <p>使用者自行超出技术实现验证与参考范围使用的，应依法承担相应后果，包括平台或学校处理、学习记录及成绩变化、账号限制、接口费用和数据损失；不得据此要求免除其依法应承担的责任。上述约定不排除或限制开发者依法应承担或法律规定不得免除的责任，包括依法不得免责的人身损害责任、因故意或重大过失造成财产损失的责任及其他法定权利。本说明不是学校或平台的授权文件，也不保证操作合规或答案正确。完整条款见随软件提供的 DISCLAIMER.md、TERMS.md 和 PRIVACY.md；本次确认版本：{{ version }}。确认时间按本机时钟保存，无真实身份核验或外部存证。</p>
       </div>
+      <p class="study-read-hint" role="status">{{ noticeRead ? '已阅读至协议底部' : '请滚动至协议底部后再同意' }}</p>
       <label v-if="!config.enabled" class="study-checkbox"><input v-model="accepted" type="checkbox" />{{ STUDY_ACCEPTANCE_TEXT }}</label>
       <p v-if="error" class="study-error" role="alert">{{ error }}</p>
-      <div class="study-actions"><button type="button" :disabled="busy" @click="notice?.close()">取消</button><button v-if="!config.enabled" type="button" class="glass-primary" :disabled="busy || !accepted" @click="enable">确认并开启</button></div>
+      <div class="study-actions"><button type="button" @click="notice?.close()">取消</button><button v-if="!config.enabled" type="button" class="glass-primary" :disabled="busy || !noticeRead || !accepted" @click="enable">确认并开启</button></div>
     </dialog>
   </section>
 </template>
@@ -436,6 +443,7 @@ summary { cursor:pointer;line-height:1.5;padding:12px 0;color:var(--study-muted)
 .study-form { display:grid;gap:18px;min-height:0;overflow:auto;padding:20px 24px;margin:0;overscroll-behavior:auto; }
 .study-form p { margin:0; }.study-experiment .study-model-manual { min-height:28px;padding:0;border:0;background:transparent;align-self:flex-start;font-size:12px;color:var(--study-muted); }.study-field-pair { display:grid;grid-template-columns:1fr 1fr;gap:14px; }.study-model-check { display:flex;flex-wrap:wrap;gap:8px; }.study-model-check small { flex-basis:100%; }
 .study-model footer { flex-shrink:0;padding:14px 24px;border-top:1px solid var(--study-line); }.study-model footer p { margin:0 0 10px;font-size:13px; }
+.study-read-hint { flex-shrink:0;margin:12px 24px 0;font-size:13px;color:var(--study-muted); }
 .study-notice>h3 { padding:22px 24px 14px; }.study-notice-content { min-height:0;overflow:auto;padding:0 24px; }.study-notice-content p { font-size:14px;line-height:1.75; }.study-notice-content h4 { margin-top:20px; }
 .study-notice>.study-checkbox,.study-notice>.study-error { margin:16px 24px 0; }.study-notice>.study-actions { flex-shrink:0;padding:16px 24px; }
 @media(max-width:560px) { .study-field-pair { grid-template-columns:1fr; }.study-launch,.study-run,.study-directory { padding:16px; }.study-heading { align-items:flex-start; }.study-heading>button { font-size:13px; }.study-actions>span { flex-basis:100%; }.study-launch .study-actions>.glass-primary { width:100%; }.study-model header,.study-form,.study-model footer { padding:16px; }.study-model footer button { flex:1 1 auto; } }

@@ -9,6 +9,17 @@ internal sealed class FirstRunConsent : Form
     private const string ProjectAddress = "https://github.com/BeifengFlying/CourseWatch";
     [DllImport("dwmapi.dll")]
     private static extern int DwmSetWindowAttribute(nint window, int attribute, ref int value, int size);
+    [StructLayout(LayoutKind.Sequential)]
+    private struct ScrollInfo
+    {
+        internal uint Size, Mask;
+        internal int Min, Max;
+        internal uint Page;
+        internal int Position, TrackPosition;
+    }
+    [DllImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool GetScrollInfo(nint window, int bar, ref ScrollInfo info);
     private readonly bool darkAppearance;
 
     private static bool SystemUsesDarkMode()
@@ -95,8 +106,27 @@ internal sealed class FirstRunConsent : Form
         var heading = new Label { Text = "使用前请阅读下方《用户协议》，确认同意后继续使用。", AutoSize = true, Dock = DockStyle.Fill, Margin = new Padding(0, 0, 0, 8) };
         var document = new RichTextBox { Text = terms, ReadOnly = true, Dock = DockStyle.Fill, DetectUrls = false, WordWrap = true, ScrollBars = RichTextBoxScrollBars.Vertical, BackColor = card, ForeColor = ink, BorderStyle = BorderStyle.FixedSingle, AccessibleName = "用户协议全文", Margin = new Padding(0, 0, 0, 12), TabIndex = 0 };
         var buttons = new FlowLayoutPanel { Dock = DockStyle.Fill, AutoSize = true, FlowDirection = FlowDirection.RightToLeft, WrapContents = false, Margin = Padding.Empty, Padding = Padding.Empty };
-        var agree = new Button { Text = "同意并继续", AutoSize = true, MinimumSize = new Size(112, 44), Margin = new Padding(8, 0, 0, 0), TabIndex = 2 };
+        var agree = new Button { Text = "同意并继续", Enabled = false, AutoSize = true, MinimumSize = new Size(112, 44), Margin = new Padding(8, 0, 0, 0), TabIndex = 2 };
         var quit = new Button { Text = "退出软件", AutoSize = true, MinimumSize = new Size(100, 44), Margin = Padding.Empty, DialogResult = DialogResult.Cancel, TabIndex = 1 };
+        var hint = new Label { Text = "请滚动至协议底部后再同意", AutoSize = true, Dock = DockStyle.Fill, Margin = new Padding(0, 0, 0, 8), ForeColor = ink };
+        var reachedEnd = false;
+        void CheckReadingPosition()
+        {
+            if (!document.IsHandleCreated || document.ClientSize.Height <= 0) return;
+            var info = new ScrollInfo { Size = (uint)Marshal.SizeOf<ScrollInfo>(), Mask = 7 };
+            var hasScrollInfo = GetScrollInfo(document.Handle, 1, ref info);
+            var atEnd = hasScrollInfo ? (long)info.Position + info.Page >= info.Max
+                : document.TextLength == 0 || document.GetCharIndexFromPosition(new Point(document.ClientSize.Width - 1, document.ClientSize.Height - 1)) >= document.TextLength - 1;
+            if (atEnd) reachedEnd = true;
+            agree.Enabled = reachedEnd;
+            hint.Text = reachedEnd ? "已阅读至协议底部" : "请滚动至协议底部后再同意";
+        }
+        void ScheduleReadingCheck() { if (IsHandleCreated && !IsDisposed) BeginInvoke((Action)CheckReadingPosition); }
+        document.VScroll += (_, _) => ScheduleReadingCheck();
+        document.Resize += (_, _) => ScheduleReadingCheck();
+        document.KeyUp += (_, _) => ScheduleReadingCheck();
+        document.MouseWheel += (_, _) => ScheduleReadingCheck();
+        document.ContentsResized += (_, _) => ScheduleReadingCheck();
         foreach (var button in new[] { agree, quit })
         {
             button.FlatStyle = FlatStyle.Flat;
@@ -112,6 +142,7 @@ internal sealed class FirstRunConsent : Form
         agree.FlatAppearance.BorderColor = accent;
         agree.Click += (_, _) =>
         {
+            if (!reachedEnd) return;
             try { acceptance.Accept(); DialogResult = DialogResult.OK; Close(); }
             catch (Exception error) when (error is IOException or UnauthorizedAccessException)
             {
@@ -119,11 +150,16 @@ internal sealed class FirstRunConsent : Form
             }
         };
         buttons.Controls.Add(agree); buttons.Controls.Add(quit);
+        var footer = new TableLayoutPanel { Dock = DockStyle.Fill, AutoSize = true, ColumnCount = 1, RowCount = 2, Margin = Padding.Empty, Padding = Padding.Empty };
+        footer.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
+        footer.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        footer.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        footer.Controls.Add(hint, 0, 0); footer.Controls.Add(buttons, 0, 1);
         layout.Controls.Add(free, 0, 0); layout.Controls.Add(notice, 0, 1); layout.Controls.Add(project, 0, 2);
-        layout.Controls.Add(heading, 0, 3); layout.Controls.Add(document, 0, 4); layout.Controls.Add(buttons, 0, 5);
+        layout.Controls.Add(heading, 0, 3); layout.Controls.Add(document, 0, 4); layout.Controls.Add(footer, 0, 5);
         Controls.Add(layout);
         CancelButton = quit;
         // Enter does not imply agreement; focus begins on the readable document.
-        Shown += (_, _) => { document.Select(0, 0); document.Focus(); };
+        Shown += (_, _) => { reachedEnd = false; agree.Enabled = false; document.Select(0, 0); document.ScrollToCaret(); document.Focus(); ScheduleReadingCheck(); };
     }
 }
