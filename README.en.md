@@ -5,6 +5,7 @@
 <p align="center">
   <a href="https://github.com/BeifengFlying/CourseWatch/actions/workflows/ci.yml"><img src="https://img.shields.io/badge/CI-GitHub%20Actions-2088FF?logo=githubactions&amp;logoColor=white" alt="CI: GitHub Actions"></a>
   <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-0.2.36%20beta-orange" alt="Version: 0.2.36 beta"></a>
+  <a href="https://github.com/BeifengFlying/CourseWatch/releases" title="Total package downloads across public releases, excluding checksums; scheduled every 15 minutes, subject to scheduling and cache delays"><img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FBeifengFlying%2FCourseWatch%2Fcodex%2Fdownload-stats%2Fdownloads.json&amp;cacheSeconds=300" alt="Total package downloads"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0%20%2B%20Terms-green" alt="License: Apache-2.0 and additional Project Terms"></a>
   <a href="package.json"><img src="https://img.shields.io/badge/Node.js-24-339933" alt="Node.js 24"></a>
   <a href="#installation"><img src="https://img.shields.io/badge/platform-macOS%2014%2B-blue" alt="Platform: macOS 14+"></a>

@@ -5,6 +5,7 @@
 <p align="center">
   <a href="https://github.com/BeifengFlying/CourseWatch/actions/workflows/ci.yml"><img src="https://img.shields.io/badge/CI-GitHub%20Actions-2088FF?logo=githubactions&amp;logoColor=white" alt="CI：GitHub Actions"></a>
   <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-0.2.36%20beta-orange" alt="版本：0.2.36 测试版"></a>
+  <a href="https://github.com/BeifengFlying/CourseWatch/releases" title="公开版本软件包累计下载次数，不含校验文件；每 15 分钟调度更新，调度与缓存可能延迟"><img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FBeifengFlying%2FCourseWatch%2Fcodex%2Fdownload-stats%2Fdownloads.json&amp;cacheSeconds=300" alt="软件包累计下载次数"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0%20%2B%20Terms-green" alt="许可：Apache-2.0 与项目补充约定"></a>
   <a href="package.json"><img src="https://img.shields.io/badge/Node.js-24-339933" alt="Node.js 24"></a>
   <a href="#安装"><img src="https://img.shields.io/badge/platform-macOS%2014%2B-blue" alt="平台：macOS 14 及以上"></a>
