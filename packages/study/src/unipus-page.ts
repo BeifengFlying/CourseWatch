@@ -1,8 +1,24 @@
 import type { Page, Frame, Dialog } from "playwright";
 import { unipusPageKind, unipusStudyFrame, validateStudyAnswer, type StudyQuestion, type StudyProgress } from "../../contracts/src/study.js";
 import type { ActivitySample } from "./timing.js";
-const questionSelector = '.question-wrap,.question-container,.question-item,.question[data-question-id]';
+import { unipusChoiceSelector, unipusQuestionSelector, unipusQuestionSnapshot } from './unipus-questions.js';
+import { unipusDirectorySnapshot } from './unipus-directory.js';
+import { visibleFrame } from './visible-frame.js';
 const examWords = /考试|测评|期中|期末|\bexam\b|assessment/i;
+export async function dismissUnipusLearningNotice(frame: Frame) {
+  if (!unipusStudyFrame(frame.url())) return;
+  const notice = frame.locator('.system-info-cloud-modal').filter({visible:true});
+  if (await notice.count() !== 1) return;
+  const content = (await notice.innerText()).replace(/\s+/g,'').replace(/^[!！]/,'');
+  // This native informational dialog states the unit's time/required strategy.
+  // Agreements, identity prompts and unrecognized messages remain manual.
+  if (!/^本单元学习时间[:：](?:无限制|[\d年月日至开始截止:：/—–\-.]+)是否必修[:：](?:必修|非必修)我知道了$/.test(content)) return;
+  const button = notice.locator('button.system-info-cloud-ok-button').filter({hasText:/^我知道了$/});
+  if (await button.count() === 1 && await button.isEnabled()) {
+    await button.click({timeout:3000});
+    await notice.waitFor({state:'hidden',timeout:3000});
+  }
+}
 export async function unipusFrames(page: Page, allowIdleConfirmation = false): Promise<Frame[]> {
   if (page.isClosed()) throw new Error("U校园窗口已关闭");
   const top = new URL(page.url()), kind = unipusPageKind(page.url());
@@ -17,6 +33,7 @@ export async function unipusFrames(page: Page, allowIdleConfirmation = false): P
   for (const frame of [page.mainFrame(), ...frames.filter(f => f !== page.mainFrame())]) {
     const blocked = await frame.locator('.geetest_panel,.yidun_popup,.captcha-container,[data-captcha],.face-recognition,[data-face-verification]').filter({ visible: true }).count();
     if (blocked) throw new Error("平台要求人工验证，请在官方窗口处理后继续");
+    await dismissUnipusLearningNotice(frame);
     const dialogs = await frame.locator('[role="dialog"]:visible,.el-dialog:visible,.modal:visible,.ant-modal:visible').allTextContents();
     if (dialogs.some(text => /人脸|验证码|验证身份|身份验证|安全验证|本人|认证|captcha/i.test(text) || !allowIdleConfirmation && /长时间未操作|继续学习|长时间未学习|学习超时|学习已暂停/.test(text))) throw new Error("平台要求本人确认或验证，请手动处理后继续");
     const headings = await frame.locator('h1:visible,h2:visible,.page-title:visible,.paper-title:visible,.task-type:visible').allTextContents();
@@ -31,25 +48,8 @@ export async function unipusQuestionMode(frame: Frame): Promise<'practice' | 'ho
   return /homework|assignment/i.test(route) || labels.some(t => /作业|\bhomework\b|\bassignment\b/i.test(t)) ? 'homework' : 'practice';
 }
 export async function readUnipusQuestions(frame: Frame): Promise<StudyQuestion[]> {
-  if (!unipusStudyFrame(frame.url())) return [];
-  return frame.evaluate(selector => {
-    const clean = (text?: string | null) => (text || '').replace(/\s+/g, ' ').trim();
-    const visible = (n: Element) => !!n.getClientRects().length && getComputedStyle(n).visibility !== 'hidden';
-    const candidates = [...document.querySelectorAll(selector)].filter(visible);
-    const leaves = candidates.filter(n => !candidates.some(other => other !== n && n.contains(other)));
-    return leaves.map((root, index) => {
-      root.setAttribute('data-coursewatch-unipus-question', String(index));
-      const heading = root.querySelector('.question-stem,.question-title,.question-content,.stem,.question-common-abs-reply,h3,h4');
-      const stem = clean(heading?.textContent);
-      const native = [...root.querySelectorAll<HTMLInputElement>('input[type="radio"],input[type="checkbox"]')].filter(n => !n.disabled);
-      const aria = [...root.querySelectorAll('[role="radio"],[role="checkbox"]')].filter(n => visible(n) && n.getAttribute('aria-disabled') !== 'true');
-      const choices = native.length ? native : aria;
-      const options = choices.map(input => clean(input instanceof HTMLInputElement ? (input.labels?.[0] || input.closest('label,.option,li'))?.textContent || input.getAttribute('aria-label') : input.textContent || input.getAttribute('aria-label')));
-      const fields = [...root.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('textarea,input[type="text"],input:not([type])')].filter(n => visible(n) && !n.disabled && !n.readOnly);
-      const type = native.some(n => n.type === 'checkbox') || aria.some(n => n.getAttribute('role') === 'checkbox') ? 'multiple' : choices.length ? (/判断/.test(stem) ? 'judge' : 'single') : fields.length > 1 || /填空/.test(stem) ? 'blank' : 'text';
-      return { id: root.getAttribute('data-question-id') || root.id || String(index), stem: stem.slice(0, 16000), options, type, slots: choices.length ? 1 : fields.length } as StudyQuestion;
-    });
-  }, questionSelector);
+  if (!unipusStudyFrame(frame.url()) || !await visibleFrame(frame)) return [];
+  return frame.evaluate(unipusQuestionSnapshot,{questionSelector:unipusQuestionSelector,choiceSelector:unipusChoiceSelector});
 }
 export async function pauseUnipusMedia(page: Page) {
   for (const frame of page.frames().filter(f => unipusStudyFrame(f.url()))) await frame.locator('video,audio').evaluateAll(nodes => nodes.forEach(n => (n as HTMLMediaElement).pause())).catch(() => {});
@@ -90,21 +90,21 @@ export async function applyUnipusAnswers(page: Page, frame: Frame, questions: St
     const root = frame.locator(`[data-coursewatch-unipus-question="${index}"]`);
     if (question.options.length) {
       const native = root.locator('input[type="radio"]:enabled,input[type="checkbox"]:enabled');
-      const controls = await native.count() ? native : root.locator('[role="radio"]:visible,[role="checkbox"]:visible');
+      const controls = await native.count() ? native : root.locator(unipusChoiceSelector).filter({visible:true});
       if (await controls.count() !== question.options.length) throw new Error("练习选项不完整，未提交");
       for (let i = 0; i < question.options.length; i++) {
         signal.throwIfAborted();
         if (page.url() !== expectedURL || frame.url() !== expectedFrameURL) throw new Error("页面发生变化，已暂停");
         const control = controls.nth(i), wanted = answers[index].includes(String(i + 1));
-        const role = await control.getAttribute('role');
-        const checked = role ? await control.getAttribute('aria-checked') === 'true' : await control.isChecked();
+        const isNative = await control.evaluate(node => node instanceof HTMLInputElement);
+        const checked = isNative ? await control.isChecked() : await control.evaluate(node => node.getAttribute('aria-checked') === 'true' || node.getAttribute('aria-pressed') === 'true' || node.classList.contains('selected'));
         if (wanted !== checked && (wanted || question.type === 'multiple')) {
-          if (role) await control.click({ timeout: 5000 }); else await control.setChecked(wanted, { timeout: 5000 });
+          if (isNative) await control.setChecked(wanted, { timeout: 5000 }); else await control.click({ timeout: 5000 });
         }
       }
       for (let i = 0; i < question.options.length; i++) {
-        const control = controls.nth(i), role = await control.getAttribute('role');
-        const checked = role ? await control.getAttribute('aria-checked') === 'true' : await control.isChecked();
+        const control = controls.nth(i);
+        const checked = await control.evaluate(node => node instanceof HTMLInputElement ? node.checked : node.getAttribute('aria-checked') === 'true' || node.getAttribute('aria-pressed') === 'true' || node.classList.contains('selected'));
         if (checked !== answers[index].includes(String(i + 1))) throw new Error("练习选项回读不一致，未提交");
       }
     } else {
@@ -145,17 +145,9 @@ export async function nextUnipusItem(page: Page, allowDirectory = false) {
     const next = frame.getByRole('button', { name: /^(下一题|下一项|下一节|下一课|下一页|Next|Next activity|Next lesson)$/i }).filter({ visible: true });
     if (await next.count() === 1 && await next.isEnabled() && await next.getAttribute('aria-disabled') !== 'true' && !await next.evaluate(n => !!n.closest('.disabled,.locked,[data-locked="true"]'))) { await next.click({ timeout: 5000 }); return true; }
   }
-  if (allowDirectory) for (const frame of await unipusFrames(page)) {
-    const rows = frame.locator('.pc-slider-content-menu .pc-slider-menu-micro:visible,.pc-slider-content-menu .pc-slider-menu-node:visible');
-    const size = await rows.count();
-    for (let index=0;index<size-1;index++) {
-      const row=rows.nth(index);
-      const selected=await row.evaluate(n=>n.getAttribute('aria-current')==='page'||n.getAttribute('aria-selected')==='true'||n.classList.contains('active')||n.classList.contains('current'));
-      if(!selected)continue;
-      const next=rows.nth(index+1);
-      if(await next.getAttribute('aria-disabled')==='true'||await next.evaluate(n=>!!n.closest('.locked,[data-locked="true"]')||!!n.querySelector('.locked,[data-locked="true"]')))return false;
-      await next.click({timeout:5000});return true;
-    }
+  if (allowDirectory) {
+    const { switchStudyItem } = await import('./navigation.js');
+    return switchStudyItem(page, 'unipus', 'next');
   }
   return false;
 }
@@ -165,6 +157,7 @@ export async function readUnipusProgress(page: Page): Promise<{ progress: StudyP
   const progress: StudyProgress = { observedAt: Date.now(), course: '', chapter: '', chapterComplete: null, chapters: [], media: [], documents: [] };
   const activity: ActivitySample = { media: [], reading: false };
   for (const [frameIndex, frame] of frames.entries()) {
+    if (!await visibleFrame(frame)) continue;
     const snapshot = await frame.evaluate(() => {
       const visible = (n: Element) => !!n.getClientRects().length && getComputedStyle(n).visibility !== 'hidden';
       const text = (selector: string) => [...document.querySelectorAll(selector)].filter(visible).map(n => n.textContent?.replace(/\s+/g, ' ').trim()).find(Boolean)?.slice(0, 200) || '';
@@ -174,17 +167,21 @@ export async function readUnipusProgress(page: Page): Promise<{ progress: StudyP
       const media = players.map(m => ({ kind: m.tagName === 'VIDEO' ? 'video' as const : 'audio' as const, current: Number.isFinite(m.currentTime) ? Math.max(0, m.currentTime) : 0, duration: Number.isFinite(m.duration) && m.duration > 0 ? m.duration : null, paused: m.paused, ended: m.ended }));
       const samples = players.map((m, i) => ({ id: `${i}:${m.currentSrc}`, current: m.currentTime, playing: !m.paused && !m.ended && !m.error && m.readyState >= 2, seeking: m.seeking, rate: m.playbackRate }));
       const reading = document.visibilityState === 'visible' && document.hasFocus() && [...document.querySelectorAll('.reading-content,.reading-material,.article-content')].some(n => visible(n) && !!n.textContent?.trim());
-      const directory=[...document.querySelectorAll('.pc-slider-content-menu .pc-slider-menu-micro,.pc-slider-content-menu .pc-slider-menu-node,[role="tree"] [role="treeitem"]')].filter(visible).filter(row=>!row.querySelector('.pc-slider-menu-micro,.pc-slider-menu-node,[role="treeitem"]')).slice(0,400).map(row=>{
-        const label=row.querySelector('.pc-menu-node-name') || row;
-        const name=(label.getAttribute('title') || label.textContent || '').replace(/\s+/g,' ').trim().slice(0,300);
-        const state=row.getAttribute('data-completed');
-        return {name,complete:state==='true'?true:state==='false'?false:null};
-      }).filter(c=>c.name);
-      return { chapters:directory, course: text('.course-name,.book-name,.pc-header-breadcrumb .ant-breadcrumb-link:first-child'), chapter: text('.unit-title,.current-chapter,.chapter-title,.pc-header-breadcrumb .ant-breadcrumb-link:last-child,.ant-breadcrumb li:last-child,h1,h2'), complete, media, samples, reading };
+
+      return { course: text('.course-name,.book-name,.pc-header-breadcrumb .ant-breadcrumb-link:first-child'), chapter: text('.unit-title,.current-chapter,.chapter-title,.pc-header-breadcrumb .ant-breadcrumb-link:last-child,.ant-breadcrumb li:last-child,h1,h2'), complete, media, samples, reading };
     });
-    if(snapshot.chapters.length) progress.chapters=snapshot.chapters;
+    const directory = await frame.locator('.pc-slider-content-menu .pc-slider-menu-micro,.pc-slider-content-menu .pc-slider-menu-node').evaluateAll(unipusDirectorySnapshot);
+    if (directory.length) {
+      progress.chapters = directory.map(({index,current,...chapter}) => chapter);
+      const selected = directory.filter(chapter => chapter.current);
+      if (selected.length === 1) {
+        progress.chapterId = selected[0].id;
+        progress.chapter = selected[0].name;
+        progress.chapterComplete = selected[0].complete;
+      }
+    }
     progress.course ||= snapshot.course; progress.chapter ||= snapshot.chapter;
-    if (snapshot.complete !== null) progress.chapterComplete = snapshot.complete;
+    if (progress.chapterComplete === null && snapshot.complete !== null) progress.chapterComplete = snapshot.complete;
     progress.media.push(...snapshot.media);
     activity.media.push(...snapshot.samples.map(m => ({ ...m, id: `${frameIndex}:${frame.url()}:${m.id}` })));
     activity.reading ||= snapshot.reading;

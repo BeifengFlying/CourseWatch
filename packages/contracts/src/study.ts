@@ -44,7 +44,7 @@ export const StudyStart = z.object({
 export type StudyStart = z.infer<typeof StudyStart>;
 export interface StudyChapterPath { id: string; name: string; }
 export interface StudyTask { id: string; tabId?: string; name: string; kind: "video" | "quiz" | "document" | "other"; complete: boolean | null; current: boolean; locked?: boolean; }
-export interface StudyChapterEntry { tasks?: StudyTask[]; id?: string; name: string; complete: boolean | null; pending?: number; locked?: boolean; path?: StudyChapterPath[]; }
+export interface StudyChapterEntry { tasks?: StudyTask[]; id?: string; name: string; complete: boolean | null; pending?: number; locked?: boolean; path?: StudyChapterPath[]; required?: boolean | null; }
 export interface CourseLearningProgress {
   courseId: string; name: string; group?: string; className?: string;
   completed: number | null; total: number | null; percent: number | null;

@@ -42,7 +42,7 @@ export async function reportBrowserFailure(error: unknown, stage: string, page: 
           count(selector: string) { return [...document.querySelectorAll(selector)].filter(visible).length; },
         };
         return {
-          ready:document.readyState, videos:count('video'), questions:count('.TiMu,.singleQuesId,[data-questionid],.question-item'),
+          ready:document.readyState, videos:count('video'), questions:count('.TiMu,.singleQuesId,[data-questionid],.question-item,.question-common-abs-choice,.question-common-abs-fill-blank,.uls-sc__question'),
           videoPopups:count('.ans-videoquiz,.tkTopic,[data-video-quiz-root]'),
           dialogs:count('[role=dialog],.ucm-ant-modal-wrap,.el-dialog,.ant-modal'),
           passwordFields:count('input[type=password]'),

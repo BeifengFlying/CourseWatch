@@ -937,6 +937,7 @@ onUnmounted(() => {
       'keyboard-input': keyboardInput,
       'platform-window': !!platformWindow,
       'sidebar-glass': !!settings.sidebarGlass,
+      'native-macos': desktopPlatform === 'macos',
     }"
     @pointerdown="dragWindow"
   >

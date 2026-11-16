@@ -2,15 +2,17 @@ import type { Page, Frame } from 'playwright';
 import { officialStudyFrame, type StudyChapterPath, type StudyPlatform } from '../../contracts/src/study.js';
 import { visibleFrame } from './visible-frame.js';
 import { unipusFrames } from './unipus-page.js';
+import { unipusDirectorySnapshot } from './unipus-directory.js';
 export const chapterSelector = (platform: StudyPlatform) => platform === 'chaoxing'
   ? '.posCatalog_select[id^="cur"],h4[id^="cur"],.chapter_item[id^="cur"]'
   : '.pc-slider-content-menu .pc-slider-menu-micro,.pc-slider-content-menu .pc-slider-menu-node';
-export interface StudyChapter { id: string; name: string; complete: boolean | null; locked: boolean; current: boolean; index: number; path?: StudyChapterPath[]; }
+export interface StudyChapter { id: string; name: string; complete: boolean | null; locked: boolean; current: boolean; index: number; path?: StudyChapterPath[]; required?: boolean | null; }
 export async function directoryFrames(page: Page, platform: StudyPlatform): Promise<Frame[]> {
   return platform === 'chaoxing' ? page.frames().filter(f => officialStudyFrame(f.url())) : unipusFrames(page);
 }
 export async function frameChapters(frame: Frame, platform: StudyPlatform): Promise<StudyChapter[]> {
-  return frame.locator(chapterSelector(platform)).evaluateAll((nodes, platform) => {
+  if (platform === 'unipus') return frame.locator(chapterSelector(platform)).evaluateAll(unipusDirectorySnapshot);
+  return frame.locator(chapterSelector(platform)).evaluateAll(nodes => {
     // Object methods remain self-contained when tsx preserves function names;
     // inferred arrow names can otherwise reference its unavailable __name helper.
     const {clean} = {clean(s?: string | null) { return (s || '').replace(/\s+/g, ' ').trim(); }};
@@ -24,31 +26,21 @@ export async function frameChapters(frame: Frame, platform: StudyPlatform): Prom
     } catch { /* No cross-origin access: fall back to native selection. */ }
     const active = nodes.filter(n => n.classList.contains('posCatalog_active') || n.classList.contains('active') || n.classList.contains('current') || n.getAttribute('aria-current') === 'page' || n.getAttribute('aria-selected') === 'true');
     const declared = new URL(location.href).searchParams.get('chapterId') || (document.querySelector<HTMLInputElement>('#chapterId,#curChapterId'))?.value;
-    const current = platform === 'chaoxing' ? cards ? (loadedId ? `cur${loadedId}` : '') : active.length === 1 ? active[0].id : declared ? `cur${declared}` : '' : '';
+    const current = cards ? (loadedId ? `cur${loadedId}` : '') : active.length === 1 ? active[0].id : declared ? `cur${declared}` : '';
     return nodes.flatMap((row, index) => {
-      const label = platform === 'chaoxing' ? row.querySelector('.posCatalog_name,.catalog_name,a[title],a.clicktitle') : row;
-      if (!label || platform === 'unipus' && row.querySelector('.pc-slider-menu-micro,.pc-slider-menu-node')) return [];
+      const label = row.querySelector('.posCatalog_name,.catalog_name,a[title],a.clicktitle');
+      if (!label) return [];
       const name = clean(label.textContent || label.getAttribute('title')).slice(0, 300);
       if (!name) return [];
-      const id = platform === 'chaoxing' ? row.id.replace(/^cur/, '') : row.id || row.getAttribute('data-id') || row.getAttribute('data-node-id') || `item:${index}:${name}`;
+      const id = row.id.replace(/^cur/, '');
       // Keep only hierarchy shown by the official DOM. Numbering or indentation
       // alone does not establish a parent/child relationship.
       const path: {id:string;name:string}[] = [];
-      if (platform === 'chaoxing') {
-        for (let li = row.closest('li')?.parentElement?.closest('li'); li; li = li.parentElement?.closest('li') || null) {
-          const parent = li.querySelector(':scope > .posCatalog_select,:scope > h4[id^="cur"],:scope > .chapter_item');
-          const label = parent?.querySelector('.posCatalog_title,.posCatalog_name,.catalog_name');
-          const name = clean(label?.textContent || label?.getAttribute('title')).slice(0,300);
-          if (parent?.id && name) path.unshift({id:parent.id.replace(/^cur/, ''),name});
-        }
-      } else {
-        for (let parent = row.parentElement?.closest('.pc-slider-menu-node'); parent; parent = parent.parentElement?.closest('.pc-slider-menu-node') || null) {
-          const own = parent.cloneNode(true) as Element;
-          own.querySelectorAll('.pc-slider-menu-micro,.pc-slider-menu-node').forEach(n => n.remove());
-          const name = clean(own.textContent).slice(0,300);
-          const id = parent.id || parent.getAttribute('data-id') || parent.getAttribute('data-node-id');
-          if (name && id) path.unshift({id,name});
-        }
+      for (let li = row.closest('li')?.parentElement?.closest('li'); li; li = li.parentElement?.closest('li') || null) {
+        const parent = li.querySelector(':scope > .posCatalog_select,:scope > h4[id^="cur"],:scope > .chapter_item');
+        const label = parent?.querySelector('.posCatalog_title,.posCatalog_name,.catalog_name');
+        const name = clean(label?.textContent || label?.getAttribute('title')).slice(0,300);
+        if (parent?.id && name) path.unshift({id:parent.id.replace(/^cur/, ''),name});
       }
       const locked = !!row.closest('[disabled],[aria-disabled=true],.disabled,.locked,.chapter_locked,[data-locked=true]') || !!row.querySelector('.lock,.icon-lock,.icon_lock,.icon-locked,.chapter-lock,[data-locked=true]');
       const state = clean(row.querySelector('.catalog_points,.task-status,.catalog_task')?.textContent);
@@ -65,9 +57,9 @@ export async function frameChapters(frame: Frame, platform: StudyPlatform): Prom
       const pending = clean(row.querySelector('.bntHoverTips')?.textContent).match(/(\d+)\s*个待完成任务点/);
       const unfinished = row.getAttribute('data-completed') === 'false' || indicator('.icon_Uncompleted') || /^(未完成|任务点未完成)$/.test(state) || !!pending && Number(pending[1]) > 0;
       const complete = finished && !unfinished ? true : unfinished && !finished ? false : null;
-      return [{ id, name, locked, complete, ...(path.length ? {path} : {}), current: platform === 'chaoxing' ? row.id === current : active.includes(row), index }];
+      return [{ id, name, locked, complete, ...(path.length ? {path} : {}), current: row.id === current, index }];
     });
-  }, platform);
+  });
 }
 export async function readStudyChapters(page: Page, platform: StudyPlatform): Promise<StudyChapter[]> {
   for (const frame of await directoryFrames(page, platform)) {

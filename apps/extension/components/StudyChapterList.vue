@@ -2,7 +2,7 @@
 import { computed, ref, watch } from 'vue';
 import { Check, ChevronDown, ChevronRight, Lock, Play } from 'lucide-vue-next';
 import type { StudyChapterEntry } from '../../../packages/contracts/src/study';
-const props = defineProps<{ chapters: StudyChapterEntry[]; selected?:string; current?:string; disabled?:boolean; showTasks?:boolean; active?:boolean }>();
+const props = defineProps<{ chapters: StudyChapterEntry[]; selected?:string; current?:string; disabled?:boolean; showTasks?:boolean; showRequired?:boolean; active?:boolean }>();
 const emit = defineEmits<{ select:[id:string]; task:[id:string,kind:"video"|"quiz"] }>();
 const search = ref(''), collapsed = ref(new Set<string>());
 interface Node { key:string; name:string; entry?:StudyChapterEntry; children:Node[]; }
@@ -29,7 +29,7 @@ function toggle(key:string) { if (collapsed.value.has(key)) collapsed.value.dele
 function descendants(node:Node):StudyChapterEntry[] { return [...(node.entry ? [node.entry] : []),...node.children.flatMap(descendants)]; }
 const rows = computed(() => {
   const query = search.value.trim().toLowerCase();
-  const matches = (n:Node):boolean => n.name.toLowerCase().includes(query) || n.children.some(matches);
+  const matches = (n:Node):boolean => n.name.toLowerCase().includes(query) || (!!props.showRequired && !!n.entry && (n.entry.required === true ? '必修' : n.entry.required === false ? '非必修' : '必修属性待确认').includes(query)) || n.children.some(matches);
   const result:{node:Node;depth:number;open:boolean;count:number;completed:number}[] = [];
   function visit(nodes:Node[],depth:number,parentMatch=false) {
     for (const node of nodes) {
@@ -59,7 +59,7 @@ function taskStatus(entry: StudyChapterEntry, kind: 'video'|'quiz') {
           </button>
           <button v-else class="chapter-item" type="button" :disabled="disabled || node.entry.locked || !node.entry.id" :aria-pressed="!!node.entry.id && selected === node.entry.id" :aria-current="current === node.entry.id && node.entry.id ? 'step' : undefined" @click="node.entry.id && emit('select',node.entry.id)">
             <span class="chapter-symbol"><Check v-if="node.entry.complete === true" class="study-complete-icon" :size="16" aria-hidden="true" /><Lock v-else-if="node.entry.locked" :size="15" /><Play v-else :size="14" /></span>
-            <span class="chapter-label">{{ node.name }}<small>{{ node.entry.locked ? '未开放' : node.entry.complete === true ? '已完成' : node.entry.complete === false ? '未完成' : '状态待确认' }}<template v-if="current === node.entry.id && node.entry.id"> · 当前位置</template><template v-if="selected === node.entry.id && node.entry.id && selected !== current"> · 从这里开始</template></small></span>
+            <span class="chapter-label">{{ node.name }}<small v-if="showRequired" class="chapter-requirement">{{ node.entry.required === true ? '必修' : node.entry.required === false ? '非必修' : '必修属性待确认' }}</small><small>{{ node.entry.locked ? '未开放' : node.entry.complete === true ? '已完成' : node.entry.complete === false ? '未完成' : '状态待确认' }}<template v-if="current === node.entry.id && node.entry.id"> · 当前位置</template><template v-if="selected === node.entry.id && node.entry.id && selected !== current"> · 从这里开始</template></small></span>
           </button>
         </div>
         <div v-if="showTasks && node.entry" class="chapter-tasks">

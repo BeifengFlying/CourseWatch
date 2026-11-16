@@ -2882,6 +2882,9 @@ html[data-native] .window-toolbar { background: rgba(245, 246, 248, .22); }
 
 .object-rail .rail-top { height: 68px; align-items: center; flex-shrink: 0; }
 .object-rail .rail-top img { width: 52px; height: 52px; display: block; }
+/* AppKit owns the top 64px for window controls and dragging. */
+.desktop-shell.native-macos .object-rail { padding-top: 64px; }
+.desktop-shell.native-macos .rail-top { height: 68px; }
 .rail-app-divider { width: 32px; height: 1px; background: rgba(255,255,255,.18); margin: 10px 0 18px; flex-shrink: 0; }
 .platform-picker .object-icon.ynjy { background: #34527b; }
 @media (min-width: 601px) {

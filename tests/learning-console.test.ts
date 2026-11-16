@@ -31,7 +31,7 @@ it('保持页面模式只检查本机状态，不点击提示、播放或发网�
 });
 it('目录读取支持教程页，播放器被暂停后不反复调用 play',async()=>{
  const page=await browser.newPage();await page.route('**/*',r=>r.fulfill({contentType:'text/html; charset=utf-8',body:'<h1>Quotation</h1><aside class="pc-slider-content-menu"><div class="pc-slider-menu-micro"><span class="pc-menu-node-name">Quotation</span></div><div class="pc-slider-menu-micro"><span class="pc-menu-node-name">Preview</span></div></aside><video controls width="320" height="180"></video>'}));
- try{await page.goto('https://ucontent.unipus.cn/course/reading');expect((await readUnipusProgress(page)).progress?.chapters).toEqual([{name:'Quotation',complete:null},{name:'Preview',complete:null}]);
+ try{await page.goto('https://ucontent.unipus.cn/course/reading');expect((await readUnipusProgress(page)).progress?.chapters).toMatchObject([{name:'Quotation',complete:null,required:null,locked:false},{name:'Preview',complete:null,required:null,locked:false}]);
  await page.locator('video').evaluate(n=>{const m=n as HTMLVideoElement;Object.defineProperty(m,'paused',{value:true,configurable:true});m.play=async()=>{document.body.dataset.plays=String(Number(document.body.dataset.plays||0)+1);};});
  await playUnipusMedia(page);await expect(playUnipusMedia(page)).rejects.toThrow('已暂停');expect(await page.locator('body').getAttribute('data-plays')).toBe('1');
  }finally{await page.close();}

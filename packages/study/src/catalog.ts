@@ -98,7 +98,7 @@ export async function readUnipusCourseCatalog(page: Page, course: Pick<CourseRec
     do {
       const chapters = await readStudyChapters(content, 'unipus');
       if (chapters.length) {
-        progress.chapters = chapters.map(({id,name,complete,locked,path}) => ({id,name,complete,locked,...(path ? {path} : {})}));
+        progress.chapters = chapters.map(({id,name,complete,locked,path,required}) => ({id,name,complete,locked,required,...(path ? {path} : {})}));
         progress.observedAt = Date.now();
         return progress;
       }

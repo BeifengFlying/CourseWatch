@@ -63,7 +63,7 @@ async function switchWindow(background: boolean) {
 async function decorateProgress(progress: typeof status.progress, page: Page) {
   if (!progress) return;
   const chapters = await readStudyChapters(page, 'unipus'), selected = chapters.filter(c => c.current);
-  if (chapters.length) progress.chapters = chapters.map(({id,name,complete,locked,path}) => ({id,name,complete,locked,...(path ? {path} : {})}));
+  if (chapters.length) progress.chapters = chapters.map(({id,name,complete,locked,path,required}) => ({id,name,complete,locked,path,required}));
   if (selected.length === 1) { progress.chapterId = selected[0].id; progress.chapter = selected[0].name; progress.chapterComplete = selected[0].complete ?? progress.chapterComplete; }
 }
 async function refreshProgress() { const p = currentPage(); status.progress = p ? (await readUnipusProgress(p)).progress : null; if(p)await decorateProgress(status.progress,p); status.navigation=p&&status.operation!=="keep-open"?await readStudyNavigation(p,"unipus"):{previous:false,next:false}; if(status.progress&&!status.progress.course)status.progress.course=status.courseName||""; send(); }

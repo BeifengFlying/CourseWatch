@@ -68,6 +68,12 @@ const savedConfig = ref("");
 const configSnapshot = () => { const { hasKey, active, ...value } = config.value; return JSON.stringify(value); };
 const unsaved = computed(() => savedConfig.value !== configSnapshot() || !!apiKey.value);
 const status = ref<StudyStatus>(initialStudyStatus());
+const currentChapterDetails = computed(() => {
+  if (props.platform !== 'unipus') return '';
+  const chapter = status.value.progress?.chapters.find(c => c.id === status.value.progress?.chapterId);
+  if (!chapter) return '';
+  return [chapter.path?.map(part => part.name).join(' / '),chapter.required === true ? '必修' : chapter.required === false ? '非必修' : '必修属性待确认'].filter(Boolean).join(' · ');
+});
 const workspace = ref<HTMLElement | null>(null), launchPanel = ref<HTMLElement | null>(null), runPanel = ref<HTMLElement | null>(null);
 let panelObserver: ResizeObserver | undefined;
 watch([launchPanel,runPanel], ([launch,run]) => {
@@ -232,6 +238,7 @@ onUnmounted(() => {
         <div class="study-now" aria-label="当前学习">
           <span class="study-eyebrow">当前课程</span><strong>{{ status.courseName || status.progress?.course || '正在读取课程' }}</strong>
           <p class="study-chapter">{{ status.progress?.chapter || '章节名称尚未读取' }}</p>
+          <p v-if="currentChapterDetails" class="study-note">{{ currentChapterDetails }}</p>
           <div v-if="props.platform === 'chaoxing' && status.progress?.tasks?.length" class="study-task-status" aria-label="小节任务状态">
             <div v-for="task in status.progress.tasks" :key="task.id"><span>{{ task.name }}{{ task.current ? ' · 当前' : '' }}</span><strong>{{ task.complete === true ? '已完成' : task.complete === false ? '未完成' : '待确认' }}</strong><button v-if="task.kind === 'quiz' && config.active && status.progress.chapterId" type="button" :disabled="busy || !canControl || task.locked || status.operation === 'keep-open'" @click="chooseTask(status.progress.chapterId,'quiz')">进入章节检测</button></div>
           </div>
@@ -286,7 +293,7 @@ onUnmounted(() => {
         </details>
         <details v-if="status.answers.length"><summary>答案（{{ status.answers.length }}）</summary><article v-for="(answer, i) in status.answers" :key="answer.id" class="study-answer"><strong>{{ i + 1 }}. {{ answer.mode === 'homework' ? '课程作业 · 手动提交' : answer.mode === 'practice' ? '教程练习' : '章节测验' }}</strong><p>{{ answer.stem }}</p><p>答案：{{ answer.answers.map(value => answer.options?.[Number(value) - 1] ? `${value}（${answer.options[Number(value) - 1]}）` : value).join('；') }}</p><p v-if="answer.explanation">{{ answer.explanation }}</p></article></details>
       </div>
-      <aside v-if="selectedCourse || config.active" class="study-directory" aria-label="学习章节"><div class="study-directory-heading"><div><h4>章节目录</h4><small>{{ (config.active ? runningChapters : chapterChoices).length }} 节 · {{ (config.active ? runningChapters : chapterChoices).filter(c => c.complete === true).length }} 节已完成</small></div><button type="button" :disabled="busy || readingPosition" @click="readChapters()">{{ busy ? '读取中…' : (config.active ? runningChapters : chapterChoices).length ? '刷新目录' : '读取目录' }}</button></div><StudyChapterList :show-tasks="props.platform === 'chaoxing'" :active="config.active" @task="chooseTask" :chapters="config.active ? runningChapters : chapterChoices" :selected="config.active ? status.progress?.chapterId : selectedChapter" :current="config.active ? status.progress?.chapterId : position?.chapterId" :disabled="busy || readingPosition || (config.active ? (!canControl || status.operation === 'keep-open') : operation === 'keep-open')" @select="id => { if (config.active) { runningChapter = id; chooseChapter(); } else selectedChapter = id; }" /></aside>
+      <aside v-if="selectedCourse || config.active" class="study-directory" aria-label="学习章节"><div class="study-directory-heading"><div><h4>章节目录</h4><small>{{ (config.active ? runningChapters : chapterChoices).length }} 节 · {{ (config.active ? runningChapters : chapterChoices).filter(c => c.complete === true).length }} 节已完成</small></div><button type="button" :disabled="busy || readingPosition" @click="readChapters()">{{ busy ? '读取中…' : (config.active ? runningChapters : chapterChoices).length ? '刷新目录' : '读取目录' }}</button></div><StudyChapterList :show-required="props.platform === 'unipus'" :show-tasks="props.platform === 'chaoxing'" :active="config.active" @task="chooseTask" :chapters="config.active ? runningChapters : chapterChoices" :selected="config.active ? status.progress?.chapterId : selectedChapter" :current="config.active ? status.progress?.chapterId : position?.chapterId" :disabled="busy || readingPosition || (config.active ? (!canControl || status.operation === 'keep-open') : operation === 'keep-open')" @select="id => { if (config.active) { runningChapter = id; chooseChapter(); } else selectedChapter = id; }" /></aside>
       </div>
     </template>
     <dialog v-if="props.mode === 'platform'" ref="modelSettings" class="study-model" :aria-label="name + '模型与设置'" @cancel="editingModel = false">
