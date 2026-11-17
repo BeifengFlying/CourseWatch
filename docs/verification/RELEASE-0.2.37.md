@@ -44,4 +44,6 @@
 
 构建源提交：`6296c7782a9c9872664899d645b61f7c6db780a7`，标签 `v0.2.37` 指向该提交。源码与标签已推送。
 
-[CourseWatch 0.2.37](https://github.com/BeifengFlying/CourseWatch/releases/tag/v0.2.37) 于 2026-11-16 23:44（Asia/Shanghai）发布为测试版，非草稿。Release 含两个 macOS DMG 及两个同名校验文件；四个附件的服务器 SHA-256 与字节数均与本地文件一致，公开下载地址均返回 HTTP 200。中英文 README 及 Release 的 Windows 下载入口留空。
+[CourseWatch 0.2.37](https://github.com/BeifengFlying/CourseWatch/releases/tag/v0.2.37) 于 2026-11-16 23:44（Asia/Shanghai）发布为测试版，非草稿。macOS 首次发布含两个 DMG 及两个同名校验文件；四个附件的服务器 SHA-256 与字节数均与本地文件一致，公开下载地址均返回 HTTP 200，当时 Windows 下载入口留空。
+
+2026-11-17，Windows 安装程序、便携 ZIP 及两份校验文件追加至同一 Release，共 8 个附件。四个 Windows 附件已通过匿名公开下载及完整 SHA-256 核验；原 macOS 附件和版本标签保持不变。Windows 构建输入、原生协议修复及验证边界见 [Windows 0.2.37](WINDOWS-0.2.37.md)，下载入口已补齐。
