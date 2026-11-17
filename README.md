@@ -29,9 +29,9 @@ macOS 关闭主窗口后继续在菜单栏运行；Windows 可选择隐藏到系
 | --- | --- |
 | macOS 14+ · Apple Silicon（M 系列） | [CourseWatch-0.2.37-mac-arm64.dmg](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.37/CourseWatch-0.2.37-mac-arm64.dmg) |
 | macOS 14+ · Intel | [CourseWatch-0.2.37-mac-x64.dmg](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.37/CourseWatch-0.2.37-mac-x64.dmg) |
-| Windows 10+ · x64 | |
+| Windows 10+ · x64 | [安装程序](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.37/CourseWatch-0.2.37-win-x64-setup.exe) · [便携 ZIP](https://github.com/BeifengFlying/CourseWatch/releases/download/v0.2.37/CourseWatch-0.2.37-win-x64.zip) |
 
-Windows 最低版本为 Windows 10 2004（内部版本 19041），建议使用 22H2 或更新版本。安装程序包含缺少 WebView2 时使用的微软在线引导程序；便携 ZIP 解压后运行 `CourseWatch.exe`。0.2.36 已通过 382 项测试、类型检查及协议弹窗 100%／150% 缩放检查；Windows 另含学习通网页课程登录校验修复。Windows 10、完整安装／升级／卸载及真实通知仍待实测，范围见 [Windows 0.2.36 验证](docs/verification/WINDOWS-0.2.36.md)。
+Windows 最低版本为 Windows 10 2004（内部版本 19041），建议使用 22H2 或更新版本。安装程序包含缺少 WebView2 时使用的微软在线引导程序；便携 ZIP 解压后运行 `CourseWatch.exe`。0.2.37 已通过 388 项测试、类型检查及协议弹窗 100%／150% 缩放各 141 项检查；Windows 修复协议末行可见后仍无法同意的问题。Windows 10、完整安装／升级／卸载及真实通知仍待实测，范围见 [Windows 0.2.37 验证](docs/verification/WINDOWS-0.2.37.md)。
 
 首次打开且尚无当前修订确认记录时，应用显示《用户协议》全文、完全免费声明、项目源码地址及付费渠道退款举报提示；点击“同意并继续”后才启动后台。选择“退出软件”不保存确认记录，同一修订已确认后重启不重复弹出。0.2.37 更新协议确认修订，旧版确认需重新完成；正文滚动到底后才可点击同意。
 
