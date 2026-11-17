@@ -103,6 +103,14 @@ try {
       $consent = $window.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $consentName)
       if ($consent) {
         if (Test-Path (Join-Path $data 'service.pid')) { throw 'Backend started before agreement acceptance.' }
+        if ($consent.Current.IsEnabled) { throw 'Agreement enabled before reading to the bottom.' }
+        $documentName = New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::NameProperty, '用户协议全文')
+        $document = $window.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $documentName)
+        if (!$document) { throw 'Agreement document unavailable.' }
+        $document.SetFocus()
+        $shell.SendKeys('^{END}')
+        for ($readingAttempt = 0; $readingAttempt -lt 20 -and !$consent.Current.IsEnabled; $readingAttempt++) { Start-Sleep -Milliseconds 100 }
+        if (!$consent.Current.IsEnabled) { throw 'Reading to the bottom did not enable agreement.' }
         $consent.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern).Invoke()
         Start-Sleep -Milliseconds 300
         continue

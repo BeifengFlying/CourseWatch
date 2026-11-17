@@ -115,14 +115,16 @@ internal sealed class FirstRunConsent : Form
             if (!document.IsHandleCreated || document.ClientSize.Height <= 0) return;
             var info = new ScrollInfo { Size = (uint)Marshal.SizeOf<ScrollInfo>(), Mask = 7 };
             var hasScrollInfo = GetScrollInfo(document.Handle, 1, ref info);
-            var atEnd = hasScrollInfo ? (long)info.Position + info.Page >= info.Max
-                : document.TextLength == 0 || document.GetCharIndexFromPosition(new Point(document.ClientSize.Width - 1, document.ClientSize.Height - 1)) >= document.TextLength - 1;
+            // RichEdit can leave trailing scroll padding after the last visible character.
+            var lastCharacterVisible = document.TextLength == 0 || document.GetCharIndexFromPosition(new Point(document.ClientSize.Width - 1, document.ClientSize.Height - 1)) >= document.TextLength - 1;
+            var atEnd = (hasScrollInfo && (long)info.Position + info.Page >= info.Max) || lastCharacterVisible;
             if (atEnd) reachedEnd = true;
             agree.Enabled = reachedEnd;
             hint.Text = reachedEnd ? "已阅读至协议底部" : "请滚动至协议底部后再同意";
         }
         void ScheduleReadingCheck() { if (IsHandleCreated && !IsDisposed) BeginInvoke((Action)CheckReadingPosition); }
         document.VScroll += (_, _) => ScheduleReadingCheck();
+        document.SelectionChanged += (_, _) => ScheduleReadingCheck();
         document.Resize += (_, _) => ScheduleReadingCheck();
         document.KeyUp += (_, _) => ScheduleReadingCheck();
         document.MouseWheel += (_, _) => ScheduleReadingCheck();

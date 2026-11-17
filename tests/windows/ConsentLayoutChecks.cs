@@ -96,6 +96,21 @@ internal static class ConsentLayoutChecks
                     Check(!receipt.IsAccepted && dialog.DialogResult == DialogResult.Cancel, "Quit must not save agreement.");
                 }
                 dialog.Close();
+                using var reopened = new FirstRunConsent(terms, receipt, dark);
+                reopened.Show(); Application.DoEvents(); Application.DoEvents();
+                var reopenedLayout = (TableLayoutPanel)reopened.Controls[0];
+                var reopenedDocument = reopenedLayout.Controls.OfType<RichTextBox>().Single();
+                var reopenedButtons = reopenedLayout.Controls.OfType<TableLayoutPanel>().Single().Controls.OfType<FlowLayoutPanel>().Single();
+                Check(!reopenedButtons.Controls.OfType<Button>().Single(b => b.Text == "同意并继续").Enabled && reopenedDocument.SelectionStart == 0, "Reopening must reset reading position and agreement availability.");
+                reopened.Close();
+            }
+            using (var shortDialog = new FirstRunConsent("短协议正文。", new AgreementAcceptance(Path.Combine(directory, "short"))))
+            {
+                shortDialog.Show(); Application.DoEvents(); Application.DoEvents();
+                var shortLayout = (TableLayoutPanel)shortDialog.Controls[0];
+                var shortButtons = shortLayout.Controls.OfType<TableLayoutPanel>().Single().Controls.OfType<FlowLayoutPanel>().Single();
+                Check(shortButtons.Controls.OfType<Button>().Single(b => b.Text == "同意并继续").Enabled, "Fully visible short terms need no scrolling.");
+                shortDialog.Close();
             }
             File.WriteAllText(Path.Combine(output, $"checks-{dpi}.json"), JsonSerializer.Serialize(new { checks, dpi, cases = 4, success = true }));
             return 0;
